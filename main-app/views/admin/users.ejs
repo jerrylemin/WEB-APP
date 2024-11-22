@@ -1,0 +1,33 @@
+<!-- views/admin/users.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Quản Lý Người Dùng</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Quyền</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% users.forEach(user => { %>
+            <tr>
+                <td><%= user.name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.isAdmin ? 'Admin' : 'Người Dùng' %></td>
+                <td>
+                    <a href="/admin/users/edit/<%= user._id %>">Sửa</a>
+                    <form action="/admin/users/delete/<%= user._id %>" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<%- include('../partials/footer') %>

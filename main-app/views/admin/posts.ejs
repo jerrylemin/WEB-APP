@@ -1,0 +1,33 @@
+<!-- views/admin/posts.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Quản Lý Bài Viết</h1>
+
+<a href="/admin/posts/add">Thêm Bài Viết Mới</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tên Bài Viết</th>
+            <th>Ngày Tạo</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% posts.forEach(post => { %>
+            <tr>
+                <td><%= post.title %></td>
+                <td><%= post.createdAt.toLocaleDateString('vi-VN') %></td>
+                <td>
+                    <a href="/admin/posts/edit/<%= post._id %>">Sửa</a>
+                    <form action="/admin/posts/delete/<%= post._id %>" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<%- include('../partials/footer') %>

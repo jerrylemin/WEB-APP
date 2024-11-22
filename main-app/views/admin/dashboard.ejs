@@ -1,0 +1,34 @@
+<!-- views/admin/dashboard.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Dashboard Admin</h1>
+<p>Xin chào, <%= user.name %>!</p>
+
+<div class="statistics">
+    <div class="stat">
+        <h3>Số Người Dùng</h3>
+        <p><%= userCount %></p>
+    </div>
+    <div class="stat">
+        <h3>Số Sản Phẩm</h3>
+        <p><%= productCount %></p>
+    </div>
+    <div class="stat">
+        <h3>Số Đơn Hàng</h3>
+        <p><%= orderCount %></p>
+    </div>
+    <div class="stat">
+        <h3>Tổng Doanh Thu</h3>
+        <p><%= revenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+    </div>
+</div>
+
+<div class="admin-actions">
+    <a href="/admin/users">Quản Lý Người Dùng</a>
+    <a href="/admin/products">Quản Lý Sản Phẩm</a>
+    <a href="/admin/orders">Quản Lý Đơn Hàng</a>
+    <!-- Thêm các liên kết quản trị khác -->
+</div>
+
+<%- include('../partials/footer') %>

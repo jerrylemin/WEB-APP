@@ -1,0 +1,19 @@
+<!-- views/admin/addPost.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Thêm Bài Viết Mới</h1>
+
+<form action="/admin/posts/add" method="POST">
+    <div>
+        <label for="title">Tên Bài Viết:</label>
+        <input type="text" name="title" id="title" required>
+    </div>
+    <div>
+        <label for="content">Nội Dung:</label>
+        <textarea name="content" id="content" required></textarea>
+    </div>
+    <button type="submit">Thêm Bài Viết</button>
+</form>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,17 @@
+<!-- views/client/profile.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Thông tin cá nhân</h1>
+
+<form action="/users/profile" method="POST">
+    <label for="name">Họ tên:</label>
+    <input type="text" name="name" value="<%= user.name %>">
+
+    <label for="email">Email:</label>
+    <input type="email" name="email" value="<%= user.email %>">
+
+    <button type="submit">Cập nhật</button>
+</form>
+
+<%- include('../partials/footer') %>

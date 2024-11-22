@@ -1,0 +1,48 @@
+<!-- views/admin/viewOrder.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Chi Tiết Đơn Hàng</h1>
+
+<p>Mã Đơn Hàng: <%= order._id %></p>
+<p>Người Dùng: <%= order.user.name %> (<%= order.user.email %>)</p>
+<p>Tổng Tiền: <%= order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+<p>Trạng Thái: <%= order.status %></p>
+
+<h2>Sản Phẩm Trong Đơn Hàng</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Tên Sản Phẩm</th>
+            <th>Số Lượng</th>
+            <th>Giá</th>
+            <th>Tổng Tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% order.products.forEach(item => { %>
+            <tr>
+                <td><%= item.product.name %></td>
+                <td><%= item.quantity %></td>
+                <td><%= item.product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                <td><%= (item.product.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<form action="/admin/orders/update/<%= order._id %>" method="POST">
+    <div>
+        <label for="status">Cập Nhật Trạng Thái:</label>
+        <select name="status" id="status">
+            <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+            <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+            <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+            <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+            <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+    </div>
+    <button type="submit">Cập Nhật Trạng Thái</button>
+</form>
+
+<%- include('../partials/footer') %>

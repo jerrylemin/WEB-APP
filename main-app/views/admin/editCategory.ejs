@@ -1,0 +1,15 @@
+<!-- views/admin/editCategory.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Sửa Danh Mục</h1>
+
+<form action="/admin/categories/edit/<%= category._id %>" method="POST">
+    <div>
+        <label for="name">Tên Danh Mục:</label>
+        <input type="text" name="name" id="name" value="<%= category.name %>" required>
+    </div>
+    <button type="submit">Cập Nhật Danh Mục</button>
+</form>
+
+<%- include('../partials/footer') %>

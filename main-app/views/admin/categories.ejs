@@ -1,0 +1,31 @@
+<!-- views/admin/categories.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Quản Lý Danh Mục</h1>
+
+<a href="/admin/categories/add">Thêm Danh Mục Mới</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tên Danh Mục</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% categories.forEach(category => { %>
+            <tr>
+                <td><%= category.name %></td>
+                <td>
+                    <a href="/admin/categories/edit/<%= category._id %>">Sửa</a>
+                    <form action="/admin/categories/delete/<%= category._id %>" method="POST" style="display:inline;">
+                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa danh mục này?')">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<%- include('../partials/footer') %>

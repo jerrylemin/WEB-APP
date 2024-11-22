@@ -1,0 +1,34 @@
+<!-- views/client/orders.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Đơn hàng của bạn</h1>
+
+<% if (orders.length > 0) { %>
+    <% orders.forEach(order => { %>
+        <div class="order">
+            <h2>Mã đơn hàng: <%= order._id %></h2>
+            <p>Trạng thái: <%= order.status %></p>
+            <p>Ngày đặt: <%= order.date.toLocaleDateString() %></p>
+            <table>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                </tr>
+                <% order.cart.items.forEach(item => { %>
+                    <tr>
+                        <td><%= item.product.name %></td>
+                        <td><%= item.quantity %></td>
+                        <td><%= item.product.price %> VND</td>
+                    </tr>
+                <% }) %>
+            </table>
+            <p>Tổng tiền: <%= order.cart.totalPrice %> VND</p>
+        </div>
+    <% }) %>
+<% } else { %>
+    <p>Bạn chưa có đơn hàng nào</p>
+<% } %>
+
+<%- include('../partials/footer') %>

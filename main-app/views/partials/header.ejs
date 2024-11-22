@@ -1,0 +1,28 @@
+<!-- views/partials/header.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang Web</title>
+    <!-- Thêm các liên kết CSS, meta tags, v.v. -->
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Trang Chủ</a></li>
+                <li><a href="/products">Sản Phẩm</a></li>
+                <% if (user) { %>
+                    <li><a href="/cart">Giỏ Hàng</a></li>
+                    <li><a href="/logout">Đăng Xuất</a></li>
+                    <% if (user.isAdmin) { %>
+                        <li><a href="/admin/dashboard">Admin Dashboard</a></li>
+                    <% } %>
+                <% } else { %>
+                    <li><a href="/login">Đăng Nhập</a></li>
+                    <li><a href="/register">Đăng Ký</a></li>
+                <% } %>
+            </ul>
+        </nav>
+    </header>

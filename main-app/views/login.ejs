@@ -1,0 +1,19 @@
+<!-- views/login.ejs -->
+
+<%- include('partials/header') %>
+
+<h1>Đăng nhập</h1>
+
+<form action="/login" method="POST">
+    <label for="email">Email:</label>
+    <input type="email" name="email" required>
+
+    <label for="password">Mật khẩu:</label>
+    <input type="password" name="password" required>
+
+    <button type="submit">Đăng nhập</button>
+</form>
+
+<p>Bạn chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+
+<%- include('partials/footer') %>

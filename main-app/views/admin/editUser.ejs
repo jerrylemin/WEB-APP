@@ -1,0 +1,23 @@
+<!-- views/admin/editUser.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Sửa Người Dùng</h1>
+
+<form action="/admin/users/edit/<%= user._id %>" method="POST">
+    <div>
+        <label for="name">Tên:</label>
+        <input type="text" name="name" id="name" value="<%= user.name %>" required>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" value="<%= user.email %>" required>
+    </div>
+    <div>
+        <label for="isAdmin">Quyền Admin:</label>
+        <input type="checkbox" name="isAdmin" id="isAdmin" <%= user.isAdmin ? 'checked' : '' %>>
+    </div>
+    <button type="submit">Cập Nhật</button>
+</form>
+
+<%- include('../partials/footer') %>

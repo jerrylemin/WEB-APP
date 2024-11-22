@@ -1,0 +1,40 @@
+<!-- views/client/cart.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Giỏ hàng của bạn</h1>
+
+<% if (cart && cart.items.length > 0) { %>
+    <form action="/cart/update" method="POST">
+        <table>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Tổng</th>
+                <th>Hành động</th>
+            </tr>
+            <% cart.items.forEach(item => { %>
+                <tr>
+                    <td><%= item.product.name %></td>
+                    <td>
+                        <input type="number" name="items[<%= item.product._id %>][quantity]" value="<%= item.quantity %>" min="1">
+                        <input type="hidden" name="items[<%= item.product._id %>][product]" value="<%= item.product._id %>">
+                    </td>
+                    <td><%= item.product.price %> VND</td>
+                    <td><%= item.product.price * item.quantity %> VND</td>
+                    <td><a href="/cart/remove/<%= item.product._id %>">Xóa</a></td>
+                </tr>
+            <% }) %>
+        </table>
+        <p>Tổng tiền: <%= cart.totalPrice %> VND</p>
+        <button type="submit">Cập nhật giỏ hàng</button>
+    </form>
+    <form action="/orders/create" method="POST">
+        <button type="submit">Thanh toán</button>
+    </form>
+<% } else { %>
+    <p>Giỏ hàng của bạn đang trống</p>
+<% } %>
+
+<%- include('../partials/footer') %>

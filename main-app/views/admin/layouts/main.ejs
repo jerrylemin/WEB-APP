@@ -1,0 +1,33 @@
+<!-- views/admin/layouts/main.ejs -->
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Ứng dụng Web</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/admin">Dashboard</a>
+            <a href="/admin/products">Sản phẩm</a>
+            <a href="/admin/orders">Đơn hàng</a>
+            <a href="/logout">Đăng xuất</a>
+        </nav>
+    </header>
+    <main>
+        <% if (success_msg) { %>
+            <div class="alert success"><%= success_msg %></div>
+        <% } %>
+        <% if (error_msg) { %>
+            <div class="alert error"><%= error_msg %></div>
+        <% } %>
+
+        <%- body %>
+    </main>
+    <footer>
+        <p>Bản quyền &copy; 2023 - Admin - Ứng dụng Web</p>
+    </footer>
+</body>
+</html>

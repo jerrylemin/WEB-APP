@@ -1,0 +1,41 @@
+<!-- views/admin/orders.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Quản Lý Đơn Hàng</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Mã Đơn Hàng</th>
+            <th>Người Dùng</th>
+            <th>Tổng Tiền</th>
+            <th>Trạng Thái</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% orders.forEach(order => { %>
+            <tr>
+                <td><%= order._id %></td>
+                <td><%= order.user.name %> (<%= order.user.email %>)</td>
+                <td><%= order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                <td><%= order.status %></td>
+                <td>
+                    <a href="/admin/orders/view/<%= order._id %>">Xem</a>
+                    <form action="/admin/orders/update/<%= order._id %>" method="POST" style="display:inline;">
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                            <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                            <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                            <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                            <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                        </select>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<%- include('../partials/footer') %>

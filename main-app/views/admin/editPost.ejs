@@ -1,0 +1,19 @@
+<!-- views/admin/editPost.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Sửa Bài Viết</h1>
+
+<form action="/admin/posts/edit/<%= post._id %>" method="POST">
+    <div>
+        <label for="title">Tên Bài Viết:</label>
+        <input type="text" name="title" id="title" value="<%= post.title %>" required>
+    </div>
+    <div>
+        <label for="content">Nội Dung:</label>
+        <textarea name="content" id="content" required><%= post.content %></textarea>
+    </div>
+    <button type="submit">Cập Nhật Bài Viết</button>
+</form>
+
+<%- include('../partials/footer') %>

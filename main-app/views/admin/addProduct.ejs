@@ -1,0 +1,31 @@
+<!-- views/admin/addProduct.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Thêm Sản Phẩm Mới</h1>
+
+<form action="/admin/products/add" method="POST">
+    <div>
+        <label for="name">Tên Sản Phẩm:</label>
+        <input type="text" name="name" id="name" required>
+    </div>
+    <div>
+        <label for="description">Mô Tả:</label>
+        <textarea name="description" id="description" required></textarea>
+    </div>
+    <div>
+        <label for="price">Giá:</label>
+        <input type="number" name="price" id="price" required>
+    </div>
+    <div>
+        <label for="category">Danh Mục:</label>
+        <input type="text" name="category" id="category" required>
+    </div>
+    <div>
+        <label for="stock">Kho:</label>
+        <input type="number" name="stock" id="stock" required>
+    </div>
+    <button type="submit">Thêm Sản Phẩm</button>
+</form>
+
+<%- include('../partials/footer') %>

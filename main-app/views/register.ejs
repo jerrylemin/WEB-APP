@@ -1,0 +1,29 @@
+<!-- views/register.ejs -->
+
+<%- include('partials/header') %>
+
+<h1>Đăng ký</h1>
+
+<form action="/register" method="POST">
+    <div>
+        <label for="name">Tên:</label>
+        <input type="text" name="name" id="name" value="<%= typeof name != 'undefined' ? name : '' %>">
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" value="<%= typeof email != 'undefined' ? email : '' %>">
+    </div>
+    <div>
+        <label for="password">Mật khẩu:</label>
+        <input type="password" name="password" id="password" value="<%= typeof password != 'undefined' ? password : '' %>">
+    </div>
+    <div>
+        <label for="password2">Xác nhận mật khẩu:</label>
+        <input type="password" name="password2" id="password2" value="<%= typeof password2 != 'undefined' ? password2 : '' %>">
+    </div>
+    <button type="submit">Đăng Ký</button>
+</form>
+
+<p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,12 @@
+<!-- views/home.ejs -->
+
+<%- include('partials/header') %>
+
+<h1>Chào mừng đến với Trang Chủ</h1>
+<% if (user) { %>
+    <p>Xin chào, <%= user.name %>!</p>
+<% } else { %>
+    <p>Vui lòng <a href="/login">đăng nhập</a> hoặc <a href="/register">đăng ký</a>.</p>
+<% } %>
+
+<%- include('partials/footer') %>

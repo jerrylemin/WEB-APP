@@ -1,0 +1,15 @@
+<!-- views/admin/addCategory.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Thêm Danh Mục Mới</h1>
+
+<form action="/admin/categories/add" method="POST">
+    <div>
+        <label for="name">Tên Danh Mục:</label>
+        <input type="text" name="name" id="name" required>
+    </div>
+    <button type="submit">Thêm Danh Mục</button>
+</form>
+
+<%- include('../partials/footer') %>

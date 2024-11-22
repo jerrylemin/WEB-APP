@@ -1,0 +1,40 @@
+<!-- views/client/products.ejs -->
+
+<%- include('../partials/header') %>
+
+<h1>Danh Sách Sản Phẩm</h1>
+
+<div class="products">
+    <% products.forEach(product => { %>
+        <div class="product">
+            <img src="<%= product.image %>" alt="<%= product.name %>">
+            <h2><%= product.name %></h2>
+            <p>Giá: <%= product.price %> VND</p>
+            <a href="/products/<%= product._id %>">Chi Tiết</a>
+        </div>
+    <% }) %>
+</div>
+
+<div class="pagination">
+    <% if (current > 1) { %>
+        <a href="?page=<%= current - 1 %>">«</a>
+    <% } else { %>
+        <span>«</span>
+    <% } %>
+
+    <% for (let i = 1; i <= pages; i++) { %>
+        <% if (i === current) { %>
+            <span><%= i %></span>
+        <% } else { %>
+            <a href="?page=<%= i %>"><%= i %></a>
+        <% } %>
+    <% } %>
+
+    <% if (current < pages) { %>
+        <a href="?page=<%= current + 1 %>">»</a>
+    <% } else { %>
+        <span>»</span>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>
