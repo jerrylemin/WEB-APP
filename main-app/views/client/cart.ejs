@@ -1,40 +1,47 @@
 <!-- views/client/cart.ejs -->
 
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Giỏ Hàng' }) %>
 
-<h1>Giỏ hàng của bạn</h1>
-
-<% if (cart && cart.items.length > 0) { %>
-    <form action="/cart/update" method="POST">
-        <table>
-            <tr>
-                <th>Sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Giá</th>
-                <th>Tổng</th>
-                <th>Hành động</th>
-            </tr>
-            <% cart.items.forEach(item => { %>
-                <tr>
-                    <td><%= item.product.name %></td>
-                    <td>
-                        <input type="number" name="items[<%= item.product._id %>][quantity]" value="<%= item.quantity %>" min="1">
-                        <input type="hidden" name="items[<%= item.product._id %>][product]" value="<%= item.product._id %>">
-                    </td>
-                    <td><%= item.product.price %> VND</td>
-                    <td><%= item.product.price * item.quantity %> VND</td>
-                    <td><a href="/cart/remove/<%= item.product._id %>">Xóa</a></td>
-                </tr>
-            <% }) %>
-        </table>
-        <p>Tổng tiền: <%= cart.totalPrice %> VND</p>
-        <button type="submit">Cập nhật giỏ hàng</button>
-    </form>
-    <form action="/orders/create" method="POST">
-        <button type="submit">Thanh toán</button>
-    </form>
-<% } else { %>
-    <p>Giỏ hàng của bạn đang trống</p>
-<% } %>
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Giỏ Hàng Của Bạn</h1>
+    <% if (cart && cart.items.length > 0) { %>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr>
+                        <th class="py-2 px-4 border-b">Sản Phẩm</th>
+                        <th class="py-2 px-4 border-b">Giá</th>
+                        <th class="py-2 px-4 border-b">Số Lượng</th>
+                        <th class="py-2 px-4 border-b">Tổng Tiền</th>
+                        <th class="py-2 px-4 border-b">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cart.items.forEach(item => { %>
+                        <tr>
+                            <td class="py-2 px-4 border-b"><%= item.product.name %></td>
+                            <td class="py-2 px-4 border-b"><%= item.product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                            <td class="py-2 px-4 border-b"><%= item.quantity %></td>
+                            <td class="py-2 px-4 border-b"><%= (item.product.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                            <td class="py-2 px-4 border-b">
+                                <form action="/cart/remove/<%= item.product._id %>" method="POST" class="inline">
+                                    <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4 flex justify-end">
+            <p class="text-xl font-semibold">Tổng: <%= cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+        </div>
+        <div class="mt-4 flex justify-end">
+            <a href="/checkout" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Thanh Toán</a>
+        </div>
+    <% } else { %>
+        <p class="text-lg">Giỏ hàng của bạn đang trống. <a href="/products" class="text-blue-500 underline">Mua sắm ngay!</a></p>
+    <% } %>
+</main>
 
 <%- include('../partials/footer') %>

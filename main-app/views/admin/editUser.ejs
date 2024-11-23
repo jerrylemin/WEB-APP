@@ -1,23 +1,31 @@
 <!-- views/admin/editUser.ejs -->
 
-<%- include('../partials/header') %>
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Sửa Người Dùng</h2>
+    <% if (error_msg) { %>
+        <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+            <%= error_msg %>
+        </div>
+    <% } %>
+    <% if (success_msg) { %>
+        <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
+            <%= success_msg %>
+        </div>
+    <% } %>
+    <form action="/admin/users/edit/<%= user._id %>" method="POST" class="space-y-4">
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Tên:</label>
+            <input type="text" name="name" id="name" value="<%= user.name %>" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+            <input type="email" name="email" id="email" value="<%= user.email %>" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div class="flex items-center">
+            <input type="checkbox" name="isAdmin" id="isAdmin" <%= user.isAdmin ? 'checked' : '' %> class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+            <label for="isAdmin" class="ml-2 block text-sm text-gray-900">Quyền Admin</label>
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cập Nhật</button>
+    </form>
+</div>
 
-<h1>Sửa Người Dùng</h1>
-
-<form action="/admin/users/edit/<%= user._id %>" method="POST">
-    <div>
-        <label for="name">Tên:</label>
-        <input type="text" name="name" id="name" value="<%= user.name %>" required>
-    </div>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" value="<%= user.email %>" required>
-    </div>
-    <div>
-        <label for="isAdmin">Quyền Admin:</label>
-        <input type="checkbox" name="isAdmin" id="isAdmin" <%= user.isAdmin ? 'checked' : '' %>>
-    </div>
-    <button type="submit">Cập Nhật</button>
-</form>
-
-<%- include('../partials/footer') %>

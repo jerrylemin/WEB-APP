@@ -1,29 +1,40 @@
 <!-- views/register.ejs -->
 
-<%- include('partials/header') %>
+<%- include('partials/header', { title: 'Đăng Ký' }) %>
 
-<h1>Đăng ký</h1>
-
-<form action="/register" method="POST">
-    <div>
-        <label for="name">Tên:</label>
-        <input type="text" name="name" id="name" value="<%= typeof name != 'undefined' ? name : '' %>">
+<main class="container mx-auto p-4 flex justify-center">
+    <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Đăng Ký</h2>
+        <% if (error_msg) { %>
+            <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+                <%= error_msg %>
+            </div>
+        <% } %>
+        <% if (success_msg) { %>
+            <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
+                <%= success_msg %>
+            </div>
+        <% } %>
+        <form action="/register" method="POST" class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Tên:</label>
+                <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                <input type="email" name="email" id="email" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Mật Khẩu:</label>
+                <input type="password" name="password" id="password" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div>
+                <label for="password2" class="block text-sm font-medium text-gray-700">Xác Nhận Mật Khẩu:</label>
+                <input type="password" name="password2" id="password2" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Đăng Ký</button>
+        </form>
     </div>
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" value="<%= typeof email != 'undefined' ? email : '' %>">
-    </div>
-    <div>
-        <label for="password">Mật khẩu:</label>
-        <input type="password" name="password" id="password" value="<%= typeof password != 'undefined' ? password : '' %>">
-    </div>
-    <div>
-        <label for="password2">Xác nhận mật khẩu:</label>
-        <input type="password" name="password2" id="password2" value="<%= typeof password2 != 'undefined' ? password2 : '' %>">
-    </div>
-    <button type="submit">Đăng Ký</button>
-</form>
-
-<p>Đã có tài khoản? <a href="/login">Đăng nhập</a></p>
+</main>
 
 <%- include('partials/footer') %>

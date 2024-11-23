@@ -1,15 +1,22 @@
 <!-- views/admin/addCategory.ejs -->
 
-<%- include('../partials/header') %>
-
-<h1>Thêm Danh Mục Mới</h1>
-
-<form action="/admin/categories/add" method="POST">
-    <div>
-        <label for="name">Tên Danh Mục:</label>
-        <input type="text" name="name" id="name" required>
-    </div>
-    <button type="submit">Thêm Danh Mục</button>
-</form>
-
-<%- include('../partials/footer') %>
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Thêm Danh Mục Mới</h2>
+    <% if (error_msg) { %>
+        <div class="bg-red-100 text-red-700 p-2 rounded mb-4">
+            <%= error_msg %>
+        </div>
+    <% } %>
+    <% if (success_msg) { %>
+        <div class="bg-green-100 text-green-700 p-2 rounded mb-4">
+            <%= success_msg %>
+        </div>
+    <% } %>
+    <form action="/admin/categories/add" method="POST" class="space-y-4">
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Tên Danh Mục:</label>
+            <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Thêm Danh Mục</button>
+    </form>
+</div>

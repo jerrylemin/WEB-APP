@@ -1,33 +1,33 @@
 <!-- views/admin/posts.ejs -->
 
-<%- include('../partials/header') %>
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold">Danh Sách Bài Viết</h2>
+    <a href="/admin/posts/add" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Thêm Bài Viết</a>
+</div>
 
-<h1>Quản Lý Bài Viết</h1>
-
-<a href="/admin/posts/add">Thêm Bài Viết Mới</a>
-
-<table>
-    <thead>
-        <tr>
-            <th>Tên Bài Viết</th>
-            <th>Ngày Tạo</th>
-            <th>Hành Động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% posts.forEach(post => { %>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow-md rounded-lg">
+        <thead>
             <tr>
-                <td><%= post.title %></td>
-                <td><%= post.createdAt.toLocaleDateString('vi-VN') %></td>
-                <td>
-                    <a href="/admin/posts/edit/<%= post._id %>">Sửa</a>
-                    <form action="/admin/posts/delete/<%= post._id %>" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</button>
-                    </form>
-                </td>
+                <th class="py-2 px-4 border-b">Tên Bài Viết</th>
+                <th class="py-2 px-4 border-b">Ngày Tạo</th>
+                <th class="py-2 px-4 border-b">Hành Động</th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% posts.forEach(post => { %>
+                <tr>
+                    <td class="py-2 px-4 border-b"><%= post.title %></td>
+                    <td class="py-2 px-4 border-b"><%= post.createdAt.toLocaleDateString('vi-VN') %></td>
+                    <td class="py-2 px-4 border-b flex space-x-2">
+                        <a href="/admin/posts/edit/<%= post._id %>" class="text-blue-500 hover:underline">Sửa</a>
+                        <form action="/admin/posts/delete/<%= post._id %>" method="POST" class="inline">
+                            <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?')">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
 
-<%- include('../partials/footer') %>

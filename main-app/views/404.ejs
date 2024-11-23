@@ -1,8 +1,11 @@
 <!-- views/404.ejs -->
 
-<%- include('partials/header') %>
+<%- include('partials/header', { title: '404 - Trang Không Tồn Tại' }) %>
 
-<h1>404 - Trang không tồn tại</h1>
-<p>Xin lỗi, trang bạn yêu cầu không tồn tại.</p>
+<main class="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
+    <h1 class="text-4xl font-bold mb-4">404</h1>
+    <p class="text-lg mb-6">Trang bạn tìm kiếm không tồn tại.</p>
+    <a href="/" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Quay Lại Trang Chủ</a>
+</main>
 
 <%- include('partials/footer') %>

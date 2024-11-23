@@ -5,6 +5,10 @@ const Product = require('../models/productModel');
 const Order = require('../models/orderModel');
 const logger = require('../logger');
 
+exports.getDashboard = (req, res) => {
+    res.render('admin/dashboard', { title: 'Dashboard Admin' });
+};
+
 // Render Dashboard Admin
 exports.renderDashboard = async (req, res) => {
     try {
@@ -17,7 +21,7 @@ exports.renderDashboard = async (req, res) => {
         ]);
         const revenue = totalRevenue[0] ? totalRevenue[0].total : 0;
         logger.info(`Admin ${req.user.email} đã truy cập dashboard`);
-        res.render('admin/dashboard', { user: req.user, userCount, productCount, orderCount, revenue });
+        res.render('admin/dashboard', { user: req.user, userCount, productCount, orderCount, revenue, title: 'Dashboard Admin' });
     } catch (err) {
         logger.error('Lỗi khi render dashboard với thống kê:', err);
         console.error('Lỗi khi render dashboard với thống kê:', err);
@@ -30,13 +34,14 @@ exports.renderDashboard = async (req, res) => {
 exports.listUsers = async (req, res) => {
     try {
         const users = await User.find().lean();
-        res.render('admin/users', { users });
+        res.render('admin/users', { users, title: 'Quản Lý Người Dùng' });
     } catch (err) {
         console.error('Lỗi khi lấy danh sách người dùng:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách người dùng');
         res.redirect('/admin/dashboard');
     }
 };
+
 
 exports.editUserForm = async (req, res) => {
     try {
@@ -82,13 +87,15 @@ exports.deleteUser = async (req, res) => {
 exports.listProducts = async (req, res) => {
     try {
         const products = await Product.find().lean();
-        res.render('admin/products', { products });
+        res.render('admin/products', { products, title: 'Quản Lý Sản Phẩm' });
     } catch (err) {
         console.error('Lỗi khi lấy danh sách sản phẩm:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');
         res.redirect('/admin/dashboard');
     }
 };
+
+
 
 exports.addProductForm = (req, res) => {
     res.render('admin/addProduct');
@@ -152,13 +159,14 @@ exports.deleteProduct = async (req, res) => {
 exports.listOrders = async (req, res) => {
     try {
         const orders = await Order.find().populate('user').lean();
-        res.render('admin/orders', { orders });
+        res.render('admin/orders', { orders, title: 'Quản Lý Đơn Hàng' });
     } catch (err) {
         console.error('Lỗi khi lấy danh sách đơn hàng:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách đơn hàng');
         res.redirect('/admin/dashboard');
     }
 };
+
 
 exports.viewOrder = async (req, res) => {
     try {
@@ -194,13 +202,14 @@ const Category = require('../models/categoryModel'); // Tạo model category n�
 exports.listCategories = async (req, res) => {
     try {
         const categories = await Category.find().lean();
-        res.render('admin/categories', { categories });
+        res.render('admin/categories', { categories, title: 'Quản Lý Danh Mục' });
     } catch (err) {
         console.error('Lỗi khi lấy danh sách danh mục:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách danh mục');
         res.redirect('/admin/dashboard');
     }
 };
+
 
 exports.addCategoryForm = (req, res) => {
     res.render('admin/addCategory');
@@ -271,13 +280,14 @@ const Post = require('../models/postModel'); // Tạo model post nếu chưa có
 exports.listPosts = async (req, res) => {
     try {
         const posts = await Post.find().lean();
-        res.render('admin/posts', { posts });
+        res.render('admin/posts', { posts, title: 'Quản Lý Bài Viết' });
     } catch (err) {
         console.error('Lỗi khi lấy danh sách bài viết:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách bài viết');
         res.redirect('/admin/dashboard');
     }
 };
+
 
 exports.addPostForm = (req, res) => {
     res.render('admin/addPost');

@@ -1,17 +1,27 @@
 <!-- views/client/profile.ejs -->
 
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Hồ Sơ Của Bạn' }) %>
 
-<h1>Thông tin cá nhân</h1>
-
-<form action="/users/profile" method="POST">
-    <label for="name">Họ tên:</label>
-    <input type="text" name="name" value="<%= user.name %>">
-
-    <label for="email">Email:</label>
-    <input type="email" name="email" value="<%= user.email %>">
-
-    <button type="submit">Cập nhật</button>
-</form>
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Hồ Sơ Của Bạn</h1>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Tên:</label>
+            <p class="mt-1 text-lg text-gray-900"><%= user.name %></p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Email:</label>
+            <p class="mt-1 text-lg text-gray-900"><%= user.email %></p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Quyền:</label>
+            <p class="mt-1 text-lg text-gray-900"><%= user.isAdmin ? 'Admin' : 'Người Dùng' %></p>
+        </div>
+        <div class="flex space-x-4">
+            <a href="/profile/edit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Chỉnh Sửa Hồ Sơ</a>
+            <a href="/orders" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Xem Đơn Hàng</a>
+        </div>
+    </div>
+</main>
 
 <%- include('../partials/footer') %>

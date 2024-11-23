@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - <%= typeof title !== 'undefined' ? title : 'Trang Quản Trị' %></title>
+    <link href="/css/main.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+        <nav class="container mx-auto flex justify-between items-center">
+            <div>
+                <a href="/admin/dashboard" class="text-2xl font-bold">Admin Dashboard</a>
+            </div>
+            <ul class="flex space-x-4">
+                <li><a href="/admin/users" class="hover:underline">Người Dùng</a></li>
+                <li><a href="/admin/products" class="hover:underline">Sản Phẩm</a></li>
+                <li><a href="/admin/orders" class="hover:underline">Đơn Hàng</a></li>
+                <li><a href="/admin/posts" class="hover:underline">Bài Viết</a></li>
+                <li><a href="/admin/categories" class="hover:underline">Danh Mục</a></li>
+                <li><a href="/logout" class="hover:underline">Đăng Xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <%- body %>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

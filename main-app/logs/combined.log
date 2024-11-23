@@ -1,1 +1,18 @@
 2024-11-22T15:22:19.684Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T13:54:35.078Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T13:56:22.474Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T13:57:14.228Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T14:39:04.134Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T14:43:03.009Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T14:43:05.169Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T14:57:24.221Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T15:06:37.786Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T15:06:37.788Z error: Error: No default engine was specified and no extension was provided.
+    at new View (E:\OneDrive - VNU-HCMUS\4th year\phat trien ung dung web\Web App\main-app\node_modules\express\lib\view.js:61:11)
+    at Function.render (E:\OneDrive - VNU-HCMUS\4th year\phat trien ung dung web\Web App\main-app\node_modules\express\lib\application.js:587:12)
+    at ServerResponse.render (E:\OneDrive - VNU-HCMUS\4th year\phat trien ung dung web\Web App\main-app\node_modules\express\lib\response.js:1049:7)
+    at res.render (E:\OneDrive - VNU-HCMUS\4th year\phat trien ung dung web\Web App\main-app\node_modules\express-ejs-layouts\lib\express-layouts.js:77:18)
+    at exports.renderDashboard (E:\OneDrive - VNU-HCMUS\4th year\phat trien ung dung web\Web App\main-app\controllers\adminController.js:24:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2024-11-23T15:19:54.273Z info: Admin admin@gmail.com đã truy cập dashboard
+2024-11-23T15:22:09.243Z info: Admin admin@gmail.com đã truy cập dashboard

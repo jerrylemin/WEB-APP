@@ -4,47 +4,36 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 
 // Thêm sản phẩm vào giỏ hàng
-exports.addToCart = async (req, res) => {
+exports.addToCart = (req, res) => {
     const productId = req.params.id;
     const quantity = parseInt(req.body.quantity) || 1;
 
-    try {
-        let cart = await Cart.findOne({ user: req.user._id });
-
-        if (!cart) {
-            cart = new Cart({ user: req.user._id, items: [], totalPrice: 0 });
+    // Giả sử bạn có function để lấy sản phẩm từ DB
+    Product.findById(productId, (err, product) => {
+        if (err || !product) {
+            req.session.error_msg = 'Sản phẩm không tồn tại.';
+            return res.redirect('/products');
         }
 
-        const product = await Product.findById(productId);
-        const itemIndex = cart.items.findIndex(item => item.product.equals(productId));
+        let cart = req.session.cart;
+        const existingItemIndex = cart.items.findIndex(item => item.product._id.toString() === productId);
 
-        if (itemIndex > -1) {
-            cart.items[itemIndex].quantity += quantity;
+        if (existingItemIndex !== -1) {
+            cart.items[existingItemIndex].quantity += quantity;
         } else {
-            cart.items.push({ product: productId, quantity });
+            cart.items.push({ product, quantity });
         }
 
         cart.totalPrice += product.price * quantity;
-        cart.updatedAt = Date.now();
-
-        await cart.save();
-        req.flash('success_msg', 'Đã thêm sản phẩm vào giỏ hàng');
+        req.session.success_msg = 'Đã thêm sản phẩm vào giỏ hàng.';
         res.redirect('/cart');
-    } catch (err) {
-        console.log(err);
-        res.redirect('/products');
-    }
+    });
 };
 
 // Hiển thị giỏ hàng
-exports.getCart = async (req, res) => {
-    try {
-        const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
-        res.render('client/cart', { cart });
-    } catch (err) {
-        console.log(err);
-        res.redirect('/products');
-    }
+exports.getCart = (req, res) => {
+    const cart = req.session.cart;
+    res.render('client/cart', { user: req.user, cart });
 };
 
 // Cập nhật giỏ hàng

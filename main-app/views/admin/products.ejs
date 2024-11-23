@@ -1,37 +1,35 @@
 <!-- views/admin/products.ejs -->
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold">Danh Sách Sản Phẩm</h2>
+    <a href="/admin/products/add" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Thêm Sản Phẩm</a>
+</div>
 
-<%- include('../partials/header') %>
-
-<h1>Quản Lý Sản Phẩm</h1>
-
-<a href="/admin/products/add">Thêm Sản Phẩm Mới</a>
-
-<table>
-    <thead>
-        <tr>
-            <th>Tên</th>
-            <th>Giá</th>
-            <th>Danh Mục</th>
-            <th>Kho</th>
-            <th>Hành Động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% products.forEach(product => { %>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow-md rounded-lg">
+        <thead>
             <tr>
-                <td><%= product.name %></td>
-                <td><%= product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
-                <td><%= product.category %></td>
-                <td><%= product.stock %></td>
-                <td>
-                    <a href="/admin/products/edit/<%= product._id %>">Sửa</a>
-                    <form action="/admin/products/delete/<%= product._id %>" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
-                    </form>
-                </td>
+                <th class="py-2 px-4 border-b">Tên</th>
+                <th class="py-2 px-4 border-b">Giá</th>
+                <th class="py-2 px-4 border-b">Danh Mục</th>
+                <th class="py-2 px-4 border-b">Kho</th>
+                <th class="py-2 px-4 border-b">Hành Động</th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
-
-<%- include('../partials/footer') %>
+        </thead>
+        <tbody>
+            <% products.forEach(product => { %>
+                <tr>
+                    <td class="py-2 px-4 border-b"><%= product.name %></td>
+                    <td class="py-2 px-4 border-b"><%= product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                    <td class="py-2 px-4 border-b"><%= product.category %></td>
+                    <td class="py-2 px-4 border-b"><%= product.stock %></td>
+                    <td class="py-2 px-4 border-b flex space-x-2">
+                        <a href="/admin/products/edit/<%= product._id %>" class="text-blue-500 hover:underline">Sửa</a>
+                        <form action="/admin/products/delete/<%= product._id %>" method="POST" class="inline">
+                            <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>

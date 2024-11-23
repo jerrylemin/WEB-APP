@@ -1,33 +1,33 @@
 <!-- views/admin/users.ejs -->
 
-<%- include('../partials/header') %>
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold">Danh Sách Người Dùng</h2>
+</div>
 
-<h1>Quản Lý Người Dùng</h1>
-
-<table>
-    <thead>
-        <tr>
-            <th>Tên</th>
-            <th>Email</th>
-            <th>Quyền</th>
-            <th>Hành Động</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% users.forEach(user => { %>
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white">
+        <thead>
             <tr>
-                <td><%= user.name %></td>
-                <td><%= user.email %></td>
-                <td><%= user.isAdmin ? 'Admin' : 'Người Dùng' %></td>
-                <td>
-                    <a href="/admin/users/edit/<%= user._id %>">Sửa</a>
-                    <form action="/admin/users/delete/<%= user._id %>" method="POST" style="display:inline;">
-                        <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">Xóa</button>
-                    </form>
-                </td>
+                <th class="py-2 px-4 border-b">Tên</th>
+                <th class="py-2 px-4 border-b">Email</th>
+                <th class="py-2 px-4 border-b">Quyền</th>
+                <th class="py-2 px-4 border-b">Hành Động</th>
             </tr>
-        <% }) %>
-    </tbody>
-</table>
-
-<%- include('../partials/footer') %>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td class="py-2 px-4 border-b"><%= user.name %></td>
+                    <td class="py-2 px-4 border-b"><%= user.email %></td>
+                    <td class="py-2 px-4 border-b"><%= user.isAdmin ? 'Admin' : 'Người Dùng' %></td>
+                    <td class="py-2 px-4 border-b flex space-x-2">
+                        <a href="/admin/users/edit/<%= user._id %>" class="text-blue-500 hover:underline">Sửa</a>
+                        <form action="/admin/users/delete/<%= user._id %>" method="POST" class="inline">
+                            <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Bạn có chắc muốn xóa người dùng này?')">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>

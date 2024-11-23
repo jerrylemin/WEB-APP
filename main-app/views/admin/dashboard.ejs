@@ -1,34 +1,29 @@
-<!-- views/admin/dashboard.ejs -->
-
-<%- include('../partials/header') %>
-
-<h1>Dashboard Admin</h1>
-<p>Xin chào, <%= user.name %>!</p>
-
-<div class="statistics">
-    <div class="stat">
-        <h3>Số Người Dùng</h3>
-        <p><%= userCount %></p>
+<h1 class="text-2xl font-bold mb-4">Dashboard Admin</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white shadow rounded p-4">
+        <h2 class="text-xl font-semibold">Số Người Dùng</h2>
+        <p class="text-3xl"><%= userCount %></p>
     </div>
-    <div class="stat">
-        <h3>Số Sản Phẩm</h3>
-        <p><%= productCount %></p>
+    <div class="bg-white shadow rounded p-4">
+        <h2 class="text-xl font-semibold">Số Sản Phẩm</h2>
+        <p class="text-3xl"><%= productCount %></p>
     </div>
-    <div class="stat">
-        <h3>Số Đơn Hàng</h3>
-        <p><%= orderCount %></p>
+    <div class="bg-white shadow rounded p-4">
+        <h2 class="text-xl font-semibold">Số Đơn Hàng</h2>
+        <p class="text-3xl"><%= orderCount %></p>
     </div>
-    <div class="stat">
-        <h3>Tổng Doanh Thu</h3>
-        <p><%= revenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+    <div class="bg-white shadow rounded p-4">
+        <h2 class="text-xl font-semibold">Tổng Doanh Thu</h2>
+        <p class="text-3xl"><%= revenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
     </div>
 </div>
 
-<div class="admin-actions">
-    <a href="/admin/users">Quản Lý Người Dùng</a>
-    <a href="/admin/products">Quản Lý Sản Phẩm</a>
-    <a href="/admin/orders">Quản Lý Đơn Hàng</a>
-    <!-- Thêm các liên kết quản trị khác -->
+<div class="mt-8">
+    <h2 class="text-xl font-semibold mb-2">Hành Động Quản Trị</h2>
+    <div class="flex space-x-4">
+        <a href="/admin/users" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Quản Lý Người Dùng</a>
+        <a href="/admin/products" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Quản Lý Sản Phẩm</a>
+        <a href="/admin/orders" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Quản Lý Đơn Hàng</a>
+        <!-- Thêm các liên kết quản trị khác -->
+    </div>
 </div>
-
-<%- include('../partials/footer') %>

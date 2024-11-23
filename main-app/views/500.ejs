@@ -1,8 +1,11 @@
 <!-- views/500.ejs -->
 
-<%- include('partials/header') %>
+<%- include('partials/header', { title: '500 - Lỗi Máy Chủ' }) %>
 
-<h1>500 - Lỗi server</h1>
-<p>Xin lỗi, đã xảy ra lỗi trên server. Vui lòng thử lại sau.</p>
+<main class="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
+    <h1 class="text-4xl font-bold mb-4">500</h1>
+    <p class="text-xl mb-6">Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau.</p>
+    <a href="/" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Quay Lại Trang Chủ</a>
+</main>
 
 <%- include('partials/footer') %>

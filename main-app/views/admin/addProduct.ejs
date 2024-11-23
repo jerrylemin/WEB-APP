@@ -1,31 +1,29 @@
 <!-- views/admin/addProduct.ejs -->
 
-<%- include('../partials/header') %>
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Thêm Sản Phẩm Mới</h2>
+    <form action="/admin/products/add" method="POST" class="space-y-4">
+        <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Tên Sản Phẩm:</label>
+            <input type="text" name="name" id="name" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label for="description" class="block text-sm font-medium text-gray-700">Mô Tả:</label>
+            <textarea name="description" id="description" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+        </div>
+        <div>
+            <label for="price" class="block text-sm font-medium text-gray-700">Giá:</label>
+            <input type="number" name="price" id="price" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label for="category" class="block text-sm font-medium text-gray-700">Danh Mục:</label>
+            <input type="text" name="category" id="category" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label for="stock" class="block text-sm font-medium text-gray-700">Kho:</label>
+            <input type="number" name="stock" id="stock" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Thêm Sản Phẩm</button>
+    </form>
+</div>
 
-<h1>Thêm Sản Phẩm Mới</h1>
-
-<form action="/admin/products/add" method="POST">
-    <div>
-        <label for="name">Tên Sản Phẩm:</label>
-        <input type="text" name="name" id="name" required>
-    </div>
-    <div>
-        <label for="description">Mô Tả:</label>
-        <textarea name="description" id="description" required></textarea>
-    </div>
-    <div>
-        <label for="price">Giá:</label>
-        <input type="number" name="price" id="price" required>
-    </div>
-    <div>
-        <label for="category">Danh Mục:</label>
-        <input type="text" name="category" id="category" required>
-    </div>
-    <div>
-        <label for="stock">Kho:</label>
-        <input type="number" name="stock" id="stock" required>
-    </div>
-    <button type="submit">Thêm Sản Phẩm</button>
-</form>
-
-<%- include('../partials/footer') %>

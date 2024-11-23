@@ -1,48 +1,51 @@
 <!-- views/admin/viewOrder.ejs -->
 
-<%- include('../partials/header') %>
+<%- include('../admin/layout', { title: 'Chi Tiết Đơn Hàng' }) %>
 
-<h1>Chi Tiết Đơn Hàng</h1>
-
-<p>Mã Đơn Hàng: <%= order._id %></p>
-<p>Người Dùng: <%= order.user.name %> (<%= order.user.email %>)</p>
-<p>Tổng Tiền: <%= order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
-<p>Trạng Thái: <%= order.status %></p>
-
-<h2>Sản Phẩm Trong Đơn Hàng</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Tên Sản Phẩm</th>
-            <th>Số Lượng</th>
-            <th>Giá</th>
-            <th>Tổng Tiền</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% order.products.forEach(item => { %>
-            <tr>
-                <td><%= item.product.name %></td>
-                <td><%= item.quantity %></td>
-                <td><%= item.product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
-                <td><%= (item.product.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
-            </tr>
-        <% }) %>
-    </tbody>
-</table>
-
-<form action="/admin/orders/update/<%= order._id %>" method="POST">
-    <div>
-        <label for="status">Cập Nhật Trạng Thái:</label>
-        <select name="status" id="status">
-            <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-            <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
-            <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-            <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
-            <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
-        </select>
+<%- block('body') -%>
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Chi Tiết Đơn Hàng</h2>
+    <div class="mb-4">
+        <p><strong>Mã Đơn Hàng:</strong> <%= order._id %></p>
+        <p><strong>Người Dùng:</strong> <%= order.user.name %> (<%= order.user.email %>)</p>
+        <p><strong>Tổng Tiền:</strong> <%= order.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+        <p><strong>Trạng Thái:</strong> <%= order.status %></p>
     </div>
-    <button type="submit">Cập Nhật Trạng Thái</button>
-</form>
-
-<%- include('../partials/footer') %>
+    <h3 class="text-lg font-semibold mb-2">Sản Phẩm Trong Đơn Hàng</h3>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-md rounded-lg">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b">Tên Sản Phẩm</th>
+                    <th class="py-2 px-4 border-b">Số Lượng</th>
+                    <th class="py-2 px-4 border-b">Giá</th>
+                    <th class="py-2 px-4 border-b">Tổng Tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% order.products.forEach(item => { %>
+                    <tr>
+                        <td class="py-2 px-4 border-b"><%= item.product.name %></td>
+                        <td class="py-2 px-4 border-b"><%= item.quantity %></td>
+                        <td class="py-2 px-4 border-b"><%= item.product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                        <td class="py-2 px-4 border-b"><%= (item.product.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <form action="/admin/orders/update/<%= order._id %>" method="POST" class="flex items-center space-x-2">
+            <label for="status" class="block text-sm font-medium text-gray-700">Cập Nhật Trạng Thái:</label>
+            <select name="status" id="status" class="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                <option value="Processing" <%= order.status === 'Processing' ? 'selected' : '' %>>Processing</option>
+                <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+            </select>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cập Nhật</button>
+        </form>
+    </div>
+</div>
+<%- endblock -%>

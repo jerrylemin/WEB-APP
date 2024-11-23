@@ -5,6 +5,12 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { ensureAdmin } = require('../middleware/adminMiddleware');
 
+// Đặt layout cho tất cả các route admin
+router.use((req, res, next) => {
+    res.locals.layout = 'admin/layout'; // Sử dụng 'admin/layout.ejs'
+    next();
+});
+
 // Dashboard Admin
 router.get('/dashboard', ensureAdmin, adminController.renderDashboard);
 
