@@ -162,7 +162,7 @@ exports.listOrders = async (req, res) => {
     try {
         const orders = await Order.find()
             .populate('user')
-            .populate('cart.items.productId')
+            .populate('cart.items.product')
             .lean();
 
         // Tính toán totalPrice nếu chưa tồn tại
