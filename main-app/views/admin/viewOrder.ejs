@@ -34,7 +34,7 @@
             <h2 class="text-xl font-semibold mt-4">Sản Phẩm:</h2>
             <ul>
                 <% order.cart.items.forEach(item => { %>
-                    <li><%= item.product.name %> - <%= item.quantity %> x <%= item.product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></li>
+                    <li><%= item.productId.name %> - <%= item.quantity %> x <%= item.productId.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></li>
                 <% }) %>
             </ul>
             <form action="/admin/orders/update/<%= order._id %>" method="POST" class="mt-4">

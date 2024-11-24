@@ -21,7 +21,7 @@ exports.viewOrder = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id)
             .populate('user')
-            .populate('cart.items.product')
+            .populate('cart.items.productId')
             .lean();
 
         if (!order) {
@@ -113,7 +113,7 @@ exports.getUserOrders = async (req, res) => {
 // Hiển thị danh sách đơn hàng cho admin
 exports.getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user').populate('cart.items.product').lean();
+        const orders = await Order.find().populate('user').populate('cart.items.productId').lean();
         res.render('admin/orders', { orders, title: 'Quản Lý Đơn Hàng' });
     } catch (err) {
         console.log(err);

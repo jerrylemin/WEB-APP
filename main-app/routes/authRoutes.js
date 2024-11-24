@@ -14,11 +14,25 @@ router.get('/register', authController.renderRegister);
 router.post('/register', authController.register);
 
 // Xử lý đăng nhập
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/products',
-    failureRedirect: '/login',
-    failureFlash: true
-}));
+// Sử dụng custom callback cho đăng nhập
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) { return next(err); }
+        if (!user) {
+            req.flash('error_msg', info.message || 'Đăng nhập không thành công');
+            return res.redirect('/login');
+        }
+        req.logIn(user, (err) => {
+            if (err) { return next(err); }
+            // Kiểm tra vai trò của người dùng
+            if (user.isAdmin) {
+                return res.redirect('/admin/dashboard');
+            } else {
+                return res.redirect('/products');
+            }
+        });
+    })(req, res, next);
+});
 
 // Đăng xuất
 router.get('/logout', authController.logout);

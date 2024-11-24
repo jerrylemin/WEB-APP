@@ -162,7 +162,7 @@ exports.listOrders = async (req, res) => {
     try {
         const orders = await Order.find()
             .populate('user')
-            .populate('cart.items.product')
+            .populate('cart.items.productId')
             .lean();
 
         // Tính toán totalPrice nếu chưa tồn tại
@@ -189,7 +189,7 @@ exports.listOrders = async (req, res) => {
 
 exports.viewOrder = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate('user').populate('products.product').lean();
+        const order = await Order.findById(req.params.id).populate('user').populate('cart.items.productId').lean();
         if (!order) {
             req.flash('error_msg', 'Đơn hàng không tồn tại');
             return res.redirect('/admin/orders');
