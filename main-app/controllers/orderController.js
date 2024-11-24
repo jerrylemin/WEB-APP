@@ -4,6 +4,27 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken'); // Thêm dòng này để sử dụng jwt
 const Order = require('../models/orderModel');
 const Cart = require('../models/cartModel');
+const User = require('../models/userModel');
+
+exports.viewOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id)
+            .populate('user')
+            .populate('cart.items.product')
+            .lean();
+
+        if (!order) {
+            req.flash('error_msg', 'Đơn hàng không tồn tại');
+            return res.redirect('/admin/orders');
+        }
+
+        res.render('admin/viewOrder', { order, title: 'Chi Tiết Đơn Hàng' });
+    } catch (err) {
+        console.log(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy chi tiết đơn hàng');
+        res.redirect('/admin/orders');
+    }
+};
 
 exports.createOrder = async (req, res) => {
     try {
@@ -99,5 +120,16 @@ exports.updateOrderStatus = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.redirect('/admin/orders');
+    }
+};
+
+exports.listOrders = async (req, res) => {
+    try {
+        const orders = await Order.find().populate('user').lean();
+        res.render('admin/orders', { orders, title: 'Quản Lý Đơn Hàng' });
+    } catch (err) {
+        console.log(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách đơn hàng');
+        res.redirect('/admin/dashboard');
     }
 };

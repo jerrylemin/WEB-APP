@@ -14,7 +14,15 @@ router.get('/', ensureAuthenticated, orderController.getUserOrders);
 // Hiển thị tất cả đơn hàng cho admin
 router.get('/admin', isAdmin, orderController.getAllOrders);
 
-// Cập nhật trạng thái đơn hàng
-router.post('/admin/update/:id', isAdmin, orderController.updateOrderStatus);
+router.get('/admin/orders', orderController.listOrders);
+
+// Route để xem chi tiết đơn hàng
+router.get('/admin/orders/view/:id', orderController.viewOrder);
+
+// Route để cập nhật trạng thái đơn hàng
+router.post('/admin/orders/update/:id', orderController.updateOrderStatus);
+
+// // Cập nhật trạng thái đơn hàng
+// router.post('/admin/update/:id', isAdmin, orderController.updateOrderStatus);
 
 module.exports = router;

@@ -40,16 +40,17 @@ exports.getProductDetails = async (req, res) => {
 exports.getProductsAdmin = async (req, res) => {
     try {
         const products = await Product.find();
-        res.render('admin/products', { products });
+        res.render('admin/products', { products, title: 'Quản Lý Sản Phẩm' });
     } catch (err) {
         console.log(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');
         res.redirect('/admin');
     }
 };
 
 // Hiển thị form thêm sản phẩm
-exports.addProductForm = (req, res) => {
-    res.render('admin/addProduct');
+exports.addProductForm = async (req, res) => {
+    res.render('admin/addProduct', { title: 'Thêm Sản Phẩm Mới' });
 };
 
 // Xử lý thêm sản phẩm
@@ -62,7 +63,7 @@ exports.addProduct = async (req, res) => {
     }
 
     if (errors.length > 0) {
-        res.render('admin/addProduct', { errors, name, description, price, image });
+        res.render('admin/addProduct', { errors, name, description, price, image, title: 'Thêm Sản Phẩm Mới' });
     } else {
         const newProduct = new Product({ name, description, price, image });
         try {
@@ -71,6 +72,7 @@ exports.addProduct = async (req, res) => {
             res.redirect('/admin/products');
         } catch (err) {
             console.log(err);
+            req.flash('error_msg', 'Đã xảy ra lỗi khi thêm sản phẩm');
             res.redirect('/admin/products');
         }
     }

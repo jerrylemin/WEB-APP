@@ -4,30 +4,35 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 
 // Thêm sản phẩm vào giỏ hàng
-exports.addToCart = (req, res) => {
-    const productId = req.params.id;
-    const quantity = parseInt(req.body.quantity) || 1;
-
-    // Giả sử bạn có function để lấy sản phẩm từ DB
-    Product.findById(productId, (err, product) => {
-        if (err || !product) {
-            req.session.error_msg = 'Sản phẩm không tồn tại.';
+exports.addToCart = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            req.flash('error_msg', 'Sản phẩm không tồn tại');
             return res.redirect('/products');
         }
 
-        let cart = req.session.cart;
-        const existingItemIndex = cart.items.findIndex(item => item.product._id.toString() === productId);
+        let cart = req.session.cart || {};
 
-        if (existingItemIndex !== -1) {
-            cart.items[existingItemIndex].quantity += quantity;
+        if (cart[product.id]) {
+            cart[product.id].quantity += 1;
         } else {
-            cart.items.push({ product, quantity });
+            cart[product.id] = {
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1
+            };
         }
 
-        cart.totalPrice += product.price * quantity;
-        req.session.success_msg = 'Đã thêm sản phẩm vào giỏ hàng.';
-        res.redirect('/cart');
-    });
+        req.session.cart = cart;
+        req.flash('success_msg', 'Thêm sản phẩm vào giỏ hàng thành công');
+        res.redirect('/products');
+    } catch (err) {
+        console.error(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng');
+        res.redirect('/products');
+    }
 };
 
 // Hiển thị giỏ hàng
