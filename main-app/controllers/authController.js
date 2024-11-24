@@ -10,8 +10,9 @@ const axios = require('axios'); // Để gửi yêu cầu tới hệ thống ph�
 
 // Hiển thị form quên mật khẩu
 exports.getForgotPassword = (req, res) => {
-    res.render('forgotPassword');
+    res.render('forgotPassword', { title: 'Quên Mật Khẩu' });
 };
+
 
 // Xử lý quên mật khẩu
 exports.postForgotPassword = (req, res) => {
@@ -70,7 +71,7 @@ exports.getResetPassword = (req, res) => {
                 req.flash('error_msg', 'Token không hợp lệ hoặc đã hết hạn');
                 return res.redirect('/forgot-password');
             }
-            res.render('resetPassword', { userId: user._id.toString(), passwordToken: token });
+            res.render('resetPassword', { userId: user._id.toString(), passwordToken: token, title: 'Đặt Lại Mật Khẩu' });
         })
         .catch(err => console.log(err));
 };
@@ -146,9 +147,11 @@ exports.renderRegister = (req, res) => {
         name: '',
         email: '',
         password: '',
-        password2: ''
+        password2: '',
+        title: 'Đăng Ký'
     });
 };
+
 
 // Hàm xử lý đăng ký người dùng
 exports.register = async (req, res) => {
@@ -231,8 +234,9 @@ exports.register = async (req, res) => {
 };
 
 exports.renderLogin = (req, res) => {
-    res.render('login');
+    res.render('login', { title: 'Đăng Nhập' });
 };
+
 
 // Đăng nhập người dùng
 exports.login = (req, res, next) => {

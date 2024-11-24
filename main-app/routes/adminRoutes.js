@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { ensureAdmin } = require('../middleware/adminMiddleware');
-
+const { ensureAuthenticated, isAdmin } = require('../utils/authMiddleware');
 // Đặt layout cho tất cả các route admin
 router.use((req, res, next) => {
     res.locals.layout = 'admin/layout'; // Sử dụng 'admin/layout.ejs'
@@ -32,7 +32,11 @@ router.post('/products/delete/:id', ensureAdmin, adminController.deleteProduct);
 router.get('/orders', ensureAdmin, adminController.listOrders);
 router.get('/orders/view/:id', ensureAdmin, adminController.viewOrder);
 router.post('/orders/update/:id', ensureAdmin, adminController.updateOrderStatus);
+// Quản lý đơn hàng chờ xác nhận
+router.get('/orders/pending', ensureAuthenticated, isAdmin, adminController.listPendingOrders);
 
+// Xác nhận đơn hàng
+router.post('/orders/confirm/:id', ensureAuthenticated, isAdmin, adminController.confirmOrder);
 // Thêm vào routes/adminRoutes.js
 
 // Quản Lý Danh Mục
@@ -50,5 +54,7 @@ router.post('/posts/add', ensureAdmin, adminController.addPost);
 router.get('/posts/edit/:id', ensureAdmin, adminController.editPostForm);
 router.post('/posts/edit/:id', ensureAdmin, adminController.updatePost);
 router.post('/posts/delete/:id', ensureAdmin, adminController.deletePost);
+
+
 
 module.exports = router;

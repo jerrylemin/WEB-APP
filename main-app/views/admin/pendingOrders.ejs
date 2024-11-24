@@ -1,0 +1,35 @@
+<!-- views/admin/pendingOrders.ejs -->
+
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Đơn Hàng Chờ Xác Nhận</h1>
+    <% if (orders.length > 0) { %>
+        <table class="min-w-full bg-white">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b">Mã Đơn Hàng</th>
+                    <th class="py-2 px-4 border-b">Người Đặt</th>
+                    <th class="py-2 px-4 border-b">Tổng Tiền</th>
+                    <th class="py-2 px-4 border-b">Ngày Đặt</th>
+                    <th class="py-2 px-4 border-b">Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td class="py-2 px-4 border-b"><%= order._id %></td>
+                        <td class="py-2 px-4 border-b"><%= order.user.name %> (<%= order.user.email %>)</td>
+                        <td class="py-2 px-4 border-b"><%= order.cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                        <td class="py-2 px-4 border-b"><%= new Date(order.createdAt).toLocaleDateString('vi-VN') %></td>
+                        <td class="py-2 px-4 border-b">
+                            <form action="/admin/orders/confirm/<%= order._id %>" method="POST">
+                                <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Xác Nhận</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Không có đơn hàng chờ xác nhận.</p>
+    <% } %>
+</main>

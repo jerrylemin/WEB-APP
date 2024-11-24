@@ -22,7 +22,10 @@ const userSchema = new mongoose.Schema({
     },
     resetToken: String,
     resetTokenExpiration: Date,
-    // Thêm các trường khác nếu cần
+    balance: {
+        type: Number,
+        default: 0
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

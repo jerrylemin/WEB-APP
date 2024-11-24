@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
 const { isAdmin } = require('../utils/authMiddleware');
+const { ensureAuthenticated } = require('../utils/authMiddleware');
 
 // Route để hiển thị danh sách sản phẩm (Client)
 router.get('/', productController.getProducts);
@@ -28,4 +29,6 @@ router.post('/admin/edit/:id', productController.editProduct);
 // Route quản trị để xóa sản phẩm
 router.post('/admin/delete/:id', productController.deleteProduct);
 
+// Thêm đánh giá sản phẩm
+router.post('/:id/review', ensureAuthenticated, productController.addReview);
 module.exports = router;

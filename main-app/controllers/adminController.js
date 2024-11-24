@@ -50,7 +50,7 @@ exports.editUserForm = async (req, res) => {
             req.flash('error_msg', 'Người dùng không tồn tại');
             return res.redirect('/admin/users');
         }
-        res.render('admin/editUser', { user });
+        res.render('admin/editUser', { user, title: 'Chỉnh Sửa Người Dùng' });
     } catch (err) {
         console.error('Lỗi khi lấy thông tin người dùng:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy thông tin người dùng');
@@ -98,8 +98,9 @@ exports.listProducts = async (req, res) => {
 
 
 exports.addProductForm = (req, res) => {
-    res.render('admin/addProduct');
+    res.render('admin/addProduct', { title: 'Thêm Sản Phẩm Mới' });
 };
+
 
 exports.addProduct = async (req, res) => {
     try {
@@ -122,13 +123,14 @@ exports.editProductForm = async (req, res) => {
             req.flash('error_msg', 'Sản phẩm không tồn tại');
             return res.redirect('/admin/products');
         }
-        res.render('admin/editProduct', { product });
+        res.render('admin/editProduct', { product, title: 'Chỉnh Sửa Sản Phẩm' });
     } catch (err) {
         console.error('Lỗi khi lấy thông tin sản phẩm:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy thông tin sản phẩm');
         res.redirect('/admin/products');
     }
 };
+
 
 exports.updateProduct = async (req, res) => {
     try {
@@ -158,12 +160,29 @@ exports.deleteProduct = async (req, res) => {
 // Quản Lý Đơn Hàng
 exports.listOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user').lean();
+        const orders = await Order.find()
+            .populate('user')
+            .populate('cart.items.productId')
+            .lean();
+
+        // Tính toán totalPrice nếu chưa tồn tại
+        orders.forEach(order => {
+            if (!order.cart.totalPrice) {
+                order.totalPrice = order.cart.items.reduce(
+                    (acc, item) => acc + item.price * item.quantity,
+                    0
+                );
+            } else {
+                order.totalPrice = order.cart.totalPrice; // Nếu đã có, sử dụng trực tiếp
+            }
+        });
+
+        console.log('Orders with totalPrice:', orders);
         res.render('admin/orders', { orders, title: 'Quản Lý Đơn Hàng' });
     } catch (err) {
-        console.error('Lỗi khi lấy danh sách đơn hàng:', err);
+        console.error('Error fetching orders for admin:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách đơn hàng');
-        res.redirect('/admin/dashboard');
+        res.redirect('/admin');
     }
 };
 
@@ -212,8 +231,9 @@ exports.listCategories = async (req, res) => {
 
 
 exports.addCategoryForm = (req, res) => {
-    res.render('admin/addCategory');
+    res.render('admin/addCategory', { title: 'Thêm Danh Mục Mới' });
 };
+
 
 exports.addCategory = async (req, res) => {
     try {
@@ -241,13 +261,14 @@ exports.editCategoryForm = async (req, res) => {
             req.flash('error_msg', 'Danh mục không tồn tại');
             return res.redirect('/admin/categories');
         }
-        res.render('admin/editCategory', { category });
+        res.render('admin/editCategory', { category, title: 'Chỉnh Sửa Danh Mục' });
     } catch (err) {
         console.error('Lỗi khi lấy thông tin danh mục:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy thông tin danh mục');
         res.redirect('/admin/categories');
     }
 };
+
 
 exports.updateCategory = async (req, res) => {
     try {
@@ -290,8 +311,9 @@ exports.listPosts = async (req, res) => {
 
 
 exports.addPostForm = (req, res) => {
-    res.render('admin/addPost');
+    res.render('admin/addPost', { title: 'Thêm Bài Viết Mới' });
 };
+
 
 exports.addPost = async (req, res) => {
     try {
@@ -314,13 +336,14 @@ exports.editPostForm = async (req, res) => {
             req.flash('error_msg', 'Bài viết không tồn tại');
             return res.redirect('/admin/posts');
         }
-        res.render('admin/editPost', { post });
+        res.render('admin/editPost', { post, title: 'Chỉnh Sửa Bài Viết' });
     } catch (err) {
         console.error('Lỗi khi lấy thông tin bài viết:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy thông tin bài viết');
         res.redirect('/admin/posts');
     }
 };
+
 
 exports.updatePost = async (req, res) => {
     try {
@@ -344,5 +367,30 @@ exports.deletePost = async (req, res) => {
         console.error('Lỗi khi xóa bài viết:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi xóa bài viết');
         res.redirect('/admin/posts');
+    }
+};
+
+// Hiển thị danh sách đơn hàng chờ xác nhận
+exports.listPendingOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ status: 'Pending' }).populate('user').lean();
+        res.render('admin/pendingOrders', { orders, title: 'Đơn Hàng Chờ Xác Nhận' });
+    } catch (err) {
+        console.error('Error fetching pending orders:', err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách đơn hàng chờ xác nhận');
+        res.redirect('/admin');
+    }
+};
+
+// Xác nhận đơn hàng
+exports.confirmOrder = async (req, res) => {
+    try {
+        await Order.findByIdAndUpdate(req.params.id, { status: 'Confirmed' });
+        req.flash('success_msg', 'Đơn hàng đã được xác nhận');
+        res.redirect('/admin/orders/pending');
+    } catch (err) {
+        console.error('Error confirming order:', err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi xác nhận đơn hàng');
+        res.redirect('/admin/orders/pending');
     }
 };

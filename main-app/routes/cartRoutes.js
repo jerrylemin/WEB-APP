@@ -24,4 +24,10 @@ router.post('/update', ensureAuthenticated, cartController.updateCart);
 // Xóa sản phẩm khỏi giỏ hàng
 router.get('/remove/:id', ensureAuthenticated, cartController.removeFromCart);
 
+// Hiển thị trang thanh toán
+router.get('/checkout', ensureAuthenticated, cartController.getCheckout);
+
+// Xử lý thanh toán
+router.post('/checkout', ensureAuthenticated, cartController.postCheckout);
+
 module.exports = router;

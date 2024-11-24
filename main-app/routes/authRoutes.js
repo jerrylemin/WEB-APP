@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
-const axios = require('axios');
+const passport = require('passport');
 // Trang đăng nhập
 router.get('/login', authController.renderLogin);
 
@@ -14,7 +14,11 @@ router.get('/register', authController.renderRegister);
 router.post('/register', authController.register);
 
 // Xử lý đăng nhập
-router.post('/login', authController.login);
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/products',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
 
 // Đăng xuất
 router.get('/logout', authController.logout);

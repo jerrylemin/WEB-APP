@@ -1,0 +1,31 @@
+<!-- views/client/orderDetails.ejs -->
+
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Chi Tiết Đơn Hàng</h1>
+    <p><strong>Mã Đơn Hàng:</strong> <%= order._id %></p>
+    <p><strong>Ngày Đặt:</strong> <%= new Date(order.createdAt).toLocaleDateString('vi-VN') %></p>
+    <p><strong>Trạng Thái:</strong> <%= order.status %></p>
+    <h2 class="text-xl font-semibold mt-4">Sản Phẩm</h2>
+    <table class="min-w-full bg-white">
+        <thead>
+            <tr>
+                <th class="py-2 px-4 border-b">Tên Sản Phẩm</th>
+                <th class="py-2 px-4 border-b">Giá</th>
+                <th class="py-2 px-4 border-b">Số Lượng</th>
+                <th class="py-2 px-4 border-b">Thành Tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% order.cart.items.forEach(item => { %>
+                <tr>
+                    <td class="py-2 px-4 border-b"><%= item.productId.name %></td> <!-- Sử dụng productId -->
+                    <td class="py-2 px-4 border-b"><%= item.productId.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                    <td class="py-2 px-4 border-b"><%= item.quantity %></td>
+                    <td class="py-2 px-4 border-b"><%= (item.productId.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <p class="mt-4"><strong>Tổng Tiền:</strong> <%= order.cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+    <a href="/orders" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4 inline-block">Quay Lại Đơn Hàng</a>
+</main>

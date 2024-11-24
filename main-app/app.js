@@ -11,6 +11,9 @@ const methodOverride = require('method-override');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 
+// Import Passport Config
+require('./config/passport')(passport); // Đảm bảo bạn có file config/passport.js
+
 // Import routes
 const homeRoutes = require('./routes/homeRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -56,6 +59,7 @@ app.use(flash());
 
 // Global variables for templates
 app.use((req, res, next) => {
+    res.locals.title = 'Your Default Title'; // Đặt tiêu đề mặc định
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
@@ -73,7 +77,7 @@ app.use('/products', productRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/admin', adminRoutes); // Route quản trị
-app.use('/users', userRoutes);
+app.use('/', userRoutes);
 
 // Error handling routes
 const errorController = require('./controllers/errorController');
@@ -85,4 +89,5 @@ app.use(errorController.get500);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Main-App Server started on port ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
 });

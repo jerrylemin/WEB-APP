@@ -1,0 +1,15 @@
+<!-- views/client/checkout.ejs -->
+
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Xác Nhận Thanh Toán</h1>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-2">Thông Tin Thanh Toán</h2>
+        <p>Số dư hiện tại: <strong><%= user.balance.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></strong></p>
+        <p>Tổng tiền: <strong><%= cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></strong></p>
+        <p>Số dư sau thanh toán: <strong><%= (user.balance - cart.totalPrice).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></strong></p>
+        <form action="/orders/create" method="POST" class="mt-4">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Xác Nhận Thanh Toán</button>
+            <a href="/cart" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">Hủy</a>
+        </form>
+    </div>
+</main>

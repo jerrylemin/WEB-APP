@@ -1,11 +1,22 @@
 // controllers/orderController.js
 
-const axios = require('axios');
-const jwt = require('jsonwebtoken'); // Thêm dòng này để sử dụng jwt
+// const axios = require('axios');
+// const jwt = require('jsonwebtoken'); // Thêm dòng này để sử dụng jwt
 const Order = require('../models/orderModel');
-const Cart = require('../models/cartModel');
+// const Cart = require('../models/cartModel');
 const User = require('../models/userModel');
+const Product = require('../models/productModel');
+const mongoose = require('mongoose');
+const { sendOrderConfirmationToAdmin } = require('../utils/notification');
 
+exports.getCheckout = (req, res) => {
+    const cart = req.session.cart;
+    if (!cart || cart.items.length === 0) {
+        req.flash('error_msg', 'Giỏ hàng của bạn đang trống');
+        return res.redirect('/cart');
+    }
+    res.render('client/checkout', { cart, user: req.user, title: 'Xác Nhận Thanh Toán' });
+};
 exports.viewOrder = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id)
@@ -19,6 +30,7 @@ exports.viewOrder = async (req, res) => {
         }
 
         res.render('admin/viewOrder', { order, title: 'Chi Tiết Đơn Hàng' });
+
     } catch (err) {
         console.log(err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy chi tiết đơn hàng');
@@ -28,62 +40,58 @@ exports.viewOrder = async (req, res) => {
 
 exports.createOrder = async (req, res) => {
     try {
-        // Lấy thông tin giỏ hàng của người dùng
-        const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
-
+        console.log('Received POST /orders/create request');
+        const cart = req.session.cart;
         if (!cart || cart.items.length === 0) {
             req.flash('error_msg', 'Giỏ hàng của bạn đang trống');
+            return res.redirect('/cart');
+        }
+
+        // Kiểm tra số dư của người dùng
+        const user = await User.findById(req.user._id);
+        if (user.balance < cart.totalPrice) {
+            req.flash('error_msg', 'Số dư không đủ để thanh toán');
             return res.redirect('/cart');
         }
 
         // Tạo đơn hàng mới
         const newOrder = new Order({
             user: req.user._id,
-            cart: {
-                items: cart.items,
-                totalPrice: cart.totalPrice
-            },
-            status: 'Pending'
+            cart: cart,
+            status: 'Pending' // Trạng thái chờ xác nhận
         });
-
         await newOrder.save();
+        console.log('Order created:', newOrder);
 
-        // Thực hiện thanh toán qua hệ thống phụ
-        try {
-            // Tạo JWT token để xác thực với hệ thống phụ
-            const token = jwt.sign({ id: req.user.id }, 'secretKey'); // Lưu ý: 'secretKey' nên được lưu trong biến môi trường
+        // Trừ số dư của người dùng
+        user.balance -= cart.totalPrice;
+        await user.save();
+        console.log('User balance updated:', user.balance);
 
-            // Gửi yêu cầu tới hệ thống phụ
-            const response = await axios.post('http://localhost:6000/transactions/transfer', {
-                fromUserId: req.user.id,
-                amount: cart.totalPrice
-            }, {
-                headers: {
-                    'Authorization': token
-                }
-            });
-
-            if (response.data.error) {
-                req.flash('error_msg', 'Thanh toán thất bại');
-                return res.redirect('/cart');
+        // Trừ số lượng trong kho
+        for (let item of cart.items) {
+            const product = await Product.findById(item.productId);
+            if (product) {
+                product.stock -= item.quantity;
+                if (product.stock < 0) product.stock = 0; // Đảm bảo stock không âm
+                await product.save();
+                console.log(`Product stock updated for ${product.name}: ${product.stock}`);
             }
-
-            // Cập nhật trạng thái đơn hàng sau khi thanh toán thành công
-            newOrder.status = 'Paid';
-            await newOrder.save();
-
-            // Xóa giỏ hàng của người dùng
-            await Cart.findOneAndDelete({ user: req.user._id });
-
-            req.flash('success_msg', 'Đặt hàng thành công');
-            res.redirect('/orders');
-        } catch (err) {
-            console.log('Lỗi trong quá trình thanh toán:', err);
-            req.flash('error_msg', 'Lỗi trong quá trình thanh toán');
-            res.redirect('/cart');
         }
+
+        // Gửi yêu cầu đến admin (có thể gửi email hoặc thông báo)
+        await sendOrderConfirmationToAdmin(newOrder);
+        console.log('Order confirmation sent to admin');
+
+        // Xóa giỏ hàng
+        req.session.cart = { items: [], totalPrice: 0 };
+        console.log('Cart cleared');
+
+        req.flash('success_msg', 'Đặt hàng thành công. Đơn hàng đang chờ xác nhận từ admin.');
+        res.redirect('/orders');
     } catch (err) {
-        console.log('Lỗi khi tạo đơn hàng:', err);
+        console.error('Error in createOrder:', err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi thanh toán');
         res.redirect('/cart');
     }
 };
@@ -91,10 +99,13 @@ exports.createOrder = async (req, res) => {
 // Hiển thị danh sách đơn hàng của người dùng
 exports.getUserOrders = async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user._id }).populate('cart.items.product');
-        res.render('client/orders', { orders });
+        const orders = await Order.find({ user: req.user._id })
+            .populate('cart.items.productId') // Sửa từ 'product' thành 'productId'
+            .lean();
+        res.render('client/orders', { orders, title: 'Đơn Hàng Của Bạn' });
     } catch (err) {
-        console.log(err);
+        console.log('Error fetching user orders:', err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách đơn hàng');
         res.redirect('/');
     }
 };
@@ -102,10 +113,11 @@ exports.getUserOrders = async (req, res) => {
 // Hiển thị danh sách đơn hàng cho admin
 exports.getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user').populate('cart.items.product');
-        res.render('admin/orders', { orders });
+        const orders = await Order.find().populate('user').populate('cart.items.product').lean();
+        res.render('admin/orders', { orders, title: 'Quản Lý Đơn Hàng' });
     } catch (err) {
         console.log(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách đơn hàng');
         res.redirect('/admin');
     }
 };
@@ -119,6 +131,7 @@ exports.updateOrderStatus = async (req, res) => {
         res.redirect('/admin/orders');
     } catch (err) {
         console.log(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi cập nhật trạng thái đơn hàng');
         res.redirect('/admin/orders');
     }
 };
@@ -133,3 +146,34 @@ exports.listOrders = async (req, res) => {
         res.redirect('/admin/dashboard');
     }
 };
+
+exports.viewOrderDetails = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+
+        // Kiểm tra xem orderId có phải là một ObjectId hợp lệ không
+        if (!mongoose.Types.ObjectId.isValid(orderId)) {
+            req.flash('error_msg', 'Đơn hàng không tồn tại');
+            return res.redirect('/orders');
+        }
+
+        const order = await Order.findOne({ _id: orderId, user: req.user._id })
+            .populate('cart.items.productId') // Sửa từ 'product' thành 'productId'
+            .lean();
+
+        if (!order) {
+            req.flash('error_msg', 'Đơn hàng không tồn tại');
+            return res.redirect('/orders');
+        }
+
+        res.render('client/orderDetails', { order, title: 'Chi Tiết Đơn Hàng' });
+    } catch (err) {
+        console.log(err);
+        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy chi tiết đơn hàng');
+        res.redirect('/orders');
+    }
+};
+
+
+// Kiểm tra xem các hàm khác đã được định nghĩa và export đúng cách
+console.log('Order Controller loaded successfully');
