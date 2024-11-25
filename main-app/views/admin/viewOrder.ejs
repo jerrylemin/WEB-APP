@@ -1,60 +1,34 @@
 <!-- views/admin/viewOrder.ejs -->
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title><%= title %></title>
-    <link href="/css/main.css" rel="stylesheet">
-</head>
-<body>
-    <header class="bg-gray-800 text-white p-4">
-        <nav class="container mx-auto flex justify-between items-center">
-            <div>
-                <a href="/admin/dashboard" class="text-2xl font-bold">Admin Dashboard</a>
-            </div>
-            <ul class="flex space-x-4">
-                <li><a href="/admin/users" class="hover:underline">Người Dùng</a></li>
-                <li><a href="/admin/products" class="hover:underline">Sản Phẩm</a></li>
-                <li><a href="/admin/orders" class="hover:underline">Đơn Hàng</a></li>
-                <li><a href="/admin/posts" class="hover:underline">Bài Viết</a></li>
-                <li><a href="/admin/categories" class="hover:underline">Danh Mục</a></li>
-                <li><a href="/logout" class="hover:underline">Đăng Xuất</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Chi Tiết Đơn Hàng</h1>
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <p><strong>ID Đơn Hàng:</strong> <%= order._id %></p>
-            <p><strong>Người Dùng:</strong> <%= order.user.name %> (<%= order.user.email %>)</p>
-            <p><strong>Tổng Giá:</strong> <%= order.cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
-            <p><strong>Trạng Thái:</strong> <%= order.status %></p>
-            <h2 class="text-xl font-semibold mt-4">Sản Phẩm:</h2>
-            <ul>
-                <% order.cart.items.forEach(item => { %>
-                    <li><%= item.productId.name %> - <%= item.quantity %> x <%= item.productId.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></li>
-                <% }) %>
-            </ul>
-            <form action="/admin/orders/update/<%= order._id %>" method="POST" class="mt-4">
-                <label for="status" class="block text-gray-700">Cập Nhật Trạng Thái:</label>
-                <select name="status" id="status" class="border rounded px-2 py-1">
-                    <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
-                    <option value="Paid" <%= order.status === 'Paid' ? 'selected' : '' %>>Paid</option>
-                    <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
-                    <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
-                    <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
-                </select>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded ml-2">Cập Nhật</button>
-            </form>
-        </div>
-    </main>
-
-    <footer class="bg-gray-800 text-white p-4 mt-8">
-        <div class="container mx-auto text-center">
-            <p>&copy; 2024 Your Company. All rights reserved.</p>
-        </div>
-    </footer>
-</body>
-</html>
+<main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">Chi Tiết Đơn Hàng</h1>
+    <p><strong>Mã Đơn Hàng:</strong> <%= order._id %></p>
+    <p><strong>Người Đặt:</strong> <%= order.user.name %> (<%= order.user.email %>)</p>
+    <p><strong>Ngày Đặt:</strong> <%= new Date(order.createdAt).toLocaleDateString('vi-VN') %></p>
+    <p><strong>Trạng Thái:</strong> <%= order.status %></p>
+    
+    <h2 class="text-xl font-semibold mt-4">Sản Phẩm</h2>
+    <ul>
+        <% order.cart.items.forEach(item => { %>
+            <li>
+                <%= item.productId.name %> - 
+                <%= item.quantity %> x 
+                <%= item.productId.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>
+            </li>
+        <% }) %>
+    </ul>
+    
+    <p class="mt-4"><strong>Tổng Tiền:</strong> <%= order.cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
+    
+    <form action="/admin/orders/update/<%= order._id %>" method="POST" class="mt-4">
+        <label for="status" class="block text-sm font-medium text-gray-700">Trạng Thái Đơn Hàng:</label>
+        <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+            <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+            <option value="Confirmed" <%= order.status === 'Confirmed' ? 'selected' : '' %>>Confirmed</option>
+            <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+            <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+            <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+        <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Cập Nhật Trạng Thái</button>
+    </form>
+</main>
