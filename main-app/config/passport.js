@@ -43,32 +43,3 @@ module.exports = function(passport) {
         }
     });
 };
-
-// Google Auth
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-router.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
-        res.redirect('/'); // Redirect sau khi đăng nhập thành công
-    }
-);
-
-// Facebook Auth
-router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }));
-
-router.get('/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    (req, res) => {
-        res.redirect('/'); // Redirect sau khi đăng nhập thành công
-    }
-);
-
-// Logout
-router.get('/logout', (req, res) => {
-    req.logout(() => {
-        res.redirect('/');
-    });
-});
-
-module.exports = router;
