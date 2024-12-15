@@ -34,13 +34,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'brand-blue': '#1E40AF',
-        'brand-green': '#16A34A',
-        // Thêm các màu sắc tùy chỉnh khác
+        'primary-green': '#518C27',
+        'secondary-green': '#5C8C46',
+        'tertiary-green': '#9ABF80',
+        'yellow': '#F29F05',
+        'red': '#F23A29'
       },
       fontFamily: {
-        sans: ['Roboto', 'sans-serif'],
-        // Thêm các font chữ tùy chỉnh khác
+        title: ['Neonderthaw', 'serif'],
+        serif: ['Be Vietnam Pro', 'serif'],
       },
     },
   },
