@@ -1,2 +1,4 @@
 .dist/
 main-app/logs/
+main-app/node_modules
+payment-system/node_modules
