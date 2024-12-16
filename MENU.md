@@ -54,47 +54,13 @@
 
 ## Thức ăn nhẹ
 
-### Đồ chiên giòn
-- Khoai tây chiên: **30,000 VNĐ**
-- Phô mai que: **35,000 VNĐ**
-- Gà popcorn: **40,000 VNĐ**
-- Cá viên chiên: **35,000 VNĐ**
-- Xúc xích chiên: **30,000 VNĐ**
-
-### Đồ ăn vặt (Snack)
-- Bánh tráng trộn: **25,000 VNĐ**
-- Bánh tráng nướng: **30,000 VNĐ**
-- Khô gà lá chanh: **40,000 VNĐ**
-- Khô bò cay: **40,000 VNĐ**
-- Rong biển sấy: **20,000 VNĐ**
-
-### Bánh ngọt và bánh mặn
+### Bánh ngọt
 - Bánh crepe sầu riêng: **35,000 VNĐ**
 - Bánh su kem: **25,000 VNĐ**
 - Bánh muffin (socola, việt quất): **30,000 VNĐ**
 - Bánh tart trứng: **30,000 VNĐ**
 - Bánh sandwich thịt nguội: **40,000 VNĐ**
-
-### Xiên que
-- Xiên hồ lô: **20,000 VNĐ**
-- Xiên gà xiên nướng: **30,000 VNĐ**
-- Xiên tôm viên: **35,000 VNĐ**
-- Xiên phô mai bọc cá: **35,000 VNĐ**
-
-### Salad và đồ ăn nhẹ tốt cho sức khỏe
-- Salad trộn gà: **50,000 VNĐ**
-- Salad rau củ quả: **40,000 VNĐ**
-- Trái cây tươi (cam, táo, dâu): **30,000 VNĐ**
-- Hạt điều rang muối: **25,000 VNĐ**
-
-### Đồ ngọt (Desserts)
 - Chè khúc bạch: **30,000 VNĐ**
 - Pudding các vị (trứng, socola, matcha): **25,000 VNĐ**
 - Thạch dừa rau câu: **20,000 VNĐ**
 - Bánh flan caramel: **25,000 VNĐ**
-
-### Đồ ăn theo mùa
-- Bắp rang bơ (mùa đông): **20,000 VNĐ**
-- Hạt dẻ nướng (mùa đông): **30,000 VNĐ**
-- Xoài lắc (mùa hè): **25,000 VNĐ**
-- Chè trái cây (mùa xuân): **30,000 VNĐ**
