@@ -1,6 +1,6 @@
 <!-- views/client/products.ejs -->
 
-<main class="container mx-auto p-4">
+<!-- <main class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Danh Sách Sản Phẩm</h1>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <% products.forEach(product => { %>
@@ -16,5 +16,16 @@
                 </div>
             </div>
         <% }) %>
+    </div>
+</main> -->
+
+<main>
+    <div class="introduction h-[calc(100vh-158px)] relative">
+        <div class="absolute left-[50%] top-[20%] text-wrap w-[25%]">
+            <h1 class="text-red text-bigger font-bold font-title">Brewtiful xin chào!</h1> 
+            <p class="text-medium font-serif">Vui lòng lướt xuống để xem các món nước của chúng mình nhé!</p>
+        </div>
+        <img class="h-[500px] w-[500px] absolute left-[18%] top-[-10%]" src="/images/webPageResources/bg/bobacup.png" alt="Chúc bạn ngon miệng!">
+        <img class="h-[150px] w-[150px] absolute left-[55%] top-[50%] transform rotate-[30deg]" src="/images/webPageResources/decorations/curlyArrow.png" alt="Lướt xuống để xem món bạn thích!">
     </div>
 </main>

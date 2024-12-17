@@ -1,9 +1,8 @@
-<main>
-    <div class="introduction h-[calc(100vh-158px)] relative">
-        <div class="absolute left-[calc(50%)] top-[20%] text-wrap w-[25%]">
-            <h1 class="text-red text-bigger font-bold font-title">Brewtiful xin chào!</h1> 
-            <p class="text-medium font-serif">Vui lòng lướt xuống để xem các món nước của chúng mình nhé!</p>
-        </div>
-        <img class="h-[500px] w-[500px] absolute left-[18%] top-[-10%]" src="/images/webPageResources/bg/bobacup.png" alt="Chúc bạn ngon miệng!">
-    </div>
-</main>
+<!-- views/home.ejs -->
+
+<h1 class="text-3xl font-bold mb-4">Chào mừng đến với Trang Chủ</h1>
+<% if (user) { %>
+    <p class="text-lg">Xin chào, <%= user.name %>!</p>
+<% } else { %>
+    <p class="text-lg">Vui lòng <a href="/login" class="text-blue-500 underline">đăng nhập</a> hoặc <a href="/register" class="text-blue-500 underline">đăng ký</a>.</p>
+<% } %>
