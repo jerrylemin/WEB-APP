@@ -7,13 +7,13 @@ const { isAdmin } = require('../utils/authMiddleware');
 const { ensureAuthenticated } = require('../utils/authMiddleware');
 
 // Route để hiển thị danh sách sản phẩm (Client)
-router.get('/', productController.getProducts);
+router.get('/products', productController.getProducts);
 
 // Route để tìm kiếm sản phẩm
-router.get('/search', productController.searchProducts);
+router.get('/products/search', productController.searchProducts);
 
-// Route để hiển thị chi tiết sản phẩm (Client)
-router.get('/:id', productController.getProductDetails);
+// // Route để hiển thị chi tiết sản phẩm (Client)
+// router.get('/:id', productController.getProductDetails);
 
 // Route quản trị để liệt kê sản phẩm
 router.get('/admin', productController.getProductsAdmin);
