@@ -6,7 +6,7 @@ const Product = require('../models/productModel');
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find().lean();
-        res.render('client/products', { products, title: 'Danh Sách Sản Phẩm' });
+        res.render('/client/products', { products, title: 'Danh Sách Sản Phẩm' });
     } catch (err) {
         console.error('Error fetching products:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');

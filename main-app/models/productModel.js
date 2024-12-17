@@ -2,26 +2,26 @@
 
 const mongoose = require('mongoose');
 
-const ReviewSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    name: String,
-    rating: Number,
-    comment: String,
-    createdAt: { type: Date, default: Date.now }
-});
+// const ReviewSchema = new mongoose.Schema({
+//     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+//     name: String,
+//     rating: Number,
+//     comment: String,
+//     createdAt: { type: Date, default: Date.now }
+// });
 
-const ProductSchema = new mongoose.Schema({
-    // Các trường khác...
-    reviews: [ReviewSchema],
-    rating: {
-        type: Number,
-        default: 0
-    },
-    numReviews: {
-        type: Number,
-        default: 0
-    }
-});
+// const ProductSchema = new mongoose.Schema({
+//     // Các trường khác...
+//     reviews: [ReviewSchema],
+//     rating: {
+//         type: Number,
+//         default: 0
+//     },
+//     numReviews: {
+//         type: Number,
+//         default: 0
+//     }
+// });
 
 const productSchema = new mongoose.Schema({
     name: {
