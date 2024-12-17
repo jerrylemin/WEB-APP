@@ -41,7 +41,7 @@ module.exports = {
         'red': '#F23A29'
       },
       fontFamily: {
-        title: ['Neonderthaw', 'serif'],
+        title: ['Berkshire Swash', 'serif'],
         serif: ['Be Vietnam Pro', 'serif'],
       },
     },
