@@ -29,21 +29,34 @@ module.exports = {
     "./views/login.ejs",
     "./views/register.ejs",
     "./views/resetPassword.ejs",
-    "./views/admin/layout.ejs"
+    "./views/admin/layout.ejs",
+    "./views/layout.ejs"
   ],
   theme: {
     extend: {
       colors: {
-        'primary-green': '#518C27',
-        'secondary-green': '#5C8C46',
-        'tertiary-green': '#9ABF80',
+        'primaryGreen': '#518C27',
+        'secondaryGreen': '#5C8C46',
+        'tertiaryGreen': '#9ABF80',
+        'darkGreen': '#012622',
         'yellow': '#F29F05',
-        'red': '#F23A29'
+        'red': '#F23A29',
+        'cream': '#FFFDD0'
       },
       fontFamily: {
         title: ['Berkshire Swash', 'serif'],
         serif: ['Be Vietnam Pro', 'serif'],
       },
+      borderRadius: {
+        outer: '10px',
+        inner: '8px'
+      },
+      fontSize: {
+        big: '30px'
+      },
+      dropShadow: {
+        'bars': '0 4px 25px rgb(81, 140, 39, 0.25)'
+      }
     },
   },
   plugins: [

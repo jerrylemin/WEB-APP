@@ -8,7 +8,7 @@
     "build:css:prod": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/main.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "concurrently \"npm:build:css\" \"nodemon app.js\""
   },
   "keywords": [],
   "author": "",
@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
     "nodemon": "^3.1.7",
     "patch-package": "^8.0.0",
     "postcss": "^8.4.49",

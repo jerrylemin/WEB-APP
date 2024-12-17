@@ -137,6 +137,12 @@ Các gói này hỗ trợ trong quá trình phát triển nhưng không cần th
    npm install nodemailer --save-dev
    ```
 
+5. **concurrently**
+   *Công cụ chạy nhiều lệnh shell cùng lúc.*
+
+   ```bash
+   npm install concurrently --save-dev
+   ```
 ---
 
 ## **3. Các Gói Tùy Chọn Khác**
