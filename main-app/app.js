@@ -1,5 +1,3 @@
-// app.js
-
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -12,7 +10,7 @@ const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 
 // Import Passport Config
-require('./config/passport')(passport); // Đảm bảo bạn có file config/passport.js
+require('./config/passport')(passport); 
 
 // Import routes
 const homeRoutes = require('./routes/homeRoutes');
@@ -38,9 +36,9 @@ app.use(methodOverride('_method'));
 
 // Sử dụng express-ejs-layouts
 app.use(expressLayouts);
-app.set('layout', 'layout'); // Đặt layout mặc định cho admin
+app.set('layout', 'layout'); 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs'); // Đặt view engine đúng cách
+app.set('view engine', 'ejs'); 
 // Session configuration
 app.use(session({
     secret: process.env.SECRET_KEY,
@@ -71,12 +69,12 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use('/', homeRoutes);      // Route trang chủ
-app.use('/', authRoutes);      // Các route authentication khác
+app.use('/', homeRoutes); // Home page
+app.use('/', authRoutes); // Authentication
 app.use('/products', productRoutes);
-app.use('/cart', cartRoutes);
+app.use('/cart', cartRoutes); 
 app.use('/orders', orderRoutes);
-app.use('/admin', adminRoutes); // Route quản trị
+app.use('/admin', adminRoutes); // Admin page
 app.use('/', userRoutes);
 
 // Error handling routes

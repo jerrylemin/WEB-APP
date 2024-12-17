@@ -52,10 +52,9 @@ module.exports = {
         inner: '8px'
       },
       fontSize: {
-        big: '30px'
-      },
-      dropShadow: {
-        'bars': '0 4px 25px rgb(81, 140, 39, 0.25)'
+        bigger: '40px',
+        big: '30px',
+        medium: '20px'
       }
     },
   },
