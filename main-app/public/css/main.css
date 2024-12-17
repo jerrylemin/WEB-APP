@@ -1028,6 +1028,14 @@ select {
   width: 150px;
 }
 
+.w-\[100vw\] {
+  width: 100vw;
+}
+
+.w-3 {
+  width: 0.75rem;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -1156,6 +1164,10 @@ select {
 
 .rounded-outer {
   border-radius: 10px;
+}
+
+.border {
+  border-width: 1px;
 }
 
 .border-b {
