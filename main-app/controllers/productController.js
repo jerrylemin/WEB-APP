@@ -6,6 +6,7 @@ const Product = require('../models/productModel');
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find().lean();
+        console.log(products);
         res.render('client/products', { products });
     } catch (err) {
         console.error('Error fetching products:', err);

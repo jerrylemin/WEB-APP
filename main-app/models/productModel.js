@@ -41,7 +41,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    // Thêm các trường khác nếu cần
+    image: {
+        type: String,
+        default: 'images/webPageResources/bg/bobacup.png'
+    }
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);

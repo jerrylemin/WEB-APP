@@ -23,8 +23,9 @@
             <!-- Navigation Options -->
             <div class="relative h-full">
                 <ul class="flex items-center space-x-4 h-full">
-                    <li class="h-3/4 rounded-inner hover:bg-primaryGreen"><a href="#" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-white">Trang chủ</a></li>
-                    <li class="h-3/4 rounded-inner hover:bg-primaryGreen"><a href="#" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-white">Sản phẩm</a></li>
+                    <li class="h-3/4 rounded-inner"><i id="searchBtn" class="cursor-pointer fa-solid fa-magnifying-glass inline-block py-4 px-6 h-full text-red font-bold"></i></li>
+                    <li class="h-3/4 rounded-inner hover:bg-primaryGreen"><a href="/" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-white">Trang chủ</a></li>
+                    <li class="h-3/4 rounded-inner hover:bg-primaryGreen"><a href="/products" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-white">Sản phẩm</a></li>
                     <li class="h-3/4 rounded-inner relative group">
                         <a href="#" class="block py-3 px-6 text-white font-serif font-bold bg-red w-full">Khách hàng</a>
                         <!-- Dropdown Menu -->
@@ -36,8 +37,8 @@
                 </ul>
             </div>
         </nav>
-        <div class="relative h-full w-9/12 mx-auto">
-            <input type="text" placeholder="Nhập vào đây để tìm kiếm..." class="w-full h-full pl-4 pr-10 py-3 font-serif rounded-outer backdrop-blur-lg bg-white/70 border-white/20 shadow-lg">
+        <div id="searchBar" class="relative h-full w-9/12 mx-auto hidden">
+            <input type="text" placeholder="Nhập vào đây để tìm kiếm..." class="w-full h-full pl-4 pr-10 py-3 font-serif rounded-outer backdrop-blur-lg bg-white/70 border border-white/20 shadow-lg">
             <i class="fas fa-search absolute top-1/2 right-4 transform -translate-y-1/2 text-red"></i>
         </div>
     </header>
@@ -51,4 +52,10 @@
         </div>
     </footer>
 </body>
+<script>
+    const searchBtn = document.querySelector('#searchBtn');
+    searchBtn.addEventListener("click", (e) => {
+        document.querySelector("#searchBar").classList.toggle("hidden");
+    });
+</script>
 </html>
