@@ -1,23 +1,3 @@
-<!-- views/client/products.ejs -->
-
-<!-- <main class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Danh Sách Sản Phẩm</h1>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <% products.forEach(product => { %>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="w-full h-48 object-cover">
-                <div class="p-4">
-                    <h2 class="text-xl font-semibold mb-2"><%= product.name %></h2>
-                    <p class="text-gray-700 mb-4"><%= product.description.substring(0, 100) %>...</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-green-600"><%= product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></span>
-                        <a href="/products/<%= product._id %>" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Chi Tiết</a>
-                    </div>
-                </div>
-            </div>
-        <% }) %>
-    </div>
-</main> -->
 <style>
     .glowing-bg {
         background-image: radial-gradient(circle, var(--tw-gradient-from), var(--tw-gradient-to));
@@ -25,7 +5,12 @@
         background-size: 150%;
     }
 </style>
-<main>
+<main class="relative">
+    <div class="full-info hidden bg-black/80 z-50 p-10 fixed inset-0">
+        <div class="full-info-cnt bg-white rounded-lg absolute inset-10 overflow-y-scroll p-5">
+            
+        </div>
+    </div>
     <div class="introduction h-[calc(100vh-158px)] relative">
         <div class="absolute left-[50%] top-[20%] text-wrap w-[25%]">
             <h1 class="text-red text-bigger font-bold font-title">Brewtiful xin chào!</h1> 
@@ -56,16 +41,26 @@
             <div class="items min-h-screen w-full flex flex-row flex-wrap justify-center gap-4">
                 <% products.forEach(p => { %>
                     <div class="parentOfGlow group w-[200px] bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
-                        <div class="glowing-bg absolute inset-0 pointer-events-none transition-opacity opacity-0 group-hover:opacity-100 duration-200 from-yellow/20 to-white/20"></div>
+                        <div class="glowing-bg absolute inset-0 pointer-events-none tr  ansition-opacity opacity-0 group-hover:opacity-100 duration-200 from-yellow/20 to-white/20"></div>
                         <div class="info h-3/4">
                             <img class="w-full rounded-inner aspect-square" src="<%= p.image %>" alt="">
                             <p class="font-bold font-serif text-medium"><%= p.name %></p>
                             <p class="font-serif text-medium"><%= p.price %>đ</p>
                         </div>
                         <div class="flex justify-center cursor-pointer">
-                            <div class="rounded-full bg-red w-[40px] h-[40px] flex justify-center items-center">
-                                <i class="fa-solid fa-plus text-white"></i>
+                            <div class="bttn rounded-full bg-red w-[40px] h-[40px] flex justify-center items-center">
+                                <i class="fa-solid fa-plus text-white bttn"></i>
                             </div>
+                        </div>
+                        <div class="info-storage hidden">
+                            <h1 class="text-center text-big font-serif"><%= p.name %></h1>
+                            <div class="flex justify-center m-4">
+                                <img class="rounded-inner aspect-square w-1/2" src="<%= p.image %>" alt="">
+                            </div>
+                            <p><b>Mô tả</b>: <%= p.description %></p>
+                            <p><b>Phân loại</b>: <%= p.category %></p>
+                            <p><b>Kho</b>: <%= p.stock %></p>
+                            <p><b>Giá</b>: <%= p.price %>đ</p>
                         </div>
                     </div>
                 <% }); %>
@@ -74,7 +69,18 @@
     </div>
 </main>
 <script>
+    document.querySelector(".full-info").addEventListener("click", (e) => {
+        e.currentTarget.classList.toggle("hidden");
+    })
+
     document.querySelectorAll(".parentOfGlow").forEach(parent => {
+        parent.addEventListener("click", (e) => {
+            if(!e.target.classList.contains("bttn")) {
+                document.querySelector(".full-info").classList.toggle("hidden");
+                document.querySelector(".full-info-cnt").innerHTML = parent.querySelector(".info-storage").innerHTML;
+            }
+        });
+
         parent.addEventListener("mousemove", (e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             let x = e.clientX - rect.left;
