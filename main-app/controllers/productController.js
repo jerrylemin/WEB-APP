@@ -6,7 +6,7 @@ const Product = require('../models/productModel');
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.find().lean();
-        console.log(products);
+        // console.log(products);
         res.render('client/products', { products });
     } catch (err) {
         console.error('Error fetching products:', err);
@@ -19,15 +19,15 @@ exports.getProducts = async (req, res) => {
 exports.getProductDetails = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id).lean();
-        if (!product) {
-            req.flash('error_msg', 'Sản phẩm không tồn tại');
-            return res.redirect('/products');
-        }
-        res.render('client/productDetails', { product, title: product.name });
+        // if (!product) {
+        //     req.flash('error_msg', 'Sản phẩm không tồn tại');
+        //     return res.redirect('/products');
+        // }
+        return res.json(product);
     } catch (err) {
         console.error('Error fetching product details:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy chi tiết sản phẩm');
-        res.redirect('/products');
+        // req.flash('error_msg', 'Đã xảy ra lỗi khi lấy chi tiết sản phẩm');
+        // res.redirect('/products');
     }
 };
 

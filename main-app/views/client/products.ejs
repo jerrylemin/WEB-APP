@@ -40,7 +40,7 @@
             </div>
             <div class="items min-h-screen w-full flex flex-row flex-wrap justify-center gap-4">
                 <% products.forEach(p => { %>
-                    <div class="parentOfGlow group w-[200px] bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
+                    <div data-product-id="<%= p._id %>" class="parentOfGlow group w-[200px] bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
                         <div class="glowing-bg absolute inset-0 pointer-events-none tr  ansition-opacity opacity-0 group-hover:opacity-100 duration-200 from-yellow/20 to-white/20"></div>
                         <div class="info h-3/4">
                             <img class="w-full rounded-inner aspect-square" src="<%= p.image %>" alt="">
@@ -51,16 +51,6 @@
                             <div class="bttn rounded-full bg-red w-[40px] h-[40px] flex justify-center items-center">
                                 <i class="fa-solid fa-plus text-white bttn"></i>
                             </div>
-                        </div>
-                        <div class="info-storage hidden">
-                            <h1 class="text-center text-big font-serif"><%= p.name %></h1>
-                            <div class="flex justify-center m-4">
-                                <img class="rounded-inner aspect-square w-1/2" src="<%= p.image %>" alt="">
-                            </div>
-                            <p><b>Mô tả</b>: <%= p.description %></p>
-                            <p><b>Phân loại</b>: <%= p.category %></p>
-                            <p><b>Kho</b>: <%= p.stock %></p>
-                            <p><b>Giá</b>: <%= p.price %>đ</p>
                         </div>
                     </div>
                 <% }); %>
@@ -73,11 +63,29 @@
         e.currentTarget.classList.toggle("hidden");
     })
 
-    document.querySelectorAll(".parentOfGlow").forEach(parent => {
-        parent.addEventListener("click", (e) => {
+    document.querySelectorAll(".parentOfGlow").forEach((parent) => {
+        parent.addEventListener("click", async (e) => {
             if(!e.target.classList.contains("bttn")) {
-                document.querySelector(".full-info").classList.toggle("hidden");
-                document.querySelector(".full-info-cnt").innerHTML = parent.querySelector(".info-storage").innerHTML;
+                // document.querySelector(".full-info-cnt").innerHTML = parent.querySelector(".info-storage").innerHTML;
+                try {
+                    const prod = await fetch(`/products/${parent.getAttribute("data-product-id")}`);
+                    const res = await prod.json();
+                    console.log(res);
+                    document.querySelector(".full-info-cnt").innerHTML = `
+                        <h1 class="text-center text-big font-serif">${res.name}</h1>
+                        <div class="flex justify-center m-4">
+                            <img class="rounded-inner aspect-square w-1/2" src="${res.image}" alt="">
+                        </div>
+                        <p><b>Mô tả</b>: ${res.description}</p>
+                        <p><b>Phân loại</b>: ${res.category}</p>
+                        <p><b>Kho</b>: ${res.stock}</p>
+                        <p><b>Giá</b>: ${res.price}đ</p>
+                    `;
+                    document.querySelector(".full-info").classList.toggle("hidden");
+                }
+                catch(e) {
+                    console.log(e);
+                }
             }
         });
 
