@@ -69,6 +69,11 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
+// // test
+// app.get("/", (req, res) => {
+//     res.render("404.ejs", {layout: false});
+// })
+
 app.use('/', homeRoutes); // Home page
 app.use('/', authRoutes); // Authentication
 app.use('/products', productRoutes);

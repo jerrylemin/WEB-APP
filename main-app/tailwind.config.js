@@ -52,6 +52,7 @@ module.exports = {
         inner: '8px'
       },
       fontSize: {
+        biggest: '100px',
         bigger: '40px',
         big: '30px',
         medium: '20px'

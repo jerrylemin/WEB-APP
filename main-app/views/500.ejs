@@ -1,7 +1,48 @@
-<!-- views/500.ejs -->
-<main class="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
-    <h1 class="text-4xl font-bold mb-4">500</h1>
-    <p class="text-xl mb-6">Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau.</p>
-    <a href="/" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Quay Lại Trang Chủ</a>
-</main>
+<!-- views/layout.ejs -->
 
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Brewtiful - 500 error</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Berkshire+Swash&display=swap" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e88fd7b48a.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-cream h-screen overflow-hidden">
+  <header class="p-4 top-1 z-50">
+    <!-- fake navbar - no functionality -->
+    <nav class="bg-tertiaryGreen rounded-outer flex justify-center items-center h-[70px] px-4 shadow-lg mb-3">
+      <div class="text-red text-big font-title">
+        Brewtiful
+      </div>
+    </nav>
+  </header>
+  <!-- error code -->
+  <div class="bg-tertiaryGreen z-50 transform rotate-[7deg] w-[25vw] h-[25vw] rounded-full flex flex-col justify-center items-center fixed left-[10vw]">
+    <p class="text-darkGreen text-biggest font-title">500</p>
+    <p class="text-red text-biggest font-title">error</p>
+  </div>
+  <!-- error info and navigation -->
+  <div class="z-50 fixed left-[50vw]">
+    <p class="text-darkGreen text-bigger font-serif font-bold">Lỗi server</p>
+    <p class="text-red text-bigger font-serif">Hãy nhấn vào đây để trở về trang chủ</p>
+    <!-- decorative arrow -->
+    <img class="relative left-[25vw] top-[-5vh] transform scale-x-[-1] z-50 w-[5vw] h-[5vw]" src="images/webPageResources/decorations/curlyArrow.png" alt="Follow me!">
+  </div>
+  <!-- home button -->
+  <a href="">
+    <div class="bg-yellow z-50 transform rotate-[30deg] w-[10vw] h-[10vw] rounded-full flex flex-col justify-center items-center fixed left-[60vw] top-[50vh]">
+      <i class="fa-solid fa-house text-bigger"></i>
+    </div>
+  </a>
+  <!-- bg   -->
+  <div>
+    <div></div>
+    <img class="transform rotate-[7deg] scale-150 relative bottom-0" src="images/webPageResources/bg/sea.png" alt="watery bg">
+  </div>
+</body>
+</html>
