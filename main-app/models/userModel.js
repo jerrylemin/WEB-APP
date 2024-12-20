@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true // Đảm bảo email là duy nhất
+        unique: true 
     },
     password: {
         type: String,
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     isAdmin: {
         type: Boolean,
-        default: false // Mặc định không phải admin
+        default: false 
     },
     resetToken: String,
     resetTokenExpiration: Date,
@@ -27,8 +27,6 @@ const userSchema = new mongoose.Schema({
         default: 0
     },
 }, { timestamps: true });
-
-
 
 const User = mongoose.model('User', userSchema);
 

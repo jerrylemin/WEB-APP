@@ -12,12 +12,11 @@
         </div>
     </div>
     <div class="introduction h-[calc(100vh-158px)] relative">
-        <div class="absolute left-[50%] top-[20%] text-wrap w-[25%]">
+        <div class="p-10 flex flex-col justify-center items-center lg:absolute lg:left-[40%] lg:top-[20%] lg:w-[50%]">
             <h1 class="text-red text-bigger font-bold font-title">Brewtiful xin chào!</h1> 
             <p class="text-medium font-serif">Vui lòng lướt xuống để xem các món nước của chúng mình nhé!</p>
         </div>
-        <img class="h-[500px] w-[500px] absolute left-[18%] top-[-10%]" src="/images/webPageResources/bg/bobacup.png" alt="Chúc bạn ngon miệng!">
-        <img class="h-[150px] w-[150px] absolute left-[55%] top-[50%] transform rotate-[30deg]" src="/images/webPageResources/decorations/curlyArrow.png" alt="Lướt xuống để xem món bạn thích!">
+        <img class="invisible lg:visible h-[100%] w-auto absolute left-[10%] top-[-10%]" src="/images/webPageResources/bg/bobacup.png" alt="Chúc bạn ngon miệng!">
     </div>
     <div class="bg-[url('/images/webPageResources/bg/bg_greenSplash.png')] bg-fixed bg-top bg-contain bg-no-repeat">
         <article class="w-9/12 mx-auto my-10">
@@ -38,9 +37,9 @@
                     <option value="" disabled selected>Giá</option>
                 </select>
             </div>
-            <div class="items min-h-screen w-full flex flex-row flex-wrap justify-center gap-4">
+            <div class="items min-h-screen w-full justify-center grid grid-flow-row auto-rows-auto grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <% products.forEach(p => { %>
-                    <div data-product-id="<%= p._id %>" class="parentOfGlow group w-[200px] bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
+                    <div data-product-id="<%= p._id %>" class="parentOfGlow group bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
                         <div class="glowing-bg absolute inset-0 pointer-events-none tr  ansition-opacity opacity-0 group-hover:opacity-100 duration-200 from-yellow/20 to-white/20"></div>
                         <div class="info h-3/4">
                             <img class="w-full rounded-inner aspect-square" src="<%= p.image %>" alt="">

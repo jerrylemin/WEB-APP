@@ -20,7 +20,9 @@ router.post('/login', (req, res, next) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash('error_msg', info.message || 'Đăng nhập không thành công');
-            return res.redirect('/login');
+            return res.render('/login', {
+                error_msg: req.flash('error_msg')
+            });
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }

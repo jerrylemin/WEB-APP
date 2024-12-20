@@ -140,10 +140,10 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-
 exports.renderRegister = (req, res) => {
     res.render('register', {
-        errors: [],
+        error_msg: null,
+        success_msg: null,
         name: '',
         email: '',
         password: '',
@@ -152,18 +152,15 @@ exports.renderRegister = (req, res) => {
     });
 };
 
-
 // Hàm xử lý đăng ký người dùng
 exports.register = async (req, res) => {
     const { name, email, password, password2 } = req.body;
     let errors = [];
 
-    // Kiểm tra các trường bắt buộc
     if (!name || !email || !password || !password2) {
         errors.push({ msg: 'Vui lòng nhập đầy đủ các trường' });
     }
 
-    // Kiểm tra mật khẩu
     if (password !== password2) {
         errors.push({ msg: 'Mật khẩu không khớp' });
     }
@@ -174,26 +171,21 @@ exports.register = async (req, res) => {
 
     if (errors.length > 0) {
         console.log('Có lỗi trong form đăng ký:', errors);
-        res.render('register', {
-            errors,
+        res.render("register", {
+            error_msg: errors[0],
             name,
-            email,
-            password,
-            password2
+            email
         });
     } else {
         try {
-            // Kiểm tra xem người dùng đã tồn tại chưa
             const existingUser = await User.findOne({ email: email });
             if (existingUser) {
                 errors.push({ msg: 'Email đã được sử dụng' });
                 console.log('Email đã được sử dụng:', email);
                 return res.render('register', {
-                    errors,
+                    error_msg: errors[0],
                     name,
-                    email,
-                    password,
-                    password2
+                    email
                 });
             }
         
@@ -222,7 +214,7 @@ exports.register = async (req, res) => {
                     return res.redirect('/login');
                 }
                 req.flash('success_msg', 'Bạn đã đăng ký thành công và đã được đăng nhập');
-                res.redirect('/products');
+                res.redirect('/');
             });
         
         } catch (err) {
@@ -234,14 +226,18 @@ exports.register = async (req, res) => {
 };
 
 exports.renderLogin = (req, res) => {
-    res.render('login', { title: 'Đăng Nhập' });
+    res.render('login', { 
+        error_msg: null,
+        success_msg: null,
+        title: 'Đăng Nhập' 
+    });
 };
 
 
 // Đăng nhập người dùng
 exports.login = (req, res, next) => {
     passport.authenticate('local', {
-        successRedirect: '/products',
+        successRedirect: '/',
         failureRedirect: '/login',
         failureFlash: true
     })(req, res, next);
