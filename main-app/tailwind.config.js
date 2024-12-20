@@ -52,10 +52,10 @@ module.exports = {
         inner: '8px'
       },
       fontSize: {
-        biggest: '5rem',
-        bigger: '4rem',
-        big: '3rem',
-        medium: '2rem'
+        biggest: '4rem',
+        bigger: '3rem',
+        big: '2rem',
+        medium: '1rem'
       }
     },
   },

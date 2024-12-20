@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="bg-cream">
-    <header class="p-4 sticky top-1 z-50">
+    <header class="p-4 sticky top-1 z-50 flex flex-col">
         <nav class="bg-tertiaryGreen rounded-outer flex justify-between items-center h-[70px] px-4 shadow-lg mb-3">
             <div class="text-red text-big font-title">
                 Brewtiful
@@ -35,7 +35,7 @@
                 </ul>
             </div>
         </nav>
-        <div id="searchBar" class="relative h-full w-9/12 mx-auto hidden">
+        <div id="searchBar" class="absolute top-24 w-9/12 mx-auto invisible place-self-center">
             <input type="text" placeholder="Nhập vào đây để tìm kiếm..." class="w-full h-full pl-4 pr-10 py-3 font-serif rounded-outer backdrop-blur-lg bg-white/70 border border-white/20 shadow-lg">
             <i class="fas fa-search absolute top-1/2 right-4 transform -translate-y-1/2 text-red"></i>
         </div>
@@ -44,7 +44,7 @@
     <!-- Nội dung chính của từng trang sẽ được chèn vào đây -->
     <%- body %>
 
-    <footer class="bg-tertiaryGreen text-red font-bold p-4 mt-8 drop-shadow-bars">
+    <footer class="bg-tertiaryGreen text-red font-serif font-bold p-4 mt-8 drop-shadow-bars">
         <div class="container mx-auto text-center">
             <p>&copy; 2024 Brewtiful. All rights reserved.</p>
         </div>
@@ -53,7 +53,7 @@
 <script>
     const searchBtn = document.querySelector('#searchBtn');
     searchBtn.addEventListener("click", (e) => {
-        document.querySelector("#searchBar").classList.toggle("hidden");
+        document.querySelector("#searchBar").classList.toggle("invisible");
     });
 </script>
 </html>
