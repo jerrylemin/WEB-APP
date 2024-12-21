@@ -1,47 +1,3 @@
-<!-- 
-<main class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Giỏ Hàng Của Bạn</h1>
-    <% if (cart && cart.items.length > 0) { %>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white shadow-md rounded-lg">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">Sản Phẩm</th>
-                        <th class="py-2 px-4 border-b">Giá</th>
-                        <th class="py-2 px-4 border-b">Số Lượng</th>
-                        <th class="py-2 px-4 border-b">Tổng Tiền</th>
-                        <th class="py-2 px-4 border-b">Hành Động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% cart.items.forEach(item => { %>
-                        <tr>
-                            <td class="py-2 px-4 border-b"><%= item.name %></td>
-                            <td class="py-2 px-4 border-b"><%= item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
-                            <td class="py-2 px-4 border-b"><%= item.quantity %></td>
-                            <td class="py-2 px-4 border-b"><%= (item.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
-                            <td class="py-2 px-4 border-b">
-                                <form action="/cart/remove/<%= item.productId %>" method="POST" class="inline">
-                                    <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">Xóa</button>
-                                </form>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-4 flex justify-end">
-            <p class="text-xl font-semibold">Tổng: <%= cart.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></p>
-        </div>
-        <div class="mt-4 flex justify-end">
-            <a href="/orders/checkout" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Thanh Toán</a>
-        </div>
-    <% } else { %>
-        <p class="text-lg">Giỏ hàng của bạn đang trống. <a href="/products" class="text-blue-500 underline">Mua sắm ngay!</a></p>
-    <% } %>
-</main>
- -->
-
  <main class="flex flex-row justify-center gap-3">
     <div class="w-5/12 h-[70vh] relative bg-[url('../images/webPageResources/bg/bobacup.png')] bg-[percentage:80%_100%] bg-center bg-no-repeat">
         <% if (cart && cart.items.length > 0) { %>
@@ -57,20 +13,12 @@
             <% if (cart && cart.items.length > 0) { %>
                 <% cart.items.forEach(item => { %>
                     <div class="p-4 border border-yellow rounded-outer mb-4 bg-yellow backdrop-blur-lg flex gap-3">
-                        <img class="w-1/3 aspect-square" src="<%= item.product.image %>" alt="">
+                        <img class="w-1/3 aspect-square" src="<%= item.productInfo.image %>" alt="">
                         <div class="content">
-                            <p><%= item.name %></p>
-                            <p><%= item.price %></p>
+                            <p><%= item.productInfo.name %></p>
+                            <p><%= item.productInfo.price %></p>
                             <label for="sl">SL:</label>
-                            <input type="text" id="sl" value="<%= item.quantity %>">
-                            <% if(item.size) { %>
-                                <label for="size">Size: </label>
-                                <select id="size">
-                                    <option value="S" <%= item.size === 'S' ? 'selected' : '' %>>S</option>
-                                    <option value="M" <%= item.size === 'M' ? 'selected' : '' %>>M</option>
-                                    <option value="L" <%= item.size === 'L' ? 'selected' : '' %>>L</option>
-                                </select>
-                            <% } %>
+                            <input type="text" id="sl" value="<%= item.quantity %>"/>
                         </div>
                         <i class="fa-solid fa-xmark text-red"></i>
                     </div>

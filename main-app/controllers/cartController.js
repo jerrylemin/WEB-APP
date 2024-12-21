@@ -67,7 +67,7 @@ exports.addToCart = async (req, res) => {
             return acc + product.price * item.quantity;
         }, 0);
         await cart.save();
-        console.log(cart);
+        // console.log(cart);
     
         // console.log('Cart Updated:', req.session.cart); // Logging để kiểm tra
         // req.flash("success_msg", "Thêm vào giỏ hàng thành công!");
@@ -90,7 +90,12 @@ exports.addToCart = async (req, res) => {
 
 // Hiển thị giỏ hàng
 exports.getCart = async (req, res) => {
-    let cart = await Cart.findOne({ user: req.user._id });
+    let cart = await Cart.findOne({ user: req.user._id }).lean();
+    cart.items = await Promise.all(cart.items.map(async item => {
+        const product = await Product.findById(item.product).lean();
+        return { ...item, productInfo: product };
+    }));
+    // console.log(cart);
     res.render('client/cart', { user: req.user, cart, title: 'Giỏ Hàng' });
 };
 
