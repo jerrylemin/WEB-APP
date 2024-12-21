@@ -9,9 +9,6 @@ const { ensureAuthenticated } = require('../utils/authMiddleware');
 // Sử dụng middleware để khởi tạo cart
 // router.use(initializeCart);
 
-// Route hiển thị giỏ hàng
-router.get('/cart', cartController.getCart);
-
 // Hiển thị giỏ hàng
 router.get('/', ensureAuthenticated, cartController.getCart);
 
@@ -22,7 +19,7 @@ router.post('/add/:id', ensureAuthenticated, cartController.addToCart);
 // router.post('/update', ensureAuthenticated, cartController.updateCart);
 
 // Xóa sản phẩm khỏi giỏ hàng
-router.get('/remove/:id', ensureAuthenticated, cartController.removeFromCart);
+router.post('/remove/:id', ensureAuthenticated, cartController.removeFromCart);
 
 // Hiển thị trang thanh toán
 router.get('/checkout', ensureAuthenticated, cartController.getCheckout);
