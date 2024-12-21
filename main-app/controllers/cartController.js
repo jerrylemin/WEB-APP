@@ -82,11 +82,17 @@ exports.addToCart = async (req, res) => {
 // };
 
 // Hiển thị giỏ hàng
-exports.getCart = (req, res) => {
-    const cart = req.session.cart || { items: [], totalPrice: 0 };
+exports.getCart = async (req, res) => {
+    const cart = req.session.cart;
+    if (!cart) {
+        cart = await Cart.findOne({ userId: req.user._id });
+        if (!cart) {
+            cart = new Cart({ userId: req.user._id, items: [], totalPrice: 0 });
+            await cart.save();
+        }
+    }
     res.render('client/cart', { user: req.user, cart, title: 'Giỏ Hàng' });
 };
-
 
 // Cập nhật giỏ hàng
 exports.updateCart = async (req, res) => {
