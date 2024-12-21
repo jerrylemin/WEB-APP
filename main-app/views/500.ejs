@@ -4,7 +4,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Brewtiful - 500 error</title>
+    <title>Brewtiful - 404 error</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Berkshire+Swash&display=swap" rel="stylesheet">
@@ -12,37 +12,51 @@
     <script src="https://kit.fontawesome.com/e88fd7b48a.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body class="bg-cream h-screen overflow-hidden">
-  <header class="p-4 top-1 z-50">
+<body class="bg-cream h-screen w-screen relative">
+  <header class="p-4 w-screen absolute top-1 z-50 flex flex-col">
     <!-- fake navbar - no functionality -->
-    <nav class="bg-tertiaryGreen rounded-outer flex justify-center items-center h-[70px] px-4 shadow-lg mb-3">
+    <nav class="bg-tertiaryGreen rounded-outer flex justify-between items-center h-[70px] px-4 shadow-lg mb-3">
       <div class="text-red text-big font-title">
         Brewtiful
       </div>
     </nav>
   </header>
-  <!-- error code -->
-  <div class="bg-tertiaryGreen z-50 transform rotate-[7deg] w-[25vw] h-[25vw] rounded-full flex flex-col justify-center items-center fixed left-[10vw]">
-    <p class="text-darkGreen text-biggest font-title">500</p>
-    <p class="text-red text-biggest font-title">error</p>
-  </div>
-  <!-- error info and navigation -->
-  <div class="z-50 fixed left-[50vw]">
-    <p class="text-darkGreen text-bigger font-serif font-bold">Lỗi server</p>
-    <p class="text-red text-bigger font-serif">Hãy nhấn vào đây để trở về trang chủ</p>
-    <!-- decorative arrow -->
-    <img class="relative left-[25vw] top-[-5vh] transform scale-x-[-1] z-50 w-[5vw] h-[5vw]" src="images/webPageResources/decorations/curlyArrow.png" alt="Follow me!">
-  </div>
-  <!-- home button -->
-  <a href="">
-    <div class="bg-yellow z-50 transform rotate-[30deg] w-[10vw] h-[10vw] rounded-full flex flex-col justify-center items-center fixed left-[60vw] top-[50vh]">
-      <i class="fa-solid fa-house text-bigger"></i>
+  <main class="relative h-full w-full overflow-hidden">
+    <!-- error code -->
+    <div class="absolute top-[10%] left-[10%] drop-shadow bg-tertiaryGreen z-30 w-[30vw] h-[30vw] rounded-full flex flex-col justify-center items-center">
+      <p class="text-darkGreen text-fat font-title">404</p>
+      <p class="text-red text-fat font-title">error</p>
     </div>
-  </a>
-  <!-- bg   -->
-  <div>
-    <div></div>
-    <img class="transform rotate-[7deg] scale-150 relative bottom-0" src="images/webPageResources/bg/sea.png" alt="watery bg">
-  </div>
+    <!-- error info and navigation -->
+    <div class="absolute top-[20%] left-[50%] drop-shadow bg-yellow/40 z-30 backdrop-blur-lg rounded-outer relative w-1/3 p-4 border border-yellow">
+      <p class="text-darkGreen text-big font-serif font-bold">Lỗi server</p>
+      <p class="text-red text-big font-serif font-bold">Click vào biểu tượng home để trở về trang chủ!</p>
+    </div>
+    <!-- decorative elements -->
+    <div class="w-full h-full absolute inset-0 z-40">
+      <div class="w-96 h-96 z-[45] absolute top-[75%] left-[0%] drop-shadow-xl backdrop-blur-lg bg-primaryGreen/60 rounded-full m-2 z-30"></div>
+      <div class="w-52 h-52 z-[44] absolute top-[60%] left-[15%] drop-shadow-xl backdrop-blur-lg bg-primaryGreen/60 rounded-full m-2 z-30"></div>
+      <div class="w-40 h-40 z-[43] absolute top-[78%] left-[30%] drop-shadow-xl backdrop-blur-lg bg-primaryGreen/60 rounded-full m-2 z-30"></div>
+      <div class="w-32 h-32 z-[42] absolute top-[50%] left-[35%] drop-shadow-xl backdrop-blur-lg bg-primaryGreen/60 rounded-full m-2 z-30"></div>
+      <div class="w-32 h-32 z-[41] absolute top-[70%] left-[45%] drop-shadow-xl backdrop-blur-lg bg-primaryGreen/50 rounded-full m-2 z-30"></div>
+      <div class="w-32 h-32 z-[34] absolute top-[88%] left-[50%] drop-shadow-md backdrop-blur-md bg-primaryGreen/40 rounded-full m-2 z-30"></div>
+      <div class="w-28 h-28 z-[33] absolute top-[50%] left-[53%] drop-shadow-md backdrop-blur-md bg-primaryGreen/40 rounded-full m-2 z-30"></div>
+      <div class="w-20 h-20 z-[32] absolute top-[70%] left-[55%] drop-shadow-md backdrop-blur-md bg-primaryGreen/40 rounded-full m-2 z-30"></div>
+      <div class="w-24 h-24 z-[31] absolute top-[80%] left-[56%] drop-shadow-md backdrop-blur-md bg-primaryGreen/40 rounded-full m-2 z-30"></div>
+      <div class="w-16 h-16 z-[24] absolute top-[45%] left-[60%] drop-shadow-sm backdrop-blur-sm bg-primaryGreen/30 rounded-full m-2 z-30"></div>
+      <div class="w-16 h-16 z-[23] absolute top-[70%] left-[62%] drop-shadow-sm backdrop-blur-sm bg-primaryGreen/20 rounded-full m-2 z-30"></div>
+      <div class="w-12 h-12 z-[22] absolute top-[78%] left-[64%] drop-shadow-sm backdrop-blur-sm bg-primaryGreen/20 rounded-full m-2 z-30"></div>
+      <div class="w-12 h-12 z-[21] absolute top-[83%] left-[69%] drop-shadow-sm backdrop-blur-sm bg-primaryGreen/20 rounded-full m-2 z-30"></div>
+      <div class="w-10 h-10 z-[13] absolute top-[75%] left-[75%] drop-shadow-sm bg-primaryGreen/10 rounded-full m-2 z-30"></div>
+      <div class="w-8 h-8 z-[12] absolute top-[70%] left-[70%] drop-shadow-sm bg-primaryGreen/10 rounded-full m-2 z-30"></div>
+      <div class="w-10 h-10 z-[11] absolute top-[60%] left-[70%] drop-shadow-sm bg-primaryGreen/10 rounded-full m-2 z-30"></div>
+    </div>
+    <!-- home button -->
+    <a href="/">
+      <div class="absolute bg-yellow/60 z-50 w-[10vw] h-[10vw] rounded-full flex flex-col justify-center items-center fixed left-[62%] top-[54%]">
+        <i class="fa-solid fa-house text-bigger"></i>
+      </div>
+    </a>
+  </main>
 </body>
 </html>

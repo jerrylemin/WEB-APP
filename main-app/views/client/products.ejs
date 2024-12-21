@@ -56,8 +56,39 @@
             </div>
         </article>
     </div>
+    <div class="fixed bottom-0 right-0 m-4">
+        <div id="notification" class="bg-green-500 text-white p-4 rounded-lg shadow-md hidden">
+            <p id="notification-message" class="font-bold"></p>
+        </div>
+    </div>
 </main>
 <script>
+    function showNotification(message) {
+        const notification = document.getElementById("notification");
+        const notificationMessage = document.getElementById("notification-message");
+        notification.classList.remove("hidden");
+        notificationMessage.textContent = message;
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 3000);
+    }
+ 
+    const bttns = document.querySelectorAll(".bttn");
+    bttns.forEach(bttn => {
+        bttn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const productId = bttn.parentNode.parentNode.getAttribute("data-product-id");
+            try {
+                const noti = await fetch(`/add/${productId}`, { method: 'POST' });          
+                console.log(noti);
+                showNotification(noti);
+            } 
+            catch(e) {
+                console.log(e);
+            }
+        });
+    });
+
     document.querySelector(".full-info").addEventListener("click", (e) => {
         e.currentTarget.classList.toggle("hidden");
     })

@@ -4,10 +4,10 @@ const express = require('express');
 const router = express.Router();
 const cartController = require('../controllers/cartController');
 const { ensureAuthenticated } = require('../utils/authMiddleware');
-const initializeCart = require('../middleware/cartMiddleware');
+// const initializeCart = require('../middleware/cartMiddleware');
 
 // Sử dụng middleware để khởi tạo cart
-router.use(initializeCart);
+// router.use(initializeCart);
 
 // Route hiển thị giỏ hàng
 router.get('/cart', cartController.getCart);
@@ -19,7 +19,7 @@ router.get('/', ensureAuthenticated, cartController.getCart);
 router.post('/add/:id', ensureAuthenticated, cartController.addToCart);
 
 // Cập nhật giỏ hàng
-router.post('/update', ensureAuthenticated, cartController.updateCart);
+// router.post('/update', ensureAuthenticated, cartController.updateCart);
 
 // Xóa sản phẩm khỏi giỏ hàng
 router.get('/remove/:id', ensureAuthenticated, cartController.removeFromCart);
