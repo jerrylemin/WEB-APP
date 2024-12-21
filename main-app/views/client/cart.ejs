@@ -12,15 +12,14 @@
             <h1 class="text-big font-serif font-bold mb-4 text-red">Giỏ hàng</h1>
             <% if (cart && cart.items.length > 0) { %>
                 <% cart.items.forEach(item => { %>
-                    <div class="p-4 border border-yellow rounded-outer mb-4 bg-yellow backdrop-blur-lg flex gap-3">
-                        <img class="w-1/3 aspect-square" src="<%= item.productInfo.image %>" alt="">
+                    <div class="p-4 border border-yellow rounded-outer mb-4 bg-yellow/40 backdrop-blur-lg flex gap-3">
+                        <img class="w-1/5 aspect-square rounded-inner" src="<%= item.productInfo.image %>" alt="">
                         <div class="content">
-                            <p><%= item.productInfo.name %></p>
-                            <p><%= item.productInfo.price %></p>
-                            <label for="sl">SL:</label>
-                            <input type="text" id="sl" value="<%= item.quantity %>"/>
+                            <p class="font-bold font-big font-serif"><%= item.productInfo.name %></p>
+                            <p class="font-big font-serif"><%= item.productInfo.price %>đ</p>
+                            <p class="font-bold font-big font-serif" for="sl">SL: <%= item.quantity %></p>
                         </div>
-                        <i class="fa-solid fa-xmark text-red"></i>
+                        <i class="fa-solid fa-xmark text-red absolute right-0 mr-4 top-0 mt-4"></i>
                     </div>
                 <% }); %>
             <% } else { %>
