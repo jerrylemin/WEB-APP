@@ -74,12 +74,12 @@
     }
  
     const bttns = document.querySelectorAll(".bttn");
-    bttns.forEach(bttn => {
+    bttns.forEach(async (bttn) => {
         bttn.addEventListener("click", async (e) => {
             e.preventDefault();
             const productId = bttn.parentNode.parentNode.getAttribute("data-product-id");
             try {
-                const noti = await fetch(`/add/${productId}`, { method: 'POST' });          
+                const noti = await fetch(`/cart/add/${productId}`, { method: 'POST' }).then(data => console.log(data));          
                 console.log(noti);
                 showNotification(noti);
             } 

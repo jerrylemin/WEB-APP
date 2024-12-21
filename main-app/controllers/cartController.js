@@ -12,28 +12,31 @@ exports.addToCart = async (req, res) => {
         // Tìm sản phẩm trong cơ sở dữ liệu
         const product = await Product.findById(productId);
         if (!product) {
-            req.flash('error_msg', 'Sản phẩm không tồn tại');
-            return res.redirect('/products');
+            // req.flash('error_msg', 'Sản phẩm không tồn tại');
+            // return res.redirect('/products');
+            res.send('Sản phẩm không tồn tại');
         }
 
         if (quantity < 1) {
-            req.flash('error_msg', 'Số lượng không hợp lệ');
-            return res.redirect('/products/' + productId);
+            // req.flash('error_msg', 'Số lượng không hợp lệ');
+            // return res.redirect('/products/' + productId);
+            res.send('Số lượng không hợp lệ');
         }
 
         if (quantity > product.stock) {
-            req.flash('error_msg', 'Số lượng sản phẩm vượt quá kho');
-            return res.redirect('/products/' + productId);
+            // req.flash('error_msg', 'Số lượng sản phẩm vượt quá kho');
+            // return res.redirect('/products/' + productId);
+            res.send('Số lượng sản phẩm vượt quá kho');
         }
 
         // Lấy giỏ hàng hiện tại từ session hoặc khởi tạo mới
         // let cart = req.session.cart || { items: [], totalPrice: 0 };
-        let cart = await Cart.findOne({ userId: req.user._id });
+        let cart = await Cart.findOne({ user: req.user._id });
         if (!cart) {
-            cart = new Cart({ userId: req.user._id, items: [], totalPrice: 0 });
+            cart = new Cart({ user: req.user._id, items: [], totalPrice: 0 });
             await cart.save();
         }
-
+        
         // Tìm xem sản phẩm đã có trong giỏ chưa
         const existingItemIndex = cart.items.findIndex(item => item.product.toString() === productId.toString());
 
@@ -42,34 +45,40 @@ exports.addToCart = async (req, res) => {
             if (cart.items[existingItemIndex].quantity + quantity > product.stock) {
                 // req.flash('error_msg', 'Số lượng sản phẩm vượt quá kho');
                 // return res.redirect('/products/' + productId);
-                req.flash("error_msg", "Số lượng sản phẩm vượt quá kho");
-                return res.status(400).end();
+                // req.flash("error_msg", "Số lượng sản phẩm vượt quá kho");
+                // return res.status(400).end();
+                return res.send("Số lượng sản phẩm vượt quá kho");
             }
             cart.items[existingItemIndex].quantity += quantity;
         } else {
             // Nếu chưa có, thêm sản phẩm mới vào giỏ
+            console.log(productId);
+            console.log(quantity);
             cart.items.push({
-                user: req.user._id,
-                product: product._id,
+                product: productId,
                 quantity: quantity
             });
+            // console.log(cart.items);
+            await cart.save();
         }
-
+        
         // Tính lại tổng tiền
-        cart.totalPrice = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
+        cart.totalPrice = cart.items.reduce(async (acc, item) => {
+            return acc + product.price * item.quantity;
+        }, 0);
         await cart.save();
-
-        console.log('Cart Updated:', req.session.cart); // Logging để kiểm tra
-        // req.flash('success_msg', 'Thêm sản phẩm vào giỏ hàng thành công');
-        // res.redirect('/products/' + productId);
-        req.flash("success_msg", "Thêm vào giỏ hàng thành công!");
-        return res.status("200").end();
+        console.log(cart);
+    
+        // console.log('Cart Updated:', req.session.cart); // Logging để kiểm tra
+        // req.flash("success_msg", "Thêm vào giỏ hàng thành công!");
+        // return res.status("200").end();
+        res.send("Thêm vào giỏ hàng thành công!");
 
     } catch (err) {
         // console.error('Error in addToCart:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng');
-        return res.status("500").end();
+        // req.flash('error_msg', 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng');
+        // return res.status("500").end();
+        res.send("Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng");
     }
 };
 
@@ -82,10 +91,6 @@ exports.addToCart = async (req, res) => {
 // Hiển thị giỏ hàng
 exports.getCart = async (req, res) => {
     let cart = await Cart.findOne({ user: req.user._id });
-    if (!cart) {
-        cart = new Cart({ user: req.user._id, items: [], totalPrice: 0 });
-        await cart.save();
-    }
     res.render('client/cart', { user: req.user, cart, title: 'Giỏ Hàng' });
 };
 
@@ -121,6 +126,7 @@ exports.getCart = async (req, res) => {
 // Xóa sản phẩm khỏi giỏ hàng
 exports.removeFromCart = async (req, res) => {
     const productId = req.params.id;
+    const product = await Product.findById(productId);
     let cart = await Cart.findOne({ user: req.user._id });
     if (!cart) {
         return res.send("Không có gì để xóa");
@@ -129,10 +135,13 @@ exports.removeFromCart = async (req, res) => {
     if (cart.items.length > 0) {
         cart.items = cart.items.filter(item => item.product.toString() !== productId.toString());
         // Tính lại tổng tiền
-        cart.totalPrice = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-        req.flash('success_msg', 'Xóa sản phẩm khỏi giỏ hàng thành công');
+        cart.totalPrice = cart.items.reduce((acc, item) => acc + product.price * item.quantity, 0);
+        await cart.save();
+        // req.flash('success_msg', 'Xóa sản phẩm khỏi giỏ hàng thành công');
+        res.send('Xóa sản phẩm khỏi giỏ hàng thành công');
     } else {
-        req.flash('error_msg', 'Giỏ hàng của bạn đang trống');
+        // req.flash('error_msg', 'Giỏ hàng của bạn đang trống');
+        res.send('Giỏ hàng của bạn đang trống');
     }
     
     res.status('200').end();
@@ -149,15 +158,17 @@ exports.postCheckout = async (req, res) => {
     try {
         const cart = req.session.cart;
         if (!cart || cart.items.length === 0) {
-            req.flash('error_msg', 'Giỏ hàng của bạn đang trống');
-            return res.redirect('/cart');
+            // req.flash('error_msg', 'Giỏ hàng của bạn đang trống');
+            // return res.redirect('/cart');
+            res.send('Giỏ hàng của bạn đang trống');
         }
 
         // Kiểm tra số dư của người dùng
         const user = await User.findById(req.user._id);
         if (user.balance < cart.totalPrice) {
-            req.flash('error_msg', 'Số dư không đủ để thanh toán');
-            return res.redirect('/cart');
+            // req.flash('error_msg', 'Số dư không đủ để thanh toán');
+            // return res.redirect('/cart');
+            res.send('Số dư không đủ để thanh toán');
         }
 
         // Tạo đơn hàng mới
@@ -188,11 +199,13 @@ exports.postCheckout = async (req, res) => {
         // Xóa giỏ hàng
         req.session.cart = { items: [], totalPrice: 0 };
 
-        req.flash('success_msg', 'Đặt hàng thành công. Đơn hàng đang chờ xác nhận từ admin.');
-        res.redirect('/orders');
+        // req.flash('success_msg', 'Đặt hàng thành công. Đơn hàng đang chờ xác nhận từ admin.');
+        // res.redirect('/orders');
+        res.send('Đặt hàng thành công. Đơn hàng đang chờ xác nhận từ admin.');
     } catch (err) {
         console.error('Error in postCheckout:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi thanh toán');
-        res.redirect('/cart');
+        // req.flash('error_msg', 'Đã xảy ra lỗi khi thanh toán');
+        // res.redirect('/cart');
+        res.send('Đã xảy ra lỗi khi thanh toán');
     }
 };
