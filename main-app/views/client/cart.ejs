@@ -1,7 +1,7 @@
  <main class="flex flex-row justify-center gap-3">
     <div class="w-5/12 h-[70vh] relative bg-[url('../images/webPageResources/bg/bobacup.png')] bg-[percentage:80%_100%] bg-center bg-no-repeat">
         <% if (cart && cart.items.length > 0) { %>
-            <div class="w-2/5 flex flex-col gap-3 absolute right-0 bg-yellow/40 p-4 rounded-outer backdrop-blur-sm">
+            <div class="buyOpt w-2/5 flex flex-col gap-3 absolute right-0 bg-yellow/40 p-4 rounded-outer backdrop-blur-sm">
                 <p class="font-bold font-serif text-medium">Thanh toán ngay?</p>
                 <a href="/orders/checkout" class="text-white transition-transform transform hover:scale-110 shadow-lg bg-red backdrop-blur-lg border border-yellow text-center font-bold font-serif px-4 py-2 rounded-outer hover:bg-red hover:text-white">Click vào đây</a>
             </div>
@@ -34,6 +34,7 @@
 <script>
     const bttns = document.querySelectorAll(".bttn");
     const cartCnt = document.querySelector(".cart");
+    const buyOpt = document.querySelector(".buyOpt");
     bttns.forEach(bttn => {
         bttn.addEventListener("click", async (e) => {
             // console.log(e.currentTarget);
@@ -49,6 +50,7 @@
                 // cart chỉ chứa tiêu đề
                 if(cartCnt.children.length === 1) {
                     cartCnt.innerHTML += `<p class="text-lg font-serif">Giỏ hàng của bạn đang trống. <a href="/products" class="text-red font-serif font-bold">Mua sắm ngay!</a></p>`;
+                    buyOpt.remove();
                 } 
             }
             catch(e) {
