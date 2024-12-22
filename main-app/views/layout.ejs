@@ -35,10 +35,10 @@
                 </ul>
             </div>
         </nav>
-        <div id="searchBar" class="absolute top-24 w-9/12 mx-auto invisible place-self-center">
-            <input type="text" placeholder="Nhập vào đây để tìm kiếm..." class="w-full h-full pl-4 pr-10 py-3 font-serif rounded-outer backdrop-blur-lg bg-white/70 border border-white/20 shadow-lg">
-            <i class="fas fa-search absolute top-1/2 right-4 transform -translate-y-1/2 text-red"></i>
-        </div>
+        <form action="/products/search" method="post" id="searchBar" class="absolute top-24 w-9/12 mx-auto invisible place-self-center">
+            <input type="text" placeholder="Nhập vào đây để tìm kiếm..." class="w-full h-full pl-4 pr-10 py-3 font-serif rounded-outer backdrop-blur-lg bg-white/70 border border-white/20 shadow-lg" name="q">
+            <button class="absolute right-6 h-full" type="submit"><i class="fas fa-search text-red"></i></button>
+        </form>
     </header>
 
     <!-- Nội dung chính của từng trang sẽ được chèn vào đây -->

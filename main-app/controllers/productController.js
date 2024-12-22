@@ -13,7 +13,7 @@ exports.getProducts = async (req, res) => {
             res.redirect("/");
         }
         const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
-        res.render('client/products', { currPage, totalPages, products });
+        res.render('client/products', { noPagination: false, currPage, totalPages, products });
     } catch (err) {
         console.error('Error fetching products:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');
@@ -117,14 +117,14 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.searchProducts = async (req, res) => {
-    const query = req.query.q || '';
+    const query = req.body.q || '';
     try {
         const products = await Product.find({ name: new RegExp(query, 'i') }).lean();
-        res.render('client/products', { products, title: 'Kết Quả Tìm Kiếm' });
+
+        res.render('client/products', { noPagination: true, products, title: 'Kết Quả Tìm Kiếm' });
     } catch (err) {
         console.log(err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi tìm kiếm sản phẩm');
-        res.redirect('/products');
+        res.send('Đã xảy ra lỗi khi tìm kiếm sản phẩm');
     }
 };
 

@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 router.get('/page/:page', productController.getProducts);
 
 // Route để tìm kiếm sản phẩm
-router.get('/search', productController.searchProducts);
+router.post('/search', productController.searchProducts);
 
 // Route để hiển thị chi tiết sản phẩm (Client)
 router.get('/id/:id', productController.getProductDetails);

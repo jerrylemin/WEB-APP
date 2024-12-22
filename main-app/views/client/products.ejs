@@ -69,78 +69,82 @@
 
 </style>
 <script>    
-    const currPage = <%= currPage %>;
-    const totalPages = <%= totalPages %>;
-
-    function createPagination() {
-        const pagination = document.getElementById("pagination");
-        pagination.innerHTML = ""; // Reset nội dung cũ
-        const ul = document.createElement("ul");
-        ul.classList.add("pagination");
-
-        // Tạo nút Previous
-        const prev = document.createElement("li");
-        prev.textContent = "Previous";
-        if(currPage === 1) {
-            prev.classList.add("disabled");
-        }
-        prev.onclick = () => {
-            if (currPage > 1) {
-                window.location.href = `/products/page/${currPage - 1}`;
+    <% if(!noPagination) { %>
+        const currPage = <%= currPage %>;
+        const totalPages = <%= totalPages %>;
+    
+        function createPagination() {
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = ""; // Reset nội dung cũ
+            const ul = document.createElement("ul");
+            ul.classList.add("pagination");
+    
+            // Tạo nút Previous
+            const prev = document.createElement("li");
+            prev.textContent = "Previous";
+            if(currPage === 1) {
+                prev.classList.add("disabled");
             }
-        };
-        ul.appendChild(prev);
-
-        // Tính toán nút chuyển trang min và nút chuyển trang max
-        const startPage = Math.max(1, currPage - 2);
-        const endPage = Math.min(totalPages, currPage + 2);
-        
-        // Nếu nút chuyển trang bắt đầu từ 1 thì không cần thêm vào ... ở trước đó nữa
-        if(startPage !== 1) {
-            const manyPrev = document.createElement("li");
-            manyPrev.textContent = "…";
-            manyPrev.classList.add("disabled");
-            ul.appendChild(manyPrev);
-        }
-        
-        // Hiển thị 2 nút bên trái và 2 nút bên phải
-        for (let i = startPage; i <= endPage; i++) {
-            const li = document.createElement("li");
-            li.textContent = i;
-
-            if (i === currPage) {
-                li.classList.add("active");
-            } else {
-                li.onclick = () => window.location.href = `/products/page/${i}`;
+            prev.onclick = () => {
+                if (currPage > 1) {
+                    window.location.href = `/products/page/${currPage - 1}`;
+                }
+            };
+            ul.appendChild(prev);
+    
+            // Tính toán nút chuyển trang min và nút chuyển trang max
+            const startPage = Math.max(1, currPage - 2);
+            const endPage = Math.min(totalPages, currPage + 2);
+            
+            // Nếu nút chuyển trang bắt đầu từ 1 thì không cần thêm vào ... ở trước đó nữa
+            if(startPage !== 1) {
+                const manyPrev = document.createElement("li");
+                manyPrev.textContent = "…";
+                manyPrev.classList.add("disabled");
+                ul.appendChild(manyPrev);
             }
-            ul.appendChild(li);
+            
+            // Hiển thị 2 nút bên trái và 2 nút bên phải
+            for (let i = startPage; i <= endPage; i++) {
+                const li = document.createElement("li");
+                li.textContent = i;
+    
+                if (i === currPage) {
+                    li.classList.add("active");
+                } else {
+                    li.onclick = () => window.location.href = `/products/page/${i}`;
+                }
+                ul.appendChild(li);
+            }
+    
+            // Nếu nút chuyển trang kết thúc bằng totalPages thì không cần thêm vào ... ở sau đó nữa
+            if(endPage !== totalPages) {
+                const manyNext = document.createElement("li");
+                manyNext.textContent = "…";
+                manyNext.classList.add("disabled");
+                ul.appendChild(manyNext);
+            }
+    
+            // Tạo nút Next
+            const next = document.createElement("li");
+            next.textContent = "Next";
+            if(currPage === totalPages) {
+                next.classList.add("disabled");
+            }
+            next.onclick = () => {
+                if (currPage < totalPages) {
+                    window.location.href = `/products/page/${currPage + 1}`;
+                };
+            };
+            ul.appendChild(next);
+    
+            // Thêm vào DOM
+            pagination.appendChild(ul);
         }
-
-        // Nếu nút chuyển trang kết thúc bằng totalPages thì không cần thêm vào ... ở sau đó nữa
-        if(endPage !== totalPages) {
-            const manyNext = document.createElement("li");
-            manyNext.textContent = "…";
-            manyNext.classList.add("disabled");
-            ul.appendChild(manyNext);
-        }
-
-        // Tạo nút Next
-        const next = document.createElement("li");
-        next.textContent = "Next";
-        if(currPage === totalPages) {
-            next.classList.add("disabled");
-        }
-        next.onclick = () => {
-            if (currPage < totalPages) createPagination(totalPages, currPage + 1);
-        };
-        ul.appendChild(next);
-
-        // Thêm vào DOM
-        pagination.appendChild(ul);
-    }
-
-    // Khởi tạo thanh pagination
-    createPagination(totalPages, currPage);
+    
+        // Khởi tạo thanh pagination
+        createPagination(totalPages, currPage);
+    <% } %>
 
     const bttns = document.querySelectorAll(".bttn");
     bttns.forEach(async (bttn) => {
