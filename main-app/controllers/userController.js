@@ -37,27 +37,31 @@ exports.updateBalance = async (req, res) => {
 // Cập nhật thông tin cá nhân
 exports.updateProfile = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, address, phoneNumber } = req.body;
         const user = await User.findById(req.user._id);
 
         if (!user) {
-            req.flash('error_msg', 'Người dùng không tồn tại');
-            return res.redirect('/profile');
+            return res.status(400).send("Người dùng không tồn tại.");
         }
 
-        user.name = name || user.name;
-        user.email = email || user.email;
-        if (password && password.length >= 6) {
-            user.password = password; // Bạn cần đảm bảo mật khẩu được mã hóa trước khi lưu
+        if(name) {
+            user.name = name;
         }
-
+        if(email) {
+            user.email = email;
+        }
+        if(address) {
+            user.address = address;
+        }
+        if(phoneNumber) {
+            user.phoneNumber = phoneNumber;
+        }
         await user.save();
-        req.flash('success_msg', 'Cập nhật hồ sơ thành công');
-        res.redirect('/profile');
+        console.log(user);
+        return res.status(200).redirect("/profile");
     } catch (err) {
         console.error('Error updating profile:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi cập nhật hồ sơ');
-        res.redirect('/profile/edit');
+        return res.status(500).send("Đã xảy ra lỗi khi cập nhật hồ sơ!");
     }
 };
 
