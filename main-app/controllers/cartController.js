@@ -119,7 +119,7 @@ exports.removeFromCart = async (req, res) => {
         res.send('Giỏ hàng của bạn đang trống');
     }
     
-    res.status('200').end();
+    res.status(200).end();
 };
 
 // Hiển thị trang thanh toán
