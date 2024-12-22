@@ -50,10 +50,9 @@ exports.addToCart = async (req, res) => {
                 return res.send("Số lượng sản phẩm vượt quá kho");
             }
             cart.items[existingItemIndex].quantity += quantity;
+            await cart.save();
         } else {
             // Nếu chưa có, thêm sản phẩm mới vào giỏ
-            console.log(productId);
-            console.log(quantity);
             cart.items.push({
                 product: productId,
                 quantity: quantity
@@ -63,7 +62,7 @@ exports.addToCart = async (req, res) => {
         }
         
         // Tính lại tổng tiền
-        cart.totalPrice = cart.items.reduce(async (acc, item) => {
+        cart.totalPrice = cart.items.reduce((acc, item) => {
             return acc + product.price * item.quantity;
         }, 0);
         await cart.save();
@@ -75,7 +74,7 @@ exports.addToCart = async (req, res) => {
         res.send("Thêm vào giỏ hàng thành công!");
 
     } catch (err) {
-        // console.error('Error in addToCart:', err);
+        console.error('Error in addToCart:', err);
         // req.flash('error_msg', 'Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng');
         // return res.status("500").end();
         res.send("Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng");
