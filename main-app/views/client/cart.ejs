@@ -7,19 +7,22 @@
             </div>
         <% } %>
     </div>
-    <div class="w-5/12 bg-[url('../images/webPageResources/bg/waterNLeaves.png')] bg-cover">
-        <div class="w-full h-full p-4 backdrop-blur-lg bg-tertiaryGreen/40 rounded-outer border border-primaryGreen overflow-y-auto">
+    <div class="w-5/12 h-[70vh] bg-[url('../images/webPageResources/bg/waterNLeaves.png')] bg-cover overflow-y-auto">
+        <div class="cart w-full h-full p-4 backdrop-blur-lg bg-tertiaryGreen/40 rounded-outer border border-primaryGreen overflow-y-auto">
             <h1 class="text-big font-serif font-bold mb-4 text-red">Giỏ hàng</h1>
             <% if (cart && cart.items.length > 0) { %>
                 <% cart.items.forEach(item => { %>
-                    <div class="p-4 border border-yellow rounded-outer mb-4 bg-yellow/40 backdrop-blur-lg flex gap-3">
+                    <div data-product-id="<%= item.product %>" class="p-4 border border-yellow rounded-outer mb-4 bg-yellow/40 backdrop-blur-lg flex gap-3">
                         <img class="w-1/5 aspect-square rounded-inner" src="<%= item.productInfo.image %>" alt="">
                         <div class="content">
                             <p class="font-bold font-big font-serif"><%= item.productInfo.name %></p>
                             <p class="font-big font-serif"><%= item.productInfo.price %>đ</p>
                             <p class="font-bold font-big font-serif" for="sl">SL: <%= item.quantity %></p>
                         </div>
-                        <i class="fa-solid fa-xmark text-red absolute right-0 mr-4 top-0 mt-4"></i>
+                        
+                        <div class="bttn w-8 h-8 rounded-full bg-red absolute right-0 mr-4 top-0 mt-4 flex justify-center items-center transition-transform duration-100 hover:transform hover:scale-110 cursor-pointer">
+                            <i class="fa-solid fa-xmark text-white"></i>
+                        </div>          
                     </div>
                 <% }); %>
             <% } else { %>
@@ -27,7 +30,30 @@
             <% } %>
         </div>
     </div>
-    <!-- <div class="w-5/12 rounded-outer backdrop-blur-lg border border-primaryGreen p-4 bg-tertiaryGreen/40 z-10">
-        
-    </div> -->
 </main>
+<script>
+    const bttns = document.querySelectorAll(".bttn");
+    const cartCnt = document.querySelector(".cart");
+    bttns.forEach(bttn => {
+        bttn.addEventListener("click", async (e) => {
+            // console.log(e.currentTarget);
+            const parent = e.currentTarget.parentElement;
+            const productId = parent.getAttribute("data-product-id");
+            try {
+                const res = await fetch(`/cart/remove/${productId}`, {
+                    method: "POST"
+                });
+                const noti = await res.text();
+                showNotification(noti);
+                parent.remove();
+                // cart chỉ chứa tiêu đề
+                if(cartCnt.children.length === 1) {
+                    cartCnt.innerHTML += `<p class="text-lg font-serif">Giỏ hàng của bạn đang trống. <a href="/products" class="text-red font-serif font-bold">Mua sắm ngay!</a></p>`;
+                } 
+            }
+            catch(e) {
+                console.log(e);
+            }
+        });
+    });
+</script>

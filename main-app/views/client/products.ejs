@@ -56,23 +56,8 @@
             </div>
         </article>
     </div>
-    <div class="fixed bottom-0 right-0 m-4">
-        <div id="notification" class="bg-yellow/40 backdrop-blur-lg text-white p-4 rounded-lg border border-yellow shadow-md hidden">
-            <p id="notification-message" class="font-bold font-serif text-medium text-black"></p>
-        </div>
-    </div>
 </main>
 <script>
-    function showNotification(message) {
-        const notification = document.getElementById("notification");
-        const notificationMessage = document.getElementById("notification-message");
-        notification.classList.remove("hidden");
-        notificationMessage.textContent = message;
-        setTimeout(() => {
-            notification.classList.add("hidden");
-        }, 3000);
-    }
- 
     const bttns = document.querySelectorAll(".bttn");
     bttns.forEach(async (bttn) => {
         bttn.addEventListener("click", async (e) => {

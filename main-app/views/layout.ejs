@@ -44,6 +44,12 @@
     <!-- Nội dung chính của từng trang sẽ được chèn vào đây -->
     <%- body %>
 
+    <section class="fixed bottom-0 right-0 m-4">
+        <div id="notification" class="bg-yellow/40 backdrop-blur-lg text-white p-4 rounded-lg border border-yellow shadow-md hidden">
+            <p id="notification-message" class="font-bold font-serif text-medium text-black"></p>
+        </div>
+    </section>
+
     <footer class="bg-tertiaryGreen text-red font-serif font-bold p-4 mt-8 drop-shadow-bars">
         <div class="container mx-auto text-center">
             <p>&copy; 2024 Brewtiful. All rights reserved.</p>
@@ -51,7 +57,18 @@
     </footer>
 </body>
 <script>
+    function showNotification(message) {
+        const notification = document.getElementById("notification");
+        const notificationMessage = document.getElementById("notification-message");
+        notification.classList.remove("hidden");
+        notificationMessage.textContent = message;
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 3000);
+    }
+
     const searchBtn = document.querySelector('#searchBtn');
+
     searchBtn.addEventListener("click", (e) => {
         document.querySelector("#searchBar").classList.toggle("invisible");
     });
