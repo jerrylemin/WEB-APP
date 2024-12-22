@@ -1,13 +1,6 @@
-<style>
-    .glowing-bg {
-        background-image: radial-gradient(circle, var(--tw-gradient-from), var(--tw-gradient-to));
-        background-position: center;
-        background-size: 150%;
-    }
-</style>
 <main class="relative">
-    <div class="full-info hidden bg-black/80 z-50 p-10 fixed inset-0">
-        <div class="full-info-cnt bg-white rounded-lg absolute inset-10 overflow-y-scroll p-5">
+    <div class="full-info hidden bg-black/80 backdrop-blur-sm z-50 fixed inset-0">
+        <div class="full-info-cnt bg-cream rounded-lg absolute inset-10 overflow-y-scroll mx-32 my-8 px-10 py-5">
             
         </div>
     </div>
@@ -20,29 +13,15 @@
     </div>
     <div class="bg-[url('/images/webPageResources/bg/bg_greenSplash.png')] bg-fixed bg-top bg-contain bg-no-repeat">
         <article class="w-9/12 mx-auto my-10">
-            <div class="combobox mb-5 flex justify-center gap-4">
-                <!-- <label for="product-category" class="block text-lg font-semibold mb-2">Phân loại</label> -->
-                <select id="product-category" class="border border-gray-300 rounded p-2 w-[150px]">
-                    <option value="" disabled selected>Phân loại</option>
-                    <option value="traditional-tea">Trà sữa truyền thống</option>
-                    <option value="fruit-tea">Trà trái cây</option>
-                    <option value="pure-tea">Trà nguyên chất</option>
-                    <option value="fresh-milk-cheese">Sữa tươi và kem cheese</option>
-                    <option value="blended-ice">Đá xay</option>
-                    <option value="special-drink">Thức uống đặc biệt</option>
-                    <option value="seasonal-drink">Thức uống theo mùa</option>
-                    <option value="sweet-cake">Bánh ngọt</option>
-                </select>
-                <select id="price-category" class="border border-gray-300 rounded p-2 w-[150px]">
-                    <option value="" disabled selected>Giá</option>
-                </select>
+            <div id="pagination" class="w-full h-10 mb-7">
+
             </div>
             <div class="items min-h-screen w-full justify-center grid grid-flow-row auto-rows-auto grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
                 <% products.forEach(p => { %>
-                    <div data-product-id="<%= p._id %>" class="parentOfGlow group bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
-                        <div class="glowing-bg absolute inset-0 pointer-events-none tr  ansition-opacity opacity-0 group-hover:opacity-100 duration-200 from-yellow/20 to-white/20"></div>
+                    <div data-product-id="<%= p._id %>" class="productCard group bg-yellow/50 border border-yellow/50 rounded-outer p-1 backdrop-blur-lg flex flex-col justify-between transition-transform transition-shadow duration-200 hover:shadow-lg hover:scale-110 relative">
+                        <div class="absolute inset-0 pointer-events-none tr  ansition-opacity opacity-0 group-hover:opacity-100 duration-200 from-yellow/20 to-white/20"></div>
                         <div class="info h-3/4">
-                            <img class="w-full rounded-inner aspect-square" src="<%= p.image %>" alt="">
+                            <img class="w-full rounded-inner aspect-square" src="/<%= p.image %>" alt="">
                             <p class="font-bold font-serif text-medium"><%= p.name %></p>
                             <p class="font-serif text-medium"><%= p.price %>đ</p>
                         </div>
@@ -57,7 +36,112 @@
         </article>
     </div>
 </main>
-<script>
+<style>
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #F29F05CC;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    user-select: none;
+}
+
+.pagination li.active {
+    background-color: #F23A29;
+    color: white;
+    font-weight: bold;
+    border: 1px solid #F23A29;
+}
+
+.pagination li.disabled {
+    pointer-events: none;
+}
+
+</style>
+<script>    
+    const currPage = <%= currPage %>;
+    const totalPages = <%= totalPages %>;
+
+    function createPagination() {
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = ""; // Reset nội dung cũ
+        const ul = document.createElement("ul");
+        ul.classList.add("pagination");
+
+        // Tạo nút Previous
+        const prev = document.createElement("li");
+        prev.textContent = "Previous";
+        if(currPage === 1) {
+            prev.classList.add("disabled");
+        }
+        prev.onclick = () => {
+            if (currPage > 1) {
+                window.location.href = `/products/page/${currPage - 1}`;
+            }
+        };
+        ul.appendChild(prev);
+
+        // Tính toán nút chuyển trang min và nút chuyển trang max
+        const startPage = Math.max(1, currPage - 2);
+        const endPage = Math.min(totalPages, currPage + 2);
+        
+        // Nếu nút chuyển trang bắt đầu từ 1 thì không cần thêm vào ... ở trước đó nữa
+        if(startPage !== 1) {
+            const manyPrev = document.createElement("li");
+            manyPrev.textContent = "…";
+            manyPrev.classList.add("disabled");
+            ul.appendChild(manyPrev);
+        }
+        
+        // Hiển thị 2 nút bên trái và 2 nút bên phải
+        for (let i = startPage; i <= endPage; i++) {
+            const li = document.createElement("li");
+            li.textContent = i;
+
+            if (i === currPage) {
+                li.classList.add("active");
+            } else {
+                li.onclick = () => window.location.href = `/products/page/${i}`;
+            }
+            ul.appendChild(li);
+        }
+
+        // Nếu nút chuyển trang kết thúc bằng totalPages thì không cần thêm vào ... ở sau đó nữa
+        if(endPage !== totalPages) {
+            const manyNext = document.createElement("li");
+            manyNext.textContent = "…";
+            manyNext.classList.add("disabled");
+            ul.appendChild(manyNext);
+        }
+
+        // Tạo nút Next
+        const next = document.createElement("li");
+        next.textContent = "Next";
+        if(currPage === totalPages) {
+            next.classList.add("disabled");
+        }
+        next.onclick = () => {
+            if (currPage < totalPages) createPagination(totalPages, currPage + 1);
+        };
+        ul.appendChild(next);
+
+        // Thêm vào DOM
+        pagination.appendChild(ul);
+    }
+
+    // Khởi tạo thanh pagination
+    createPagination(totalPages, currPage);
+
     const bttns = document.querySelectorAll(".bttn");
     bttns.forEach(async (bttn) => {
         bttn.addEventListener("click", async (e) => {
@@ -78,39 +162,27 @@
         e.currentTarget.classList.toggle("hidden");
     })
 
-    document.querySelectorAll(".parentOfGlow").forEach((parent) => {
+    document.querySelectorAll(".productCard").forEach((parent) => {
         parent.addEventListener("click", async (e) => {
             if(!e.target.classList.contains("bttn")) {
-                // document.querySelector(".full-info-cnt").innerHTML = parent.querySelector(".info-storage").innerHTML;
                 try {
-                    const prod = await fetch(`/products/${parent.getAttribute("data-product-id")}`);
+                    const prod = await fetch(`/products/id/${parent.getAttribute("data-product-id")}`);
                     const res = await prod.json();
-                    console.log(res);
                     document.querySelector(".full-info-cnt").innerHTML = `
-                        <h1 class="text-center text-big font-serif">${res.name}</h1>
+                        <h1 class="text-center text-big text-red font-serif font-bold">${res.name}</h1>
                         <div class="flex justify-center m-4">
-                            <img class="rounded-inner aspect-square w-1/2" src="${res.image}" alt="">
+                            <img class="rounded-inner aspect-square w-1/2" src="/${res.image}" alt="">
                         </div>
-                        <p><b>Mô tả</b>: ${res.description}</p>
-                        <p><b>Phân loại</b>: ${res.category}</p>
-                        <p><b>Kho</b>: ${res.stock}</p>
-                        <p><b>Giá</b>: ${res.price}đ</p>
+                        <p class="text-medium font-serif"><b>Mô tả</b>: ${res.description}</p>
+                        <p class="text-medium font-serif"><b>Phân loại</b>: ${res.category}</p>
+                        <p class="text-medium font-serif"><b>Kho</b>: ${res.stock}</p>
+                        <p class="text-medium font-serif"><b>Giá</b>: ${res.price}đ</p>
                     `;
                     document.querySelector(".full-info").classList.toggle("hidden");
                 }
                 catch(e) {
                     console.log(e);
                 }
-            }
-        });
-
-        parent.addEventListener("mousemove", (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            let x = e.clientX - rect.left;
-            let y = e.clientY - rect.top;
-            const glowingBg = e.currentTarget.querySelector(".glowing-bg"); // Tìm trong phần tử cha hiện tại
-            if (glowingBg) {
-                glowingBg.style.setProperty("background-position", `${x}px ${y}px`);
             }
         });
     });

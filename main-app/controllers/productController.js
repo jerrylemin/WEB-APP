@@ -5,9 +5,15 @@ const Product = require('../models/productModel');
 // Hiển thị danh sách sản phẩm
 exports.getProducts = async (req, res) => {
     try {
-        const products = await Product.find().lean();
-        // console.log(products);
-        res.render('client/products', { products });
+        const perPage = 8; // mỗi trang hiện 8 kết quả
+        const currPage = req.params.page;
+        const totalPages = Math.ceil(await Product.countDocuments() / perPage);
+        if(currPage < 1 || currPage > totalPages) {
+            console.log("Không tồn tại trang");
+            res.redirect("/");
+        }
+        const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+        res.render('client/products', { currPage, totalPages, products });
     } catch (err) {
         console.error('Error fetching products:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');
@@ -15,14 +21,9 @@ exports.getProducts = async (req, res) => {
     }
 };
 
-// Hiển thị chi tiết sản phẩm
 exports.getProductDetails = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id).lean();
-        // if (!product) {
-        //     req.flash('error_msg', 'Sản phẩm không tồn tại');
-        //     return res.redirect('/products');
-        // }
         return res.json(product);
     } catch (err) {
         console.error('Error fetching product details:', err);
@@ -127,35 +128,37 @@ exports.searchProducts = async (req, res) => {
     }
 };
 
-exports.addReview = async (req, res) => {
-    try {
-        const { rating, comment } = req.body;
-        const product = await Product.findById(req.params.id);
 
-        const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString());
 
-        if (alreadyReviewed) {
-            req.flash('error_msg', 'Bạn đã đánh giá sản phẩm này');
-            return res.redirect('/products/' + req.params.id);
-        }
+// exports.addReview = async (req, res) => {
+//     try {
+//         const { rating, comment } = req.body;
+//         const product = await Product.findById(req.params.id);
 
-        const review = {
-            user: req.user._id,
-            name: req.user.name,
-            rating: Number(rating),
-            comment
-        };
+//         const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString());
 
-        product.reviews.push(review);
-        product.numReviews = product.reviews.length;
-        product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+//         if (alreadyReviewed) {
+//             req.flash('error_msg', 'Bạn đã đánh giá sản phẩm này');
+//             return res.redirect('/products/' + req.params.id);
+//         }
 
-        await product.save();
-        req.flash('success_msg', 'Đánh giá của bạn đã được thêm');
-        res.redirect('/products/' + req.params.id);
-    } catch (err) {
-        console.error('Error adding review:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi thêm đánh giá');
-        res.redirect('/products/' + req.params.id);
-    }
-};
+//         const review = {
+//             user: req.user._id,
+//             name: req.user.name,
+//             rating: Number(rating),
+//             comment
+//         };
+
+//         product.reviews.push(review);
+//         product.numReviews = product.reviews.length;
+//         product.rating = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+//         await product.save();
+//         req.flash('success_msg', 'Đánh giá của bạn đã được thêm');
+//         res.redirect('/products/' + req.params.id);
+//     } catch (err) {
+//         console.error('Error adding review:', err);
+//         req.flash('error_msg', 'Đã xảy ra lỗi khi thêm đánh giá');
+//         res.redirect('/products/' + req.params.id);
+//     }
+// };

@@ -7,13 +7,18 @@ const { isAdmin } = require('../utils/authMiddleware');
 const { ensureAuthenticated } = require('../utils/authMiddleware');
 
 // Route để hiển thị danh sách sản phẩm (Client)
-router.get('/', productController.getProducts);
+router.get('/', (req, res) => {
+    return res.redirect("/products/page/1");
+});
+
+// Route để hiển thị danh sách sản phẩm theo trang
+router.get('/page/:page', productController.getProducts);
 
 // Route để tìm kiếm sản phẩm
 router.get('/search', productController.searchProducts);
 
 // Route để hiển thị chi tiết sản phẩm (Client)
-router.get('/:id', productController.getProductDetails);
+router.get('/id/:id', productController.getProductDetails);
 
 // Route quản trị để liệt kê sản phẩm
 router.get('/admin', productController.getProductsAdmin);
@@ -30,5 +35,6 @@ router.post('/admin/edit/:id', productController.editProduct);
 router.post('/admin/delete/:id', productController.deleteProduct);
 
 // Thêm đánh giá sản phẩm
-router.post('/:id/review', ensureAuthenticated, productController.addReview);
+// router.post('/:id/review', ensureAuthenticated, productController.addReview);
+
 module.exports = router;
