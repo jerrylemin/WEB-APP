@@ -28,12 +28,16 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false 
     },
+    APIKey: {
+        type: String,
+        default: null
+    },
     resetToken: String,
     resetTokenExpiration: Date,
-    balance: {
-        type: Number,
-        default: 0
-    },
+    bankAccountID: {
+        type: String,
+        default: null   
+    }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

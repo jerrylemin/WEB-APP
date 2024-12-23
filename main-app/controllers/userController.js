@@ -12,26 +12,18 @@ exports.getProfile = (req, res) => {
 };
 
 // Hiển thị form cập nhật số dư
-exports.editBalanceForm = (req, res) => {
-    res.render('client/editBalance', { user: req.user, title: 'Cập Nhật Số Dư' });
-};
-
-// Xử lý cập nhật số dư
-exports.updateBalance = async (req, res) => {
+exports.editBalanceForm = async (req, res, next) => {
+    // Lấy số dư
+    const bankAccountID = req.user.bankAccountID;
+    console.log(bankAccountID);
     try {
-        const { amount } = req.body;
-        const user = await User.findById(req.user._id);
-
-        user.balance = user.balance + parseFloat(amount);
-        await user.save();
-
-        req.flash('success_msg', 'Cập nhật số dư thành công');
-        res.redirect('/profile');
-    } catch (err) {
-        console.error('Error updating balance:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi cập nhật số dư');
-        res.redirect('/profile');
+        const bankAcc = await fetch(`/bank/balance/${req.user.bankAccountID}`);
+        const balance = await bankAcc.text();
     }
+    catch(err) {
+        return next(err);
+    }
+    res.render('client/editBalance', { user: req.user, balance: parseInt(balance), title: 'Cập Nhật Số Dư' });
 };
 
 // Cập nhật thông tin cá nhân

@@ -153,7 +153,7 @@ exports.renderRegister = (req, res) => {
 };
 
 // Hàm xử lý đăng ký người dùng
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
     const { name, email, password, password2 } = req.body;
     let errors = [];
 
@@ -193,11 +193,28 @@ exports.register = async (req, res) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
         
+            // Tạo tài khoản ngân hàng cho người dùng
+            try {
+                const res = await fetch("/api/accounts/create", {
+                    method: "POST"
+                });
+                if (res.ok) {
+                    const resData = await res.json();
+                    const { bankAccountID, APIKey } = resData;
+                }
+            }
+            catch(err) {
+                return next(err)
+            }
+            
             // Tạo đối tượng người dùng mới
+
             const newUser = new User({
                 name,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                bankAccountID: bankAccountID,
+                APIKey: 
             });
         
             console.log('Đối tượng người dùng mới được tạo:', newUser);

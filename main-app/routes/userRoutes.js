@@ -18,7 +18,4 @@ router.post('/profile/edit', ensureAuthenticated, userController.updateProfile);
 // Hiển thị form cập nhật số dư
 router.get('/balance/edit', ensureAuthenticated, userController.editBalanceForm);
 
-// Xử lý cập nhật số dư
-router.post('/balance/edit', ensureAuthenticated, userController.updateBalance);
-
 module.exports = router;

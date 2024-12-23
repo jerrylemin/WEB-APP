@@ -5,6 +5,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const accountRoutes = require('./routes/accountRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const crypto = require('crypto');
 
 const app = express();
 

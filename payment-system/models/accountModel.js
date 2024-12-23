@@ -3,10 +3,10 @@
 const mongoose = require('mongoose');
 
 const AccountSchema = new mongoose.Schema({
-    userId: {
+    accountID: {
         type: String,
         required: true,
-        unique: true
+        default: null
     },
     balance: {
         type: Number,
