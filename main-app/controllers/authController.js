@@ -204,7 +204,7 @@ exports.register = async (req, res, next) => {
                 }
             }
             catch(err) {
-                return next(err)
+                return next(err);
             }
             
             // Tạo đối tượng người dùng mới
@@ -213,8 +213,8 @@ exports.register = async (req, res, next) => {
                 name,
                 email,
                 password: hashedPassword,
-                bankAccountID: bankAccountID,
-                APIKey: 
+                bankAccountID,
+                APIKey
             });
         
             console.log('Đối tượng người dùng mới được tạo:', newUser);
