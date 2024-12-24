@@ -5,9 +5,12 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { User, Admin } = require('../models/userModel');
+const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const axios = require('axios'); // Để gửi yêu cầu tới hệ thống phụ nếu cần
 const fs = require('fs');
+
+const SECRET_KEY = "tm_lm_qd";
 
 // Hiển thị form quên mật khẩu
 exports.getForgotPassword = (req, res) => {
@@ -193,23 +196,6 @@ exports.register = async (req, res, next) => {
             // Mã hóa mật khẩu
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
-        
-            // Tạo tài khoản ngân hàng cho người dùng
-            try {
-                const res = await fetch("/api/accounts/create", {
-                    method: "POST",
-                    headers: {
-                        "Access-Token": localStorage.getItem('token') // Token jwt của người dùng
-                    }
-                });
-                if (res.ok) {
-                    const resData = await res.json();
-                    const { bankAccountID } = resData;
-                }
-            }
-            catch(err) {
-                return next(err);
-            }
             
             // Tạo đối tượng người dùng mới
             let isAdmin = false;
@@ -227,17 +213,42 @@ exports.register = async (req, res, next) => {
                 name,
                 email,
                 password: hashedPassword,
-                isAdmin,
-                bankAccountID
+                isAdmin
             });
-        
             console.log('Đối tượng người dùng mới được tạo:', newUser);
         
             // Lưu người dùng vào cơ sở dữ liệu
             await newUser.save();
             console.log('Người dùng đã được lưu vào MongoDB');
+            
+            // Tạo jwt token cho người dùng dựa vào userID
+            const token = jwt.sign({ userID: newUser._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+            // Lưu token vào cookie
+            res.cookie('AccessToken', token, { maxAge: 86400000, httpOnly: true });
+
+            // Tạo tài khoản ngân hàng cho người dùng
+            try {
+                const res = await fetch("http://localhost:5001/api/accounts/create", {
+                    method: "POST",
+                    headers: {
+                        "Access-Token": req.cookies['AccessToken'] // Token jwt của người dùng
+                    }
+                });
+                console.log(res);
+                if (res.ok) {
+                    const resData = await res.json();
+                    console.log(resData);
+                    const { bankAccountID } = resData;
+                    // Thêm trường bankAccountID vào newUser và lưu lại xuống cơ sở dữ liệu
+                    newUser.bankAccountID = bankAccountID;
+                    await newUser.save();
+                }
+            }
+            catch(err) {
+                return next(err);
+            }
         
-            // Tự động đăng nhập người dùng sau khi đăng ký thành công (tùy chọn)
+            // Tự động đăng nhập người dùng sau khi đăng ký thành công
             req.login(newUser, (err) => {
                 if (err) {
                     console.log('Lỗi khi đăng nhập sau khi đăng ký:', err);

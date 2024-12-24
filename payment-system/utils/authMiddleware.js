@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = "tm_qd_lm";
 
 function verifyToken(req, res, next) {
-    const token = req.headers['x-access-token'];
+    const token = req.headers['AccessToken'];
     if (!token) {
         return res.status(403).send({ message: 'Không tìm thấy token!' });
     }
@@ -16,3 +16,5 @@ function verifyToken(req, res, next) {
         next();
     });
 }
+
+module.exports = verifyToken;

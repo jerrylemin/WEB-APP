@@ -7,6 +7,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const methodOverride = require('method-override');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
 
 // Import Passport Config
@@ -33,6 +34,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
+app.use(cookieParser());
 
 // Sử dụng express-ejs-layouts
 app.use(expressLayouts);

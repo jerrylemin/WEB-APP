@@ -6,6 +6,8 @@ const Account = require('../models/accountModel');
 // Tạo tài khoản mới
 exports.createAccount = async (req, res) => {
     try {
+        console.log("Đang tạo tài khoản...");
+
         // Tạo số tài khoản ngẫu nhiên (8 chữ số)
         const randomNumber = crypto.randomInt(88888889) + 11111111;
 

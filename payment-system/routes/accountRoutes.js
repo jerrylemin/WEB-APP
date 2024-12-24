@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const accountController = require('../controllers/accountController');
-const { verifyToken } = require('../utils/authMiddleware');
+const verifyToken = require('../utils/authMiddleware');
 
 // Tạo tài khoản mới
 router.post('/create', verifyToken, accountController.createAccount);

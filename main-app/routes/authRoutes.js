@@ -24,7 +24,7 @@ router.post('/login', (req, res, next) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash('error_msg', info.message || 'Đăng nhập không thành công');
-            return res.render('/login', {
+            return res.render('login', {
                 error_msg: req.flash('error_msg')
             });
         }
@@ -32,7 +32,8 @@ router.post('/login', (req, res, next) => {
             if (err) { return next(err); }
             // Tạo và gửi jwt token cho người dùng
             const token = jwt.sign({ userID: user._id }, SECRET_KEY, { expiresIn: '1d' }); // Tạo token
-            localStorage.setItem('accessToken', token); // Lưu token vào localStorage của trình duyệt
+            // Lưu token người dùng vào cookie
+            res.cookie('AccessToken', token, { maxAge: 86400000, httpOnly: true }); // 1 ngày
             // Kiểm tra vai trò của người dùng
             if (user.isAdmin) {
                 return res.redirect('/admin/dashboard');
