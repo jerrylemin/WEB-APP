@@ -28,10 +28,6 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false 
     },
-    APIKey: {
-        type: String,
-        default: null
-    },
     resetToken: String,
     resetTokenExpiration: Date,
     bankAccountID: {
@@ -42,4 +38,15 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
+const adminSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true 
+    }
+});
+
+const Admin = mongoose.model('Admin', adminSchema);
+
 module.exports = User;
+module.exports = Admin;

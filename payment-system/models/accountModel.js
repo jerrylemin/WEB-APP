@@ -3,6 +3,10 @@
 const mongoose = require('mongoose');
 
 const AccountSchema = new mongoose.Schema({
+    userID: {
+        type: String,
+        required: true
+    },
     accountID: {
         type: String,
         required: true,

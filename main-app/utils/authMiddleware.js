@@ -1,6 +1,7 @@
 // utils/authMiddleware.js
 
 // Middleware kiểm tra xem người dùng đã đăng nhập chưa
+
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         console.log('User is authenticated');

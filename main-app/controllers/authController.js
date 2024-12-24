@@ -4,9 +4,10 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const User = require('../models/userModel');
+const { User, Admin } = require('../models/userModel');
 const nodemailer = require('nodemailer');
 const axios = require('axios'); // Để gửi yêu cầu tới hệ thống phụ nếu cần
+const fs = require('fs');
 
 // Hiển thị form quên mật khẩu
 exports.getForgotPassword = (req, res) => {
@@ -196,11 +197,14 @@ exports.register = async (req, res, next) => {
             // Tạo tài khoản ngân hàng cho người dùng
             try {
                 const res = await fetch("/api/accounts/create", {
-                    method: "POST"
+                    method: "POST",
+                    headers: {
+                        "Access-Token": localStorage.getItem('token') // Token jwt của người dùng
+                    }
                 });
                 if (res.ok) {
                     const resData = await res.json();
-                    const { bankAccountID, APIKey } = resData;
+                    const { bankAccountID } = resData;
                 }
             }
             catch(err) {
@@ -208,13 +212,23 @@ exports.register = async (req, res, next) => {
             }
             
             // Tạo đối tượng người dùng mới
-
+            let isAdmin = false;
+            try {
+                const res = await Admin.findOne({email: email}); // Kiểm tra xem người dùng có phải là admin không
+                if (res) {
+                    isAdmin = true; // Nếu là admin thì isAdmin = true
+                }
+            }
+            catch(err) {
+                return next(err);
+            }
+            
             const newUser = new User({
                 name,
                 email,
                 password: hashedPassword,
-                bankAccountID,
-                APIKey
+                isAdmin,
+                bankAccountID
             });
         
             console.log('Đối tượng người dùng mới được tạo:', newUser);
@@ -249,7 +263,6 @@ exports.renderLogin = (req, res) => {
         title: 'Đăng Nhập' 
     });
 };
-
 
 // Đăng nhập người dùng
 exports.login = (req, res, next) => {

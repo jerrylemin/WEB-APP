@@ -4,6 +4,10 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
+
+const SECRET_KEY = "tm_lm_qd";
+
 // Trang đăng nhập
 router.get('/login', authController.renderLogin);
 
@@ -26,6 +30,9 @@ router.post('/login', (req, res, next) => {
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
+            // Tạo và gửi jwt token cho người dùng
+            const token = jwt.sign({ userID: user._id }, SECRET_KEY, { expiresIn: '1d' }); // Tạo token
+            localStorage.setItem('accessToken', token); // Lưu token vào localStorage của trình duyệt
             // Kiểm tra vai trò của người dùng
             if (user.isAdmin) {
                 return res.redirect('/admin/dashboard');
