@@ -221,6 +221,14 @@ exports.register = async (req, res, next) => {
             await newUser.save();
             console.log('Người dùng đã được lưu vào MongoDB');
             
+            // Tạo cart cho người dùng
+            const cart = new Cart({
+                user: newUser._id,
+                items: [],
+                totalPrice: 0
+            });
+            await cart.save();
+
             // Tạo jwt token cho người dùng dựa vào userID
             const token = jwt.sign({ userID: newUser._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
             // Lưu token vào cookie
