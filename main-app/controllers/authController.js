@@ -1,4 +1,5 @@
 // controllers/authController.js 
+require("dotenv").config();
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -13,11 +14,18 @@ const fs = require('fs');
 
 const SECRET_KEY = "tm_lm_qd";
 
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
 // Hiển thị form quên mật khẩu
 exports.getForgotPassword = (req, res) => {
     res.render('forgotPassword', { title: 'Quên Mật Khẩu' });
 };
-
 
 // Xử lý quên mật khẩu
 exports.postForgotPassword = (req, res) => {
@@ -147,8 +155,7 @@ passport.deserializeUser(async (id, done) => {
 
 exports.renderRegister = (req, res) => {
     res.render('register', {
-        error_msg: null,
-        success_msg: null,
+        msg: null,
         name: '',
         email: '',
         password: '',
@@ -177,7 +184,7 @@ exports.register = async (req, res, next) => {
     if (errors.length > 0) {
         console.log('Có lỗi trong form đăng ký:', errors);
         res.render("register", {
-            error_msg: errors[0],
+            msg: errors[0],
             name,
             email
         });
@@ -188,7 +195,7 @@ exports.register = async (req, res, next) => {
                 errors.push({ msg: 'Email đã được sử dụng' });
                 console.log('Email đã được sử dụng:', email);
                 return res.render('register', {
-                    error_msg: errors[0],
+                    msg: errors[0],
                     name,
                     email
                 });
@@ -216,11 +223,11 @@ exports.register = async (req, res, next) => {
                 password: hashedPassword,
                 isAdmin
             });
-            console.log('Đối tượng người dùng mới được tạo:', newUser);
+            // console.log('Đối tượng người dùng mới được tạo:', newUser);
         
             // Lưu người dùng vào cơ sở dữ liệu
             await newUser.save();
-            console.log('Người dùng đã được lưu vào MongoDB');
+            // console.log('Người dùng đã được lưu vào MongoDB');
             
             // Tạo cart cho người dùng
             const cart = new Cart({
@@ -231,55 +238,73 @@ exports.register = async (req, res, next) => {
             await cart.save();
 
             // Tạo jwt token cho người dùng dựa vào userID
-            // console.log("User id trong token: " + newUser._id);
             const token = jwt.sign({ userID: newUser._id }, SECRET_KEY, { expiresIn: '1d' });
-            // Lưu token vào cookie củar người dùng
-            res.cookie('AccessToken', token, { maxAge: 86400000, httpOnly: true });
 
-            // Tạo tài khoản ngân hàng cho người dùng
-            try {
-                const response = await fetch("http://localhost:5001/api/accounts/create", {
-                    method: "GET",
-                    headers: {
-                        "Access-Token": token // Token jwt của người dùng
-                    }
-                });
-                if (response.ok) {
-                    const resData = await response.json();
-                    console.log(resData);
-                    const { bankAccountID } = resData;
-                    // Thêm trường bankAccountID vào newUser và lưu lại xuống cơ sở dữ liệu
-                    newUser.bankAccountID = bankAccountID;
-                    await newUser.save();
-                }
-            }
-            catch(err) {
-                return next(err);
-            }
-        
-            // Tự động đăng nhập người dùng sau khi đăng ký thành công
-            req.login(newUser, (err) => {
-                if (err) {
-                    console.log('Lỗi khi đăng nhập sau khi đăng ký:', err);
-                    req.flash('error_msg', 'Đăng nhập thất bại sau khi đăng ký');
-                    return res.redirect('/login');
-                }
-                req.flash('success_msg', 'Bạn đã đăng ký thành công và đã được đăng nhập');
-                return res.redirect('/');
+            const url = `https://localhost:5000/register/verify/${token}`;
+            await transporter.sendMail({
+                to: newUser.email,
+                subject: 'Brewtiful - Xác thực email',
+                html: `<h4>Chào ${newUser.name},</h4><p>Vui lòng nhấn vào liên kết sau để xác thực tài khoản của bạn: <a href="${url}">Xác thực</a></p>`
             });
-        
+
+            // Lưu token vào cookie của người dùng
+            res.render("login", {
+                msg: 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản!'
+            })
         } catch (err) {
-            console.log('Lỗi trong quá trình đăng ký:', err);
-            req.flash('error_msg', 'Đã xảy ra lỗi trong quá trình đăng ký');
-            return res.redirect('/register');
+            return res.render('register', {
+                msg: 'Đã xảy ra lỗi trong quá trình đăng ký'
+            });
         }
     }
 };
 
+exports.verifyRegister = async (req, res) => {
+    const decoded = jwt.verify(req.params.token, SECRET_KEY);
+    const user = await User.findById(decoded.userID);
+    if (!user) {
+        return res.render('login', {
+            msg: 'Tài khoản không tồn tại'
+        });
+    }
+    // console.log(user);
+    try {
+        // Đánh dấu tài khoản đã xác thực
+        user.isVerified = true;
+        await user.save();
+
+        // Tạo tài khoản ngân hàng cho người dùng
+        const response = await fetch("https://localhost:5001/api/accounts/create", {
+            method: "GET",
+            headers: {
+                "Access-Token": req.params.token // Token jwt của người dùng
+            }
+        });
+        if (response.ok) {
+            const resData = await response.json();
+            console.log(resData);
+            const { bankAccountID } = resData;
+            // Thêm trường bankAccountID vào newUser và lưu lại xuống cơ sở dữ liệu
+            user.bankAccountID = bankAccountID;
+            await user.save();
+        }
+
+        // Lưu token vào cookie của người dùng
+        res.cookie('AccessToken', req.params.token, { maxAge: 86400000, httpOnly:   true });
+        res.render("login", {
+            msg: 'Tài khoản đã được xác thực thành công!'
+        })
+    } catch (err) {
+        console.log(err);  
+        res.render("login", {
+            msg: 'Liên kết xác thực không hợp lệ hoặc đã hết hạn'
+        })
+    }
+}
+
 exports.renderLogin = (req, res) => {
     res.render('login', { 
-        error_msg: null,
-        success_msg: null,
+        msg: null,
         title: 'Đăng Nhập' 
     });
 };
@@ -297,7 +322,6 @@ exports.login = (req, res, next) => {
 exports.logout = (req, res) => {
     req.logout(function(err) {
         if (err) { return next(err); }
-        req.flash('success_msg', 'Bạn đã đăng xuất thành công');
-        res.redirect('/login');
+        res.status(200).redirect("/");
     });
 };

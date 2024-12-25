@@ -19,18 +19,18 @@ router.post('/search', productController.searchProducts);
 router.get('/id/:id', productController.getProductDetails);
 
 // Route quản trị để liệt kê sản phẩm
-router.get('/admin', productController.getProductsAdmin);
+router.get('/admin', isAdmin, productController.getProductsAdmin);
 
 // Route quản trị để thêm sản phẩm
-router.get('/admin/add', productController.addProductForm);
-router.post('/admin/add', productController.addProduct);
+router.get('/admin/add', isAdmin, productController.addProductForm);
+router.post('/admin/add', isAdmin, productController.addProduct);
 
 // Route quản trị để chỉnh sửa sản phẩm
-router.get('/admin/edit/:id', productController.editProductForm);
-router.post('/admin/edit/:id', productController.editProduct);
+router.get('/admin/edit/:id', isAdmin, productController.editProductForm);
+router.post('/admin/edit/:id', isAdmin, productController.editProduct);
 
 // Route quản trị để xóa sản phẩm
-router.post('/admin/delete/:id', productController.deleteProduct);
+router.post('/admin/delete/:id', isAdmin, productController.deleteProduct);
 
 // Thêm đánh giá sản phẩm
 // router.post('/:id/review', ensureAuthenticated, productController.addReview);

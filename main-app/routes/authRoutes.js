@@ -17,6 +17,9 @@ router.get('/register', authController.renderRegister);
 // Xử lý đăng ký
 router.post('/register', authController.register);
 
+// Xác thực đăng ký
+router.get('/register/verify/:token', authController.verifyRegister);
+
 // Xử lý đăng nhập
 // Sử dụng custom callback cho đăng nhập
 router.post('/login', (req, res, next) => {
@@ -24,6 +27,12 @@ router.post('/login', (req, res, next) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash('error_msg', info.message || 'Đăng nhập không thành công');
+            return res.render('login', {
+                error_msg: req.flash('error_msg')
+            });
+        }
+        if(!user.isVerified) {
+            req.flash('error_msg', 'Tài khoản chưa được xác thực');
             return res.render('login', {
                 error_msg: req.flash('error_msg')
             });

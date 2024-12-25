@@ -130,7 +130,7 @@ exports.searchProducts = async (req, res) => {
     try {
         const products = await Product.find({ name: new RegExp(query, 'i') }).lean();
 
-        res.render('client/products', { noPagination: true, products, title: 'Kết Quả Tìm Kiếm' });
+        res.render('client/products', { products, title: 'Kết Quả Tìm Kiếm' });
     } catch (err) {
         console.log(err);
         res.send('Đã xảy ra lỗi khi tìm kiếm sản phẩm');

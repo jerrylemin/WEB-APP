@@ -7,7 +7,7 @@
     "build:css": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/main.css --watch",
     "build:css:prod": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/main.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":  "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node app.js",
+    "start": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 node app.js",
     "dev": "concurrently \"cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 npm:build:css\" \"cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 nodemon app.js\""
   },
   "keywords": [],

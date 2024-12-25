@@ -35,3 +35,36 @@
 2024-11-25T11:50:25.821Z info: Admin jerryle.minh.3@gmail.com đã truy cập dashboard
 2024-11-25T11:50:32.583Z info: Admin jerryle.minh.3@gmail.com đã truy cập dashboard
 2024-12-20T13:45:38.813Z info: Admin nguyentuanminh435@gmail.com đã truy cập dashboard
+2024-12-25T11:13:43.142Z error: TypeError: User.countDocuments is not a function
+    at exports.renderDashboard (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\controllers\adminController.js:15:38)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:149:13)
+    at ensureAdmin (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\middleware\adminMiddleware.js:6:20)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\index.js:346:12)
+2024-12-25T11:18:43.176Z error: TypeError: User.countDocuments is not a function
+    at exports.renderDashboard (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\controllers\adminController.js:15:38)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:149:13)
+    at ensureAdmin (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\middleware\adminMiddleware.js:6:20)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\index.js:346:12)
+2024-12-25T11:21:46.739Z error: TypeError: User.countDocuments is not a function
+    at exports.renderDashboard (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\controllers\adminController.js:15:38)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:149:13)
+    at ensureAdmin (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\middleware\adminMiddleware.js:6:20)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at next (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\layer.js:95:5)
+    at E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (E:\LearningMaterial\KHTN\Năm 3\HK1\LapTrinhWebApp\Project\WEB-APP\main-app\node_modules\express\lib\router\index.js:346:12)
