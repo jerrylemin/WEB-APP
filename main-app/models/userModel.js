@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        default: null
     },
     address: {
         type: String,
@@ -27,6 +27,14 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false 
+    },
+    googleAuth: {
+        type: Boolean,
+        default: false
+    },
+    googleId: {
+        type: String,
+        default: null
     },
     isVerified: {
         type: Boolean,

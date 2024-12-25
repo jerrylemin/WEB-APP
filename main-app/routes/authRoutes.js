@@ -53,6 +53,21 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
+// Yêu cầu xác thực bằng Google
+router.get(
+    '/login/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+  
+// Xử lý callback từ Google
+router.get(
+    '/login/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+        res.redirect('/products');
+    }
+);
+
 // Đăng xuất
 router.get('/logout', authController.logout);
 

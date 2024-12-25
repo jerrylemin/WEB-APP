@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { User, Admin } = require('../models/userModel');
@@ -140,8 +141,40 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
         .catch(err => console.log(err));
 }));
 
+passport.use(
+    new GoogleStrategy(
+    {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+    try {
+        let user = await User.findOne({ googleId: profile.id });
+        if(!user) {
+            const info = {
+                name: profile.name.givenName + ' ' + profile.name.familyName,
+                email: profile.emails[0].value,
+                googleAuth: true,
+                googleId: profile.id
+            };
+            console.log(info);
+            const newUser = new User(info);
+            await newUser.save();
+            user = await User.findOne({ googleId: profile.id });
+            return done(null, user);
+        }
+        return done(null, user);
+    }
+    catch(err) {
+        return done(err, false);
+    }
+}));
+
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+    // console.log("serializing...");
+    console.log(user);
+    done(null, user._id);
 });
 
 passport.deserializeUser(async (id, done) => {

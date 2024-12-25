@@ -103,6 +103,12 @@ Chào bạn,
     npm install winston
     ```
 
+6. **passport-google-oauth20**  
+    *Chiến lược Passport cho xác thực bằng Google OAuth.*
+
+    ```bash
+    npm install passport-google-oauth20
+    ```
 ---
 
 ## **2. Gói Phụ Thuộc (Dev Dependencies)**
