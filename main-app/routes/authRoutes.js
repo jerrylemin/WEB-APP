@@ -33,7 +33,7 @@ router.post('/login', (req, res, next) => {
             // Tạo và gửi jwt token cho người dùng
             const token = jwt.sign({ userID: user._id }, SECRET_KEY, { expiresIn: '1d' }); // Tạo token
             // Lưu token người dùng vào cookie
-            res.cookie('AccessToken', token, { maxAge: 86400000, httpOnly: true }); // 1 ngày
+            res.cookie('AccessToken', token, { maxAge: 86400000 }); // 1 ngày
             // Kiểm tra vai trò của người dùng
             if (user.isAdmin) {
                 return res.redirect('/admin/dashboard');

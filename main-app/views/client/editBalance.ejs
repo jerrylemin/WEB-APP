@@ -2,7 +2,7 @@
 
 <main class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Cập Nhật Số Dư</h1>
-    <form action="/balance/" method="POST" class="bg-white p-6 rounded-lg shadow-md">
+    <form id="editBalanceForm" class="bg-white p-6 rounded-lg shadow-md">
         <div class="mb-4">
             <p><b>Số tiền: </b> <%= balance %></p>
         </div>
@@ -16,3 +16,48 @@
         </div>
     </form>
 </main>
+<script>
+    // source: https://www.w3schools.com/js/js_cookies.asp
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector("#editBalanceForm").onsubmit = async function(e) {
+            e.preventDefault();
+            try {
+                const response = await fetch("http://localhost:5001/api/accounts/balance/update", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "access-token": getCookie("AccessToken")
+                    },
+                    body: JSON.stringify({
+                        amount: document.querySelector("#amount").value
+                    })
+                });
+                const resData = await response.json();
+                if (response.ok) {
+                    alert("Cập nhật số dư thành công");
+                    window.location.href = "/profile";
+                } else {
+                    alert(resData.message);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+    });
+</script>

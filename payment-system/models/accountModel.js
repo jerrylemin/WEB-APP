@@ -9,8 +9,7 @@ const AccountSchema = new mongoose.Schema({
     },
     accountID: {
         type: String,
-        required: true,
-        default: null
+        required: true
     },
     balance: {
         type: Number,

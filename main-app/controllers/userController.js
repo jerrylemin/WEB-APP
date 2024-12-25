@@ -3,27 +3,41 @@
 const User = require('../models/userModel');
 
 // Hiển thị trang cá nhân
-exports.getProfile = (req, res) => {
-    if (!req.user) {
-        req.flash('error_msg', 'Vui lòng đăng nhập để xem hồ sơ');
-        return res.redirect('/login');
+exports.getProfile = async (req, res, next) => {
+    try {
+        console.log("Profile user id: ");
+        console.log(req.user._id);
+        const response = await fetch("http://localhost:5001/api/accounts/balance", {
+            method: "GET",
+            headers: {
+                "access-token": req.cookies['AccessToken'] // Token jwt của người dùng
+            }
+        });
+
+        const resData = await response.json();
+        res.render('client/profile', { user: req.user, title: 'Hồ Sơ Của Bạn', balance: parseInt(resData.balance) });
     }
-    res.render('client/profile', { user: req.user, title: 'Hồ Sơ Của Bạn' });
+    catch(err) {
+        return next(err);
+    }
 };
 
 // Hiển thị form cập nhật số dư
 exports.editBalanceForm = async (req, res, next) => {
     // Lấy số dư
-    const bankAccountID = req.user.bankAccountID;
-    console.log(bankAccountID);
     try {
-        const bankAcc = await fetch(`/bank/balance/${req.user.bankAccountID}`);
-        const balance = await bankAcc.text();
+        const response = await fetch("http://localhost:5001/api/accounts/balance", {
+            method: "GET",
+            headers: {
+                "access-token": req.cookies['AccessToken'] // Token jwt của người dùng
+            }
+        });
+        const resData = await response.json();
+        res.render('client/editBalance', { balance: parseInt(resData.balance), title: 'Cập Nhật Số Dư' });
     }
     catch(err) {
         return next(err);
     }
-    res.render('client/editBalance', { user: req.user, balance: parseInt(balance), title: 'Cập Nhật Số Dư' });
 };
 
 // Cập nhật thông tin cá nhân

@@ -1,13 +1,12 @@
 // controllers/accountController.js
 
 const Account = require('../models/accountModel');
+const crypto = require('crypto');
 
 
 // Tạo tài khoản mới
 exports.createAccount = async (req, res) => {
     try {
-        console.log("Đang tạo tài khoản...");
-
         // Tạo số tài khoản ngẫu nhiên (8 chữ số)
         const randomNumber = crypto.randomInt(88888889) + 11111111;
 
@@ -31,13 +30,11 @@ exports.createAccount = async (req, res) => {
 // Kiểm tra số dư tài khoản
 exports.checkBalance = async (req, res) => {
     try {
-        const account = await Account.findById(req.body.bankAccountID); // Tìm tài khoản
-        // Nếu req.userId không khớp với userID của tài khoản, trả về lỗi
-        if (account.userID !== req.userId) {
-            return res.status(403).json({ error: 'Không được phép truy cập' });
-        }
+        const account = await Account.findOne({ userID: req.userId }); // Tìm tài khoản ứng với userID trong jwt token của người dùng
         // Nếu không tìm thấy tài khoản trong cơ sở dữ liệu, trả về lỗi
-        if (!account) return res.status(404).json({ error: 'Tài khoản không tồn tại' });
+        if (!account) {
+            return res.status(404).json({ error: 'Tài khoản không tồn tại' });
+        }
         res.json({ balance: account.balance }); // Trả về số dư tài khoản nếu không có lỗi
     } catch (err) {
         console.log(err);
@@ -48,19 +45,19 @@ exports.checkBalance = async (req, res) => {
 // Cập nhật số dư tài khoản
 exports.updateBalance = async (req, res) => {
     try {
-        const account = await Account.findById(req.body.bankAccountID); // Tìm tài khoản
-        // Nếu req.userId không khớp với userID của tài khoản, trả về lỗi
-        if (account.userID !== req.userId) {
-            return res.status(403).json({ error: 'Không được phép truy cập' });
-        }
+        console.log("Đang cập nhật số dư tài khoản...");
+        const account = await Account.findOne({ userID: req.userId }); // Tìm tài khoản ứng với userID trong jwt token của người dùng
         // Nếu không tìm thấy tài khoản trong cơ sở dữ liệu, trả về lỗi
         if (!account) return res.status(404).json({ error: 'Tài khoản không tồn tại' });
-        const newBalance = req.body.newBalance;
-        account.balance = newBalance;
+        const addedAmount = parseInt(req.body.amount);
+        if(account.balance + addedAmount < 0) {
+            return res.status(400).json({ message: 'Số dư mới không thể là số âm!' });
+        }
+        account.balance += addedAmount;
         await account.save(); // Lưu số dư mới
-        res.json({ message: 'Số dư tài khoản đã được cập nhật!', balance: account.balance });
+        return res.status(200).json({ message: 'Số dư tài khoản đã được cập nhật!', balance: account.balance });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ error: 'Lỗi server' });
+        return res.status(500).json({ error: 'Lỗi server' });
     }
 };

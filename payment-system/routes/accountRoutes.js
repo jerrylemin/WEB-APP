@@ -6,10 +6,10 @@ const accountController = require('../controllers/accountController');
 const verifyToken = require('../utils/authMiddleware');
 
 // Tạo tài khoản mới
-router.post('/create', verifyToken, accountController.createAccount);
+router.get('/create', verifyToken, accountController.createAccount);
 
 // Kiểm tra số dư tài khoản
-router.post('/balance', verifyToken, accountController.checkBalance);
+router.get('/balance', verifyToken, accountController.checkBalance);
 
 // // Cập nhật số dư tài khoản
 router.post('/balance/update', verifyToken, accountController.updateBalance);

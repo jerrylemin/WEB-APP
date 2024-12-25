@@ -5,6 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const { User, Admin } = require('../models/userModel');
+const Cart = require('../models/cartModel');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const axios = require('axios'); // Để gửi yêu cầu tới hệ thống phụ nếu cần
@@ -200,8 +201,8 @@ exports.register = async (req, res, next) => {
             // Tạo đối tượng người dùng mới
             let isAdmin = false;
             try {
-                const res = await Admin.findOne({email: email}); // Kiểm tra xem người dùng có phải là admin không
-                if (res) {
+                const response = await Admin.findOne({email: email}); // Kiểm tra xem người dùng có phải là admin không
+                if (response) {
                     isAdmin = true; // Nếu là admin thì isAdmin = true
                 }
             }
@@ -230,21 +231,21 @@ exports.register = async (req, res, next) => {
             await cart.save();
 
             // Tạo jwt token cho người dùng dựa vào userID
-            const token = jwt.sign({ userID: newUser._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
-            // Lưu token vào cookie
+            // console.log("User id trong token: " + newUser._id);
+            const token = jwt.sign({ userID: newUser._id }, SECRET_KEY, { expiresIn: '1d' });
+            // Lưu token vào cookie củar người dùng
             res.cookie('AccessToken', token, { maxAge: 86400000, httpOnly: true });
 
             // Tạo tài khoản ngân hàng cho người dùng
             try {
-                const res = await fetch("http://localhost:5001/api/accounts/create", {
-                    method: "POST",
+                const response = await fetch("http://localhost:5001/api/accounts/create", {
+                    method: "GET",
                     headers: {
-                        "Access-Token": req.cookies['AccessToken'] // Token jwt của người dùng
+                        "Access-Token": token // Token jwt của người dùng
                     }
                 });
-                console.log(res);
-                if (res.ok) {
-                    const resData = await res.json();
+                if (response.ok) {
+                    const resData = await response.json();
                     console.log(resData);
                     const { bankAccountID } = resData;
                     // Thêm trường bankAccountID vào newUser và lưu lại xuống cơ sở dữ liệu
@@ -264,13 +265,13 @@ exports.register = async (req, res, next) => {
                     return res.redirect('/login');
                 }
                 req.flash('success_msg', 'Bạn đã đăng ký thành công và đã được đăng nhập');
-                res.redirect('/');
+                return res.redirect('/');
             });
         
         } catch (err) {
             console.log('Lỗi trong quá trình đăng ký:', err);
             req.flash('error_msg', 'Đã xảy ra lỗi trong quá trình đăng ký');
-            res.redirect('/register');
+            return res.redirect('/register');
         }
     }
 };
