@@ -7,9 +7,7 @@ const { isAdmin } = require('../utils/authMiddleware');
 const { ensureAuthenticated } = require('../utils/authMiddleware');
 
 // Route để hiển thị danh sách sản phẩm (Client)
-router.get('/', (req, res) => {
-    return res.redirect("/products/page/1");
-});
+router.get('/', productController.renderProducts);
 
 // Route để hiển thị danh sách sản phẩm theo trang
 router.get('/page/:page', productController.getProducts);

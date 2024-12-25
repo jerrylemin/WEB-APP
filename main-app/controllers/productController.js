@@ -3,17 +3,26 @@
 const Product = require('../models/productModel');
 
 // Hiển thị danh sách sản phẩm
+exports.renderProducts = async (req, res) => {
+    try {
+        const perPage = 8;
+        const totalPages = Math.ceil(await Product.countDocuments() / perPage);
+        res.render('client/products', {
+            totalPages
+        });
+    }
+    catch(err) {
+        return next(err);
+    }
+}
+
 exports.getProducts = async (req, res) => {
     try {
-        const perPage = 8; // mỗi trang hiện 8 kết quả
+        const perPage = 8;
         const currPage = req.params.page;
-        const totalPages = Math.ceil(await Product.countDocuments() / perPage);
-        if(currPage < 1 || currPage > totalPages) {
-            console.log("Không tồn tại trang");
-            res.redirect("/");
-        }
         const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
-        res.render('client/products', { noPagination: false, currPage, totalPages, products });
+        console.log(products);
+        res.json(products);
     } catch (err) {
         console.error('Error fetching products:', err);
         req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');

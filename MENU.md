@@ -3,34 +3,39 @@
 ## Nước uống
 
 ### Trà sữa truyền thống
-- Trà sữa trân châu đen: **40,000 VNĐ**
-- Trà sữa trân châu trắng: **40,000 VNĐ**
+- Trà sữa trân châu: **40,000 VNĐ**
 - Trà sữa đường nâu: **45,000 VNĐ**
 - Trà sữa matcha: **50,000 VNĐ**
+- Trà sữa socola: **45,000 VNĐ**
+- Trà sữa dừa: **42,000 VNĐ**
 
 ### Trà trái cây
 - Trà đào cam sả: **45,000 VNĐ**
 - Trà dâu tây: **45,000 VNĐ**
 - Trà xoài nhiệt đới: **50,000 VNĐ**
 - Trà chanh leo: **50,000 VNĐ**
+- Trà cam quýt: **45,000 VNĐ**
 
 ### Trà nguyên chất
 - Trà ô long: **40,000 VNĐ**
 - Trà nhài: **40,000 VNĐ**
 - Trà sen vàng: **50,000 VNĐ**
 - Trà đen: **40,000 VNĐ**
+- Trà hoa hồng: **45,000 VNĐ**
 
 ### Sữa tươi và kem cheese
 - Sữa tươi trân châu đường nâu: **50,000 VNĐ**
 - Matcha kem cheese: **55,000 VNĐ**
 - Cacao kem cheese: **55,000 VNĐ**
 - Trà xanh kem cheese: **55,000 VNĐ**
+- Sữa tươi kem cheese dâu tây: **60,000 VNĐ**
 
 ### Đá xay (Blended)
 - Matcha đá xay: **55,000 VNĐ**
 - Cacao đá xay: **55,000 VNĐ**
 - Dâu tây đá xay: **55,000 VNĐ**
 - Việt quất đá xay: **60,000 VNĐ**
+- Trà xanh đá xay: **55,000 VNĐ**
 
 ### Thức uống đặc biệt (Signature)
 - Sữa tươi trứng muối: **60,000 VNĐ**
@@ -42,13 +47,6 @@
 - Trà vải mùa hè: **50,000 VNĐ**
 - Trà sữa bí đỏ mùa thu: **55,000 VNĐ**
 - Trà dâu tây Giáng sinh: **55,000 VNĐ**
-
-### Topping đa dạng (đi kèm)
-- Trân châu đen, trắng: **10,000 VNĐ**
-- Pudding trứng, pudding matcha: **15,000 VNĐ**
-- Thạch dừa, thạch cà phê: **10,000 VNĐ**
-- Kem cheese, kem sữa: **15,000 VNĐ**
-- Hạt thủy tinh vị trái cây: **10,000 VNĐ**
 
 ---
 
