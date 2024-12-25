@@ -2,4 +2,5 @@
 main-app/logs/
 main-app/node_modules
 payment-system/node_modules
-main-app/QUERIES/
+main-app/QUERIES/main-app/QUERIES/
+main-app/.env
