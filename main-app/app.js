@@ -9,6 +9,8 @@ const methodOverride = require('method-override');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const expressLayouts = require('express-ejs-layouts');
+const https = require('https');
+const fs = require('fs');
 
 // Import Passport Config
 require('./config/passport')(passport); 
@@ -86,8 +88,13 @@ app.use(errorController.get404);
 app.use(errorController.get500);
 
 // Start server
+const certs = {
+    key: fs.readFileSync("../certs/server.key"),
+    cert: fs.readFileSync("../certs/server.cert")
+};
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+https.createServer(certs, app).listen(PORT, () => {
     console.log(`Main-App Server started on port ${PORT}`);
-    console.log(`http://localhost:${PORT}`);
+    console.log(`https://localhost:${PORT}`);
 });

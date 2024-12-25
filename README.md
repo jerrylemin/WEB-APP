@@ -143,6 +143,13 @@ Các gói này hỗ trợ trong quá trình phát triển nhưng không cần th
    ```bash
    npm install concurrently --save-dev
    ```
+
+6. **cross-env**  
+   *Gói giúp chạy lệnh shell với các biến môi trường được định nghĩa rõ ràng, hỗ trợ cả Windows, macOS và Linux.*
+
+   ```bash
+   npm install cross-env
+   ```
 ---
 
 ## **3. Các Gói Tùy Chọn Khác**

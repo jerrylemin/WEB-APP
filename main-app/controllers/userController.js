@@ -7,7 +7,7 @@ exports.getProfile = async (req, res, next) => {
     try {
         console.log("Profile user id: ");
         console.log(req.user._id);
-        const response = await fetch("http://localhost:5001/api/accounts/balance", {
+        const response = await fetch("https://localhost:5001/api/accounts/balance", {
             method: "GET",
             headers: {
                 "access-token": req.cookies['AccessToken'] // Token jwt của người dùng
@@ -26,7 +26,7 @@ exports.getProfile = async (req, res, next) => {
 exports.editBalanceForm = async (req, res, next) => {
     // Lấy số dư
     try {
-        const response = await fetch("http://localhost:5001/api/accounts/balance", {
+        const response = await fetch("https://localhost:5001/api/accounts/balance", {
             method: "GET",
             headers: {
                 "access-token": req.cookies['AccessToken'] // Token jwt của người dùng
