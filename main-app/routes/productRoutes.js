@@ -12,8 +12,11 @@ router.get('/', productController.renderProducts);
 // Route để hiển thị danh sách sản phẩm theo trang
 router.get('/page/:page', productController.getProducts);
 
+// Route để hiển thị danh sách sản phẩm đã tìm kiếm (Client)
+router.post('/search', productController.renderSearchedProducts);
+
 // Route để tìm kiếm sản phẩm
-router.post('/search', productController.searchProducts);
+router.post('/search/:page', productController.getSearchedProducts);
 
 // Route để hiển thị chi tiết sản phẩm (Client)
 router.get('/id/:id', productController.getProductDetails);

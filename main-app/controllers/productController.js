@@ -2,13 +2,16 @@
 
 const Product = require('../models/productModel');
 
+// Middleware dùng để lấy danh sách sản phẩm
+
 // Hiển thị danh sách sản phẩm
 exports.renderProducts = async (req, res) => {
     try {
         const perPage = 8;
         const totalPages = Math.ceil(await Product.countDocuments() / perPage);
         res.render('client/products', {
-            totalPages
+            totalPages,
+            searchQuery: null
         });
     }
     catch(err) {
@@ -16,6 +19,7 @@ exports.renderProducts = async (req, res) => {
     }
 }
 
+// API để lấy danh sách sản phẩm
 exports.getProducts = async (req, res) => {
     try {
         const perPage = 8;
@@ -24,12 +28,41 @@ exports.getProducts = async (req, res) => {
         console.log(products);
         res.json(products);
     } catch (err) {
-        console.error('Error fetching products:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');
-        res.redirect('/');
+        res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
     }
 };
 
+// Hiển thị danh sách sản phẩm đang tìm kiếm
+exports.renderSearchedProducts = async (req, res) => {
+    try {
+        const perPage = 8;
+        const searchQuery = req.body.q;
+        const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).lean();
+        const totalPages = Math.ceil(products.length / perPage);
+        res.render('client/products', {
+            totalPages,
+            searchQuery
+        });
+    }
+    catch(err) {
+        return next(err);
+    }
+}
+
+// API để lấy danh sách sản phẩm
+exports.getSearchedProducts = async (req, res) => {
+    try {
+        const searchQuery = req.body.q;
+        const currPage = req.params.page;
+        const perPage = 8;
+        const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
+    }
+};
+
+// Lấy thông tin chi tiết về sản phẩm
 exports.getProductDetails = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id).lean();
