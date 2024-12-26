@@ -1,8 +1,18 @@
 // controllers/productController.js
 
 const Product = require('../models/productModel');
+const Category = require('../models/categoryModel');
 
-// Middleware dùng để lấy danh sách sản phẩm
+// Lấy danh sách tất cả các Category
+exports.getAllCategories = async (req, res, next) => {
+    try {
+        const data = await Category.find().lean();
+        res.status(200).json(data);
+    }
+    catch(err) {
+        return next(err);
+    }
+}
 
 // Hiển thị danh sách sản phẩm
 exports.renderProducts = async (req, res) => {

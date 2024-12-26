@@ -89,7 +89,8 @@ exports.addToCart = async (req, res) => {
 
 // Hiển thị giỏ hàng
 exports.getCart = async (req, res) => {
-    let cart = await Cart.findOne({ user: req.user._id }).lean();
+    console.log(req.user._id);
+    let cart = await Cart.findOne({ user: req.user._id }).lean();   
     console.log("Thông tin cart: " + cart);
     cart.items = await Promise.all(cart.items.map(async item => {
         const product = await Product.findById(item.product).lean();

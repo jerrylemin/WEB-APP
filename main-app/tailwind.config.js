@@ -31,7 +31,8 @@ module.exports = {
     "./views/register.ejs",
     "./views/resetPassword.ejs",
     "./views/admin/layout.ejs",
-    "./views/layout.ejs"
+    "./views/layout.ejs",
+    "./public/js/*.js"
   ],
   theme: {
     extend: {

@@ -23,7 +23,7 @@
                 <ul class="flex items-center space-x-4 h-full">
                     <li class="h-3/4 rounded-inner"><i id="searchBtn" class="cursor-pointer fa-solid fa-magnifying-glass inline-block py-4 px-6 h-full text-red font-bold"></i></li>
                     <li class="h-3/4 rounded-inner hover:shadow-md hover:bg-yellow/60 hover:backdrop-blur-lg"><a href="/" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-black">Trang chủ</a></li>
-                    <li class="h-3/4 rounded-inner hover:shadow-md hover:bg-yellow/60 hover:backdrop-blur-lg"><a href="/products" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-black">Sản phẩm</a></li>
+                    <li id="products" class="h-3/4 relative group rounded-inner hover:shadow-md hover:bg-yellow/60 hover:backdrop-blur-lg"><a href="/products" class="inline-block py-3 px-6 h-full text-red font-serif font-bold hover:text-black">Sản phẩm</a></li>
                     <li class="h-3/4 relative group">
                         <a href="#" class="block py-3 px-6 text-white font-serif font-bold bg-red w-full">Khách hàng</a>
                         <!-- Dropdown Menu -->
@@ -35,6 +35,9 @@
                     </li>
                 </ul>
             </div>
+            <!-- Dropdown menu for the Products section -->
+            <ul id="categories" class="absolute rounded-outer w-1/4 right-0 h-[40vh] bg-yellow/60 backdrop-blur-lg top-24 hidden bg-secondaryGreen text-white overflow-y-auto group-hover:block">
+            </ul>
         </nav>
         <form action="/products/search" method="post" id="searchBar" class="absolute top-24 w-9/12 mx-auto invisible place-self-center">
             <input type="text" placeholder="Nhập vào đây để tìm kiếm..." class="w-full h-full pl-4 pr-10 py-3 font-serif rounded-outer backdrop-blur-lg bg-white/70 border border-white/20 shadow-lg" name="q">
@@ -58,6 +61,7 @@
     </footer>
 </body>
 <script>
+    // Hàm dùng để hiển thị thông báo
     function showNotification(message) {
         const notification = document.getElementById("notification");
         const notificationMessage = document.getElementById("notification-message");
@@ -68,10 +72,54 @@
         }, 3000);
     }
 
+    // Hàm dùng để ẩn/hiện search bar
     const searchBtn = document.querySelector('#searchBtn');
-
     searchBtn.addEventListener("click", (e) => {
         document.querySelector("#searchBar").classList.toggle("invisible");
     });
+
+    // Thêm phân cấp cho mục 'sản phẩm' trong menu
+    const categories = document.querySelector('#categories');
+    fetch("/products/categories").then(async (res) => {
+        const data = await res.json();
+        data.forEach((c) => {
+            categories.innerHTML += `
+                <li class="text-center rounded-inner hover:bg-red"><a href="#" class="block py-3 px-6 font-serif font-bold hover:text-white">${c.name}</a></li>
+            `;
+        });
+    }).catch((err) => {
+        console.log(err);
+    });
+        
+
+    const products = document.querySelector('#products');
+    let myTimeout = null;
+    products.onmouseover = function(e) {
+        if (myTimeout) {
+            clearTimeout(myTimeout);
+            myTimeout = null;
+        }
+        categories.classList.remove("hidden");        
+    }    
+
+    products.onmouseout = function(e) {
+        myTimeout = setTimeout(() => {
+            categories.classList.add("hidden");
+        }, 200);
+    }
+    
+    categories.onmouseover = function(e) {
+        if(myTimeout) {
+            clearTimeout(myTimeout);
+            myTimeout = null;
+        }
+        categories.classList.remove("hidden");
+    }
+
+    categories.onmouseout = function(e) {
+        myTimeout = setTimeout(() => {
+            categories.classList.add("hidden");
+        }, 200);
+    }
 </script>
 </html>

@@ -6,6 +6,9 @@ const productController = require('../controllers/productController');
 const { isAdmin } = require('../utils/authMiddleware');
 const { ensureAuthenticated } = require('../utils/authMiddleware');
 
+// Route để lấy danh sách các category hiện có
+router.get('/categories', productController.getAllCategories);
+
 // Route để hiển thị danh sách sản phẩm (Client)
 router.get('/', productController.renderProducts);
 
