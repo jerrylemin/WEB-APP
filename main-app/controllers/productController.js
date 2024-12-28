@@ -3,63 +3,31 @@
 const Product = require('../models/productModel');
 const Category = require('../models/categoryModel');
 
-// Lấy danh sách tất cả các Category
+// API để lấy danh sách tất cả các Category
 exports.getAllCategories = async (req, res, next) => {
     try {
         const data = await Category.find().lean();
         res.status(200).json(data);
     }
     catch(err) {
-        return next(err);
-    }
-}
-
-// Hiển thị danh sách sản phẩm
-exports.renderProducts = async (req, res) => {
-    try {
-        const perPage = 8;
-        const totalPages = Math.ceil(await Product.countDocuments() / perPage);
-        res.render('client/products', {
-            totalPages,
-            searchQuery: null
-        });
-    }
-    catch(err) {
-        return next(err);
+        return res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
     }
 }
 
 // API để lấy danh sách sản phẩm
 exports.getProducts = async (req, res) => {
     try {
+        console.log("running")
         const perPage = 8;
         const currPage = req.params.page;
         const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
-        console.log(products);
         res.json(products);
     } catch (err) {
         res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
     }
 };
 
-// Hiển thị danh sách sản phẩm đang tìm kiếm
-exports.renderSearchedProducts = async (req, res) => {
-    try {
-        const perPage = 8;
-        const searchQuery = req.body.q;
-        const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).lean();
-        const totalPages = Math.ceil(products.length / perPage);
-        res.render('client/products', {
-            totalPages,
-            searchQuery
-        });
-    }
-    catch(err) {
-        return next(err);
-    }
-}
-
-// API để lấy danh sách sản phẩm
+// API để lấy danh sách sản phẩm đã tìm kiếm theo từng trang
 exports.getSearchedProducts = async (req, res) => {
     try {
         const searchQuery = req.body.q;
@@ -72,17 +40,86 @@ exports.getSearchedProducts = async (req, res) => {
     }
 };
 
-// Lấy thông tin chi tiết về sản phẩm
+// API để lấy thông tin chi tiết về sản phẩm
 exports.getProductDetails = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id).lean();
+        const category = await Category.findById(product.category).lean();
+        product.category = category.name;
         return res.json(product);
     } catch (err) {
-        console.error('Error fetching product details:', err);
-        // req.flash('error_msg', 'Đã xảy ra lỗi khi lấy chi tiết sản phẩm');
-        // res.redirect('/products');
+        res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy chi tiết sản phẩm'});
     }
 };
+
+// API để lấy danh sách sản phẩm theo hạng mục theo từng trang
+exports.getByCategory = async (req, res, next) => {
+    try {
+        const currPage = req.params.page;
+        const perPage = 8;
+        const products = await Product.find({category: req.query.category}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+        res.status(200).json(products);
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
+    }
+}
+
+// Hiển thị sanh sách sản phẩm theo hạng mục
+exports.renderProductsByCategory = async (req, res, next) => {
+    try {
+        console.log("running renderByCat")
+        const categoryName = req.query.catName;
+        const category = await Category.findOne({name: categoryName}).lean();
+        const categoryId = category._id;
+        const products = await Product.find({category: categoryId}).sort({name: 1}).lean();
+        const perPage = 8;
+        const totalPages = Math.ceil(products.length / perPage);
+        res.render('client/products', {
+            totalPages,
+            searchQuery: null,
+            category: categoryId
+        });
+    }
+    catch(err) {
+        return next(err);
+    }
+}
+
+// Hiển thị danh sách sản phẩm
+exports.renderProducts = async (req, res, next) => {
+    try {
+        const perPage = 8;
+        const totalPages = Math.ceil(await Product.countDocuments() / perPage);
+        res.render('client/products', {
+            totalPages,
+            searchQuery: null,
+            category: null
+        });
+    }
+    catch(err) {
+        return next(err);
+    }
+}
+
+// Hiển thị danh sách sản phẩm đang tìm kiếm
+exports.renderSearchedProducts = async (req, res) => {
+    try {
+        const perPage = 8;
+        const searchQuery = req.body.q;
+        const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).lean();
+        const totalPages = Math.ceil(products.length / perPage);
+        res.render('client/products', {
+            totalPages,
+            searchQuery,
+            category: null
+        });
+    }
+    catch(err) {
+        return next(err);
+    }
+}
 
 // Hiển thị danh sách sản phẩm cho admin
 exports.getProductsAdmin = async (req, res) => {
@@ -141,7 +178,6 @@ exports.editProductForm = async (req, res) => {
         res.redirect('/admin/products');
     }
 };
-
 
 // Xử lý chỉnh sửa sản phẩm
 exports.editProduct = async (req, res) => {

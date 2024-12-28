@@ -6,23 +6,29 @@ const productController = require('../controllers/productController');
 const { isAdmin } = require('../utils/authMiddleware');
 const { ensureAuthenticated } = require('../utils/authMiddleware');
 
-// Route để lấy danh sách các category hiện có
+// API Route để lấy danh sách các category hiện có
 router.get('/categories', productController.getAllCategories);
 
-// Route để hiển thị danh sách sản phẩm (Client)
-router.get('/', productController.renderProducts);
-
-// Route để hiển thị danh sách sản phẩm theo trang
+// API Route để lấy danh sách sản phẩm theo từng trang
 router.get('/page/:page', productController.getProducts);
 
-// Route để hiển thị danh sách sản phẩm đã tìm kiếm (Client)
-router.post('/search', productController.renderSearchedProducts);
-
-// Route để tìm kiếm sản phẩm
+// API Route để lấy danh sách sản phẩm đã tìm kiếm theo từng trang
 router.post('/search/:page', productController.getSearchedProducts);
 
-// Route để hiển thị chi tiết sản phẩm (Client)
+// API Route để lấy danh sách sản phẩm của 1 category theo từng trang
+router.get("/category/page/:page", productController.getByCategory);
+
+// API Route để hiển thị chi tiết sản phẩm
 router.get('/id/:id', productController.getProductDetails);
+
+// Route để render danh sách sản phẩm 
+router.get('/', productController.renderProducts);
+
+// Route để render danh sách sản phẩm đã tìm kiếm
+router.post('/search', productController.renderSearchedProducts);
+
+// Route để render danh sách sản phẩm theo hạng mục
+router.get('/category', productController.renderProductsByCategory);
 
 // Route quản trị để liệt kê sản phẩm
 router.get('/admin', isAdmin, productController.getProductsAdmin);

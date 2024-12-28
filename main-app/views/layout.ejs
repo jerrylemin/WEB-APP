@@ -84,7 +84,7 @@
         const data = await res.json();
         data.forEach((c) => {
             categories.innerHTML += `
-                <li class="text-center rounded-inner hover:bg-red"><a href="#" class="block py-3 px-6 font-serif font-bold hover:text-white">${c.name}</a></li>
+                <li class="text-center rounded-inner hover:bg-red"><a href="/products/category?catName=${c.name}" class="block py-3 px-6 font-serif font-bold hover:text-white">${c.name}</a></li>
             `;
         });
     }).catch((err) => {
