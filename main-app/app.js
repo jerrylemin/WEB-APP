@@ -49,7 +49,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 } // 1 ngày
+    cookie: { secure: true, maxAge: 1000 * 60 * 60 * 24 } // 1 ngày
 }));
 
 // Passport middleware

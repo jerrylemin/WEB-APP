@@ -23,6 +23,7 @@ router.get('/register/verify/:token', authController.verifyRegister);
 // Xử lý đăng nhập
 // Sử dụng custom callback cho đăng nhập
 router.post('/login', (req, res, next) => {
+    const temp = req.session.cart;
     passport.authenticate('local', (err, user, info) => {
         if (err) { return next(err); }
         if (!user) {
@@ -39,6 +40,8 @@ router.post('/login', (req, res, next) => {
         }
         req.logIn(user, (err) => {
             if (err) { return next(err); }
+            // Khôi phục lại cart
+            req.session.cart = temp; 
             // Tạo và gửi jwt token cho người dùng
             const token = jwt.sign({ userID: user._id }, SECRET_KEY, { expiresIn: '1d' }); // Tạo token
             // Lưu token người dùng vào cookie
@@ -50,7 +53,8 @@ router.post('/login', (req, res, next) => {
                 return res.redirect('/products');
             }
         });
-    })(req, res, next);
+        req.session.cart = temp;
+    })(req, res, next)
 });
 
 // Yêu cầu xác thực bằng Google

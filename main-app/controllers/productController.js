@@ -17,7 +17,6 @@ exports.getAllCategories = async (req, res, next) => {
 // API để lấy danh sách sản phẩm
 exports.getProducts = async (req, res) => {
     try {
-        console.log("running")
         const perPage = 8;
         const currPage = req.params.page;
         const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
@@ -69,7 +68,6 @@ exports.getByCategory = async (req, res, next) => {
 // Hiển thị sanh sách sản phẩm theo hạng mục
 exports.renderProductsByCategory = async (req, res, next) => {
     try {
-        console.log("running renderByCat")
         const categoryName = req.query.catName;
         const category = await Category.findOne({name: categoryName}).lean();
         const categoryId = category._id;

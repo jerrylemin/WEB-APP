@@ -112,8 +112,8 @@ switchPage(currPage).then(() => {
             const productId = bttn.parentNode.parentNode.getAttribute("data-product-id");
             try {
                 const res = await fetch(`/cart/add/${productId}`, { method: 'POST' });          
-                const noti = await res.text();
-                showNotification(noti);
+                const noti = await res.json();
+                showNotification(noti.message);
             } 
             catch(e) {
                 console.log(e);

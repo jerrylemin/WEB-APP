@@ -44,8 +44,8 @@
                 const res = await fetch(`/cart/remove/${productId}`, {
                     method: "POST"
                 });
-                const noti = await res.text();
-                showNotification(noti);
+                const noti = await res.json();
+                showNotification(noti.message);
                 parent.remove();
                 // cart chỉ chứa tiêu đề
                 if(cartCnt.children.length === 1) {
