@@ -13,6 +13,11 @@
     </div>
     <div class="bg-[url('/images/webPageResources/bg/bg_greenSplash.png')] bg-fixed bg-top bg-contain bg-no-repeat">
         <article class="w-9/12 mx-auto my-10">
+            <div id="filter" class="w-full h-10 mb-7">
+                <select id="filterByPrice">
+                    <option value="all" selected>Tất cả</option>
+                </select>
+            </div>
             <div id="pagination" class="w-full h-10 mb-7">
 
             </div>
@@ -56,23 +61,41 @@
 </style>
 <script>
     var currPage = 1;
-    var totalPages = parseInt("<%= totalPages %>");
+    var totalPages = null;
     var searchQuery = "<%= searchQuery %>";
     var category = "<%= category %>";
+    var filterByPrice = false;
+    var minPrice = null;
+    var maxPrice = null;
     var currentFetchFunc = fetchByPage;
+    
     if(searchQuery) {
-        console.log("search query found");
         currentFetchFunc = fetchBySearch;
     }
     else if(category) {
-        console.log("category found");
         currentFetchFunc = fetchByCategory;
     }
 
+    async function getPriceRange() {
+        const response = await fetch("https://localhost:5000/products/price/range");
+        let {min, max} = await response.json();
+        minPrice = min;
+        maxPrice = max;
+    }
+
     async function fetchByPage() {
-        const response = await fetch(`https://localhost:5000/products/page/${currPage}`);
-        const products = await response.json();
-        return products;
+        console.log(currPage);
+        const response = await fetch(`https://localhost:5000/products/page/${currPage}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({filterByPrice, minPrice, maxPrice})
+        });
+        let result = await response.json();
+        // console.log(result)
+        totalPages = result.totalPages;
+        return result.products;
     }
 
     async function fetchBySearch() {
@@ -82,24 +105,34 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                q: searchQuery
+                q: searchQuery,
+                filterByPrice,
+                minPrice,
+                maxPrice
             })
         });
-        const products = await response.json();
-        return products;
+        let result = await response.json();
+        totalPages = result.totalPages;
+        return result.products;
     }
 
     async function fetchByCategory() {
-        const response = await fetch(`https://localhost:5000/products/category/page/${currPage}?category=${category}`);
-        const products = await response.json();
-        console.log(products);
-        return products;
+        const response = await fetch(`https://localhost:5000/products/category/page/${currPage}?category=${category}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({filterByPrice, minPrice, maxPrice})
+        });
+        let result = await response.json();
+        totalPages = result.totalPages;
+        return result.products;
     }
 
     async function switchPage() {
-        createPagination();
         try {
             const products = await currentFetchFunc();
+            createPagination();
             const container = document.querySelector(".items");
             container.innerHTML = "";
             products.forEach((p) => {
@@ -199,54 +232,92 @@
         pagination.appendChild(ul);
     }
 
-    // Khởi tạo thanh pagination
-    createPagination();
-    switchPage(currPage).then(() => {
-        const bttns = document.querySelectorAll(".bttn");
-        bttns.forEach(async (bttn) => {
-            bttn.addEventListener("click", async (e) => {
-                e.preventDefault();
-                const productId = bttn.parentNode.parentNode.getAttribute("data-product-id");
-                try {
-                    const res = await fetch(`/cart/add/${productId}`, { method: 'POST' });
-                    const noti = await res.json();
-                    showNotification(noti.message);
-                } 
-                catch(e) {
-                    console.log(e);
-                }
+    document.addEventListener("DOMContentLoaded", (e) => {
+        // Khởi tạo các tùy chọn filter by price
+        getPriceRange().then(() => {
+            const select = document.querySelector("#filterByPrice");
+            const priceRanges = [];
+            let min = minPrice;
+            while(min <= maxPrice) {
+                priceRanges.push([min, min + 10000]);
+                min += 10000;
+            }
+            priceRanges.forEach((range) => {
+                const option = document.createElement("option");
+                option.value = `${range[0]}-${range[1]}`;
+                option.textContent = `${range[0]} - ${range[1]}`;
+                select.appendChild(option);
             });
+    
+            // Bắt sự kiện "khi bộ lọc thay đổi"
+            document.querySelector("#filterByPrice").onchange = (e) => {
+                currPage = 1;
+                const value = e.target.value;
+                if(value !== "all") {
+                    filterByPrice = true;
+                    const range = value.split('-');
+                    minPrice = parseInt(range[0]);
+                    maxPrice = parseInt(range[1]);
+                }
+                else {
+                    filterByPrice = false;
+                    minPrice = null;
+                    maxPrice = null;
+                }
+                switchPage();
+            }
         });
 
-        document.querySelectorAll(".productCard").forEach((parent) => {
-            parent.addEventListener("click", async (e) => {
-                if(!e.target.classList.contains("bttn")) {
+        // Khởi tạo thanh pagination
+        createPagination();
+        switchPage(currPage).then(() => {
+            const bttns = document.querySelectorAll(".bttn");
+            bttns.forEach(async (bttn) => {
+                bttn.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    const productId = bttn.parentNode.parentNode.getAttribute("data-product-id");
                     try {
-                        const prod = await fetch(`https://localhost:5000/products/id/${parent.getAttribute("data-product-id")}`);
-                        const res = await prod.json();
-                        document.querySelector(".full-info-cnt").innerHTML = `
-                            <h1 class="text-center text-big text-red font-serif font-bold">${res.name}</h1>
-                            <div class="flex justify-center m-4">
-                                <img class="rounded-inner aspect-square w-1/2" src="/${res.image}" alt="">
-                            </div>
-                            <p class="text-medium font-serif"><b>Mô tả</b>: ${res.description}</p>
-                            <p class="text-medium font-serif"><b>Phân loại</b>: ${res.category}</p>
-                            <p class="text-medium font-serif"><b>Kho</b>: ${res.stock}</p>
-                            <p class="text-medium font-serif"><b>Giá</b>: ${res.price}đ</p>
-                        `;
-                        document.querySelector(".full-info").classList.toggle("hidden");
-                    }
+                        const res = await fetch(`/cart/add/${productId}`, { method: 'POST' });
+                        const noti = await res.json();
+                        showNotification(noti.message);
+                    } 
                     catch(e) {
                         console.log(e);
                     }
-                }
+                });
             });
+    
+            document.querySelectorAll(".productCard").forEach((parent) => {
+                parent.addEventListener("click", async (e) => {
+                    if(!e.target.classList.contains("bttn")) {
+                        try {
+                            const prod = await fetch(`https://localhost:5000/products/id/${parent.getAttribute("data-product-id")}`);
+                            const res = await prod.json();
+                            document.querySelector(".full-info-cnt").innerHTML = `
+                                <h1 class="text-center text-big text-red font-serif font-bold">${res.name}</h1>
+                                <div class="flex justify-center m-4">
+                                    <img class="rounded-inner aspect-square w-1/2" src="/${res.image}" alt="">
+                                </div>
+                                <p class="text-medium font-serif"><b>Mô tả</b>: ${res.description}</p>
+                                <p class="text-medium font-serif"><b>Phân loại</b>: ${res.category}</p>
+                                <p class="text-medium font-serif"><b>Kho</b>: ${res.stock}</p>
+                                <p class="text-medium font-serif"><b>Giá</b>: ${res.price}đ</p>
+                            `;
+                            document.querySelector(".full-info").classList.toggle("hidden");
+                        }
+                        catch(e) {
+                            console.log(e);
+                        }
+                    }
+                });
+            });
+        });
+    
+        document.querySelector(".full-info").addEventListener("click", (e) => {
+            e.currentTarget.classList.toggle("hidden");
         });
     });
 
-    document.querySelector(".full-info").addEventListener("click", (e) => {
-        e.currentTarget.classList.toggle("hidden");
-    });
 </script>
 <!-- <% if(!searchQuery) { %>
     <script src="/js/products.js"></script>

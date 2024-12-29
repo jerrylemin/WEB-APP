@@ -9,14 +9,17 @@ const { ensureAuthenticated } = require('../utils/authMiddleware');
 // API Route để lấy danh sách các category hiện có
 router.get('/categories', productController.getAllCategories);
 
+// API Route để lấy danh sách giá thấp nhất và giá cao nhất
+router.get('/price/range', productController.getPriceRange)
+
 // API Route để lấy danh sách sản phẩm theo từng trang
-router.get('/page/:page', productController.getProducts);
+router.post('/page/:page', productController.getProducts);
 
 // API Route để lấy danh sách sản phẩm đã tìm kiếm theo từng trang
 router.post('/search/:page', productController.getSearchedProducts);
 
 // API Route để lấy danh sách sản phẩm của 1 category theo từng trang
-router.get("/category/page/:page", productController.getByCategory);
+router.post("/category/page/:page", productController.getByCategory);
 
 // API Route để hiển thị chi tiết sản phẩm
 router.get('/id/:id', productController.getProductDetails);

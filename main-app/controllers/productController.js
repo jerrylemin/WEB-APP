@@ -14,13 +14,37 @@ exports.getAllCategories = async (req, res, next) => {
     }
 }
 
+// API để lấy khoảng giá
+exports.getPriceRange = async (req, res, next) => {
+    try {
+        const minPrice = await Product.find().sort({price: 1}).limit(1).lean();
+        const maxPrice = await Product.find().sort({price: -1}).limit(1).lean();
+        const priceRange = { min: Math.floor(minPrice[0].price / 10000) * 10000, max: Math.ceil(maxPrice[0].price /10000) * 10000};
+        res.json(priceRange);
+    }
+    catch(err) {
+        return res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy khoảng giá' });
+    }
+}
+
 // API để lấy danh sách sản phẩm
 exports.getProducts = async (req, res) => {
     try {
+        const { filterByPrice, minPrice, maxPrice } = req.body;
         const perPage = 8;
         const currPage = req.params.page;
-        const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
-        res.json(products);
+        if(filterByPrice) {
+            const products = await Product.find({ price: { $gte: minPrice, $lte: maxPrice } }).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+            const totalItems = await Product.countDocuments({ price: { $gte: minPrice, $lte: maxPrice } });
+            const totalPages = Math.ceil( totalItems / perPage );
+            res.status(200).json({ products, totalPages});
+        }
+        else {
+            const products = await Product.find().sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+            const totalItems = await Product.countDocuments();
+            const totalPages = Math.ceil(totalItems / perPage);
+            res.status(200).json({products, totalPages});
+        }
     } catch (err) {
         res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
     }
@@ -29,11 +53,22 @@ exports.getProducts = async (req, res) => {
 // API để lấy danh sách sản phẩm đã tìm kiếm theo từng trang
 exports.getSearchedProducts = async (req, res) => {
     try {
+        const { filterByPrice, minPrice, maxPrice } = req.body;
         const searchQuery = req.body.q;
         const currPage = req.params.page;
         const perPage = 8;
-        const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
-        res.json(products);
+        if(filterByPrice) {
+            const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }, price: { $gte: minPrice, $lte: maxPrice }}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+            const totalItems = await Product.countDocuments({name: {$regex: searchQuery, $options: 'i'}, price: { $gte: minPrice, $lte: maxPrice }});
+            const totalPages = Math.ceil( totalItems / perPage );
+            res.status(200).json({ products, totalPages});
+        }
+        else {
+            const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+            const totalItems = await Product.countDocuments({name: { $regex: searchQuery, $options: 'i' }});
+            const totalPages = Math.ceil( totalItems / perPage);
+            res.status(200).json({products, totalPages});
+        }
     } catch (err) {
         res.status(500).json({ msg: 'Đã xảy ra lỗi khi lấy danh sách sản phẩm' });
     }
@@ -54,10 +89,19 @@ exports.getProductDetails = async (req, res) => {
 // API để lấy danh sách sản phẩm theo hạng mục theo từng trang
 exports.getByCategory = async (req, res, next) => {
     try {
+        const { filterByPrice, minPrice, maxPrice } = req.body;
         const currPage = req.params.page;
         const perPage = 8;
-        const products = await Product.find({category: req.query.category}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
-        res.status(200).json(products);
+        if(filterByPrice) {
+            const products = await Product.find({category: req.query.category, price: {$gte: minPrice, $lte: maxPrice}}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+            const totalPages = Math.ceil( Product.countDocuments({category: req.query.category, price: { $gte: minPrice, $lte: maxPrice } }) / perPage );
+            res.json({ products, totalPages});
+        }
+        else {
+            const products = await Product.find({category: req.query.category}).sort({name: 1}).skip(perPage * (currPage - 1)).limit(perPage).lean();
+            const totalPages = Math.ceil(Product.countDocuments({category: req.query.category}) / perPage);
+            res.status(200).json({products, totalPages});
+        }
     }
     catch(err) {
         console.log(err);
@@ -73,9 +117,7 @@ exports.renderProductsByCategory = async (req, res, next) => {
         const categoryId = category._id;
         const products = await Product.find({category: categoryId}).sort({name: 1}).lean();
         const perPage = 8;
-        const totalPages = Math.ceil(products.length / perPage);
         res.render('client/products', {
-            totalPages,
             searchQuery: null,
             category: categoryId
         });
@@ -89,9 +131,7 @@ exports.renderProductsByCategory = async (req, res, next) => {
 exports.renderProducts = async (req, res, next) => {
     try {
         const perPage = 8;
-        const totalPages = Math.ceil(await Product.countDocuments() / perPage);
         res.render('client/products', {
-            totalPages,
             searchQuery: null,
             category: null
         });
@@ -107,9 +147,7 @@ exports.renderSearchedProducts = async (req, res) => {
         const perPage = 8;
         const searchQuery = req.body.q;
         const products = await Product.find({name: { $regex: searchQuery, $options: 'i' }}).lean();
-        const totalPages = Math.ceil(products.length / perPage);
         res.render('client/products', {
-            totalPages,
             searchQuery,
             category: null
         });
