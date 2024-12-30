@@ -24,6 +24,9 @@ router.post("/category/page/:page", productController.getByCategory);
 // API Route để hiển thị chi tiết sản phẩm
 router.get('/id/:id', productController.getProductDetails);
 
+// API Route để lấy sản phẩm tương tự (cùng category)
+router.get('/id/:id/related', productController.getRelatedProducts);
+
 // Route để render danh sách sản phẩm 
 router.get('/', productController.renderProducts);
 

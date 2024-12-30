@@ -14,6 +14,24 @@ exports.getAllCategories = async (req, res, next) => {
     }
 }
 
+// API để lấy các sản phẩm liên quan
+exports.getRelatedProducts = async (req, res, next) => {
+    try {
+        const productId = req.params.id;
+        const product = await Product.findOne({_id: productId}).lean();
+        const relatedProds = await Product.find({category: product.category}).limit(3).lean();
+        res.status(200).json({
+            message: "Lấy sản phẩm thành công",
+            data: relatedProds
+        });
+    }
+    catch(err) {
+        res.status(500).json({
+            message: "Xảy ra lỗi khi lấy thông tin sản phẩm liên quan"
+        });
+    }
+}
+
 // API để lấy khoảng giá
 exports.getPriceRange = async (req, res, next) => {
     try {

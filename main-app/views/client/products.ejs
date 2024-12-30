@@ -292,17 +292,33 @@
                     if(!e.target.classList.contains("bttn")) {
                         try {
                             const prod = await fetch(`https://localhost:5000/products/id/${parent.getAttribute("data-product-id")}`);
-                            const res = await prod.json();
+                            const resProd = await prod.json();
+                            const relatedProds = await fetch(`https://localhost:5000/products/id/${parent.getAttribute("data-product-id")}/related`);
+                            const resRelated = await relatedProds.json();
                             document.querySelector(".full-info-cnt").innerHTML = `
-                                <h1 class="text-center text-big text-red font-serif font-bold">${res.name}</h1>
+                                <h1 class="text-center text-big text-red font-serif font-bold">${resProd.name}</h1>
                                 <div class="flex justify-center m-4">
-                                    <img class="rounded-inner aspect-square w-1/2" src="/${res.image}" alt="">
+                                    <img class="rounded-inner aspect-square w-1/2" src="/${resProd.image}" alt="">
                                 </div>
-                                <p class="text-medium font-serif"><b>Mô tả</b>: ${res.description}</p>
-                                <p class="text-medium font-serif"><b>Phân loại</b>: ${res.category}</p>
-                                <p class="text-medium font-serif"><b>Kho</b>: ${res.stock}</p>
-                                <p class="text-medium font-serif"><b>Giá</b>: ${res.price}đ</p>
+                                <p class="text-medium font-serif"><b>Mô tả</b>: ${resProd.description}</p>
+                                <p class="text-medium font-serif"><b>Phân loại</b>: ${resProd.category}</p>
+                                <p class="text-medium font-serif"><b>Kho</b>: ${resProd.stock}</p>
+                                <p class="text-medium font-serif"><b>Giá</b>: ${resProd.price}đ</p>
+                                <p class="text-medium font-serif md-3"><b>Sản phẩm có liên quan</b>:</p>
+                                <div class="related grid grid-rows-1 grid-cols-3 gap-3 overflow-x-auto">
+                                    
+                                </div>
                             `;
+                            const relatedSection = document.querySelector(".related");
+                            resRelated.data.forEach(related => {
+                                relatedSection.innerHTML += `
+                                    <div class="w-full bg-yellow/50 border border-yellow/50 rounded-outer p-1 relative">
+                                        <img class="w-full rounded-inner aspect-square" src="/${related.image}" alt="">
+                                        <p class="font-bold font-serif text-medium">${related.name}</p>
+                                        <p class="font-serif text-medium">${related.price}đ</p>
+                                    </div>
+                                `;
+                            });
                             document.querySelector(".full-info").classList.toggle("hidden");
                         }
                         catch(e) {
@@ -314,9 +330,11 @@
         });
     
         document.querySelector(".full-info").addEventListener("click", (e) => {
-            e.currentTarget.classList.toggle("hidden");
+            if(!e.target.closest(".full-info-cnt")) {
+                document.querySelector(".full-info").classList.toggle("hidden");
+            }
         });
-    });
+});
 
 </script>
 <!-- <% if(!searchQuery) { %>

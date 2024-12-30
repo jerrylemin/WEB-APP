@@ -1239,8 +1239,20 @@ select {
   height: 100vh;
 }
 
+.h-1\/2 {
+  height: 50%;
+}
+
+.h-\[60vh\] {
+  height: 60vh;
+}
+
 .min-h-\[60vh\] {
   min-height: 60vh;
+}
+
+.min-h-\[65vh\] {
+  min-height: 65vh;
 }
 
 .w-1\/2 {
@@ -1359,6 +1371,10 @@ select {
   cursor: pointer;
 }
 
+.auto-cols-auto {
+  grid-auto-columns: auto;
+}
+
 .grid-flow-row {
   grid-auto-flow: row;
 }
@@ -1371,6 +1387,14 @@ select {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-rows-1 {
+  grid-template-rows: repeat(1, minmax(0, 1fr));
+}
+
 .flex-row {
   flex-direction: row;
 }
@@ -1379,8 +1403,16 @@ select {
   flex-direction: column;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .items-center {
   align-items: center;
+}
+
+.justify-start {
+  justify-content: flex-start;
 }
 
 .justify-center {
@@ -1431,6 +1463,10 @@ select {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
 }
 
 .overflow-y-scroll {
