@@ -11,7 +11,7 @@ router.get('/create', verifyToken, accountController.createAccount);
 // Kiểm tra số dư tài khoản
 router.get('/balance', verifyToken, accountController.checkBalance);
 
-// // Cập nhật số dư tài khoản
+// Cập nhật số dư tài khoản
 router.post('/balance/update', verifyToken, accountController.updateBalance);
 
 module.exports = router;

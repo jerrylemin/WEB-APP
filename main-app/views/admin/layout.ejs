@@ -18,7 +18,7 @@
                 <li><a href="/admin/users" class="hover:underline">Người Dùng</a></li>
                 <li><a href="/admin/products" class="hover:underline">Sản Phẩm</a></li>
                 <li><a href="/admin/orders" class="hover:underline">Đơn Hàng</a></li>
-                <li><a href="/admin/posts" class="hover:underline">Bài Viết</a></li>
+                <!-- <li><a href="/admin/posts" class="hover:underline">Bài Viết</a></li> -->
                 <li><a href="/admin/categories" class="hover:underline">Danh Mục</a></li>
                 <li><a href="/logout" class="hover:underline">Đăng Xuất</a></li>
             </ul>
@@ -35,4 +35,15 @@
         </div>
     </footer>
 </body>
+<script>
+    function showNotification(message) {
+        const notification = document.getElementById("notification");
+        const notificationMessage = document.getElementById("notification-message");
+        notification.classList.remove("hidden");
+        notificationMessage.textContent = message;
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 3000);
+    }
+</script>
 </html>

@@ -7,6 +7,7 @@ module.exports = {
     "./views/client/productDetails.ejs",
     "./views/client/profile.ejs",
     "./views/client/editProfile.ejs",
+    "./views/client/checkout.ejs",
     "./views/admin/layouts/main.ejs",
     "./views/admin/addCategory.ejs",
     "./views/admin/editCategory.ejs",

@@ -1,6 +1,21 @@
 // controllers/userController.js
 
-const User = require('../models/userModel');
+const { User } = require('../models/userModel');
+
+// Lấy id người dùng với tài khoản nhận thanh toán chính
+exports.getMainAccount = async (req, res, next) => {
+    try {
+        const response = await User.findOne({mainAccount: true}).lean();
+        if(response) {
+            return res.status(200).json({message: null, id: response._id});
+        }
+        return res.status(404).json({message: 'Không tìm thấy tài khoản nhận thanh toán chính'});
+    }
+    catch(err) {
+        console.log(err);
+        return res.status(500).json({message: 'Có lỗi xảy ra khi lấy id người dùng với tài khoản nhận thanh toán chính', error: err});
+    }
+}
 
 // Hiển thị trang cá nhân
 exports.getProfile = async (req, res, next) => {

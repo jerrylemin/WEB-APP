@@ -1,11 +1,13 @@
 // controllers/adminController.js
 
-const User = require('../models/userModel');
+const { User } = require('../models/userModel');
 const Product = require('../models/productModel');
+const Category = require('../models/categoryModel');
 const Order = require('../models/orderModel');
 const logger = require('../logger');
 
 exports.getDashboard = (req, res) => {
+    console.log("getting dashboard")
     res.render('admin/dashboard', { title: 'Dashboard Admin' });
 };
 
@@ -74,27 +76,21 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         await User.findByIdAndDelete(req.params.id);
-        req.flash('success_msg', 'Xóa người dùng thành công');
-        res.redirect('/admin/users');
+        res.redirect('/admin/users?message=Xóa người dùng thành công');
     } catch (err) {
-        console.error('Lỗi khi xóa người dùng:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi xóa người dùng');
-        res.redirect('/admin/users');
+        res.redirect('/admin/users?message=Lỗi khi xóa người dùng');
     }
 };
 
 // Quản Lý Sản Phẩm
 exports.listProducts = async (req, res) => {
     try {
-        const products = await Product.find().lean();
+        const products = await Product.find().populate('category').lean();
         res.render('admin/products', { products, title: 'Quản Lý Sản Phẩm' });
     } catch (err) {
-        console.error('Lỗi khi lấy danh sách sản phẩm:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy danh sách sản phẩm');
-        res.redirect('/admin/dashboard');
+        res.redirect('/admin/dashboard?message=Xảy ra lỗi khi lấy danh sách sản phẩm');
     }
 };
-
 
 
 exports.addProductForm = (req, res) => {
@@ -104,56 +100,54 @@ exports.addProductForm = (req, res) => {
 
 exports.addProduct = async (req, res) => {
     try {
-        const { name, description, price, category, stock } = req.body;
-        const newProduct = new Product({ name, description, price, category, stock });
+        const { name, description, price, category, stock } = req.body; 
+        const categoryDoc = await Category.findOne({name: category});
+        // Nếu không tìm thấy danh mục -> báo lỗi
+        if(!categoryDoc) {
+            return res.status(400).redirect('/admin/products?message=Không tìm thấy danh mục');
+        }
+        // Nếu tìm thấy danh mục -> Thêm sản phẩm
+        const newProduct = new Product({ name, description, price, category: categoryDoc._id, stock });
         await newProduct.save();
-        req.flash('success_msg', 'Thêm sản phẩm thành công');
-        res.redirect('/admin/products');
+        res.status(200).redirect('/admin/products?message=Thêm sản phẩm thành công');
     } catch (err) {
-        console.error('Lỗi khi thêm sản phẩm:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi thêm sản phẩm');
-        res.redirect('/admin/products');
+        res.status(500).redirect('/admin/products?message=Có lỗi xảy ra');
     }
 };
 
 exports.editProductForm = async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id).lean();
+        const product = await Product.findById(req.params.id).populate('category').lean();
         if (!product) {
-            req.flash('error_msg', 'Sản phẩm không tồn tại');
-            return res.redirect('/admin/products');
+            return res.status(400).redirect('/admin/products?message=Không tìm thấy thông tin sản phẩm');
         }
         res.render('admin/editProduct', { product, title: 'Chỉnh Sửa Sản Phẩm' });
     } catch (err) {
-        console.error('Lỗi khi lấy thông tin sản phẩm:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi lấy thông tin sản phẩm');
-        res.redirect('/admin/products');
+        res.status(500).redirect('/admin/products?message=Xảy ra lỗi khi lấy thông tin sản phẩm');
     }
 };
-
 
 exports.updateProduct = async (req, res) => {
     try {
         const { name, description, price, category, stock } = req.body;
-        await Product.findByIdAndUpdate(req.params.id, { name, description, price, category, stock });
-        req.flash('success_msg', 'Cập nhật sản phẩm thành công');
-        res.redirect('/admin/products');
+        const categoryDoc = await Category.findOne({name: category});
+        // Nếu không tìm thấy danh mục -> báo lỗi
+        if(!categoryDoc) {
+            return res.status(400).redirect('/admin/products?message=Không tìm thấy danh mục');
+        }   
+        await Product.findByIdAndUpdate(req.params.id, { name, description, price, category: categoryDoc._id, stock });
+        res.status(200).redirect('/admin/products?message=Cập nhật sản phẩm thành công!');
     } catch (err) {
-        console.error('Lỗi khi cập nhật sản phẩm:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi cập nhật sản phẩm');
-        res.redirect('/admin/products');
+        res.status(500).redirect('/admin/products?message=Đã xảy ra lỗi khi cập nhật sản phẩm');
     }
 };
 
 exports.deleteProduct = async (req, res) => {
     try {
         await Product.findByIdAndDelete(req.params.id);
-        req.flash('success_msg', 'Xóa sản phẩm thành công');
-        res.redirect('/admin/products');
+        res.status(200).redirect('/admin/products?message=Xóa sản phẩm thành công!');
     } catch (err) {
-        console.error('Lỗi khi xóa sản phẩm:', err);
-        req.flash('error_msg', 'Đã xảy ra lỗi khi xóa sản phẩm');
-        res.redirect('/admin/products');
+        res.status(500).redirect('/admin/products?message=Đã xảy ra lỗi khi xóa sản phẩm');
     }
 };
 
@@ -215,8 +209,6 @@ exports.updateOrderStatus = async (req, res) => {
     }
 };
 
-const Category = require('../models/categoryModel'); // Tạo model category nếu chưa có
-
 // Quản Lý Danh Mục
 exports.listCategories = async (req, res) => {
     try {
@@ -231,7 +223,7 @@ exports.listCategories = async (req, res) => {
 
 
 exports.addCategoryForm = (req, res) => {
-    res.render('admin/addCategory', { title: 'Thêm Danh Mục Mới' });
+    res.render('admin/addCategory', { title: 'Thêm Danh Mục Mới', msg: null });
 };
 
 

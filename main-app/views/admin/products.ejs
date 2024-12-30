@@ -20,7 +20,7 @@
                 <tr>
                     <td class="py-2 px-4 border-b"><%= product.name %></td>
                     <td class="py-2 px-4 border-b"><%= product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
-                    <td class="py-2 px-4 border-b"><%= product.category %></td>
+                    <td class="py-2 px-4 border-b"><%= product.category.name %></td>
                     <td class="py-2 px-4 border-b"><%= product.stock %></td>
                     <td class="py-2 px-4 border-b flex space-x-2">
                         <a href="/admin/products/edit/<%= product._id %>" class="text-blue-500 hover:underline">Sửa</a>

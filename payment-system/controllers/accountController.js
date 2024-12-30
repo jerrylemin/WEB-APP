@@ -22,7 +22,7 @@ exports.createAccount = async (req, res) => {
                 bankAccountID: newAccount.accountID
             });
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 };
@@ -30,14 +30,15 @@ exports.createAccount = async (req, res) => {
 // Kiểm tra số dư tài khoản
 exports.checkBalance = async (req, res) => {
     try {
-        const account = await Account.findOne({ userID: req.userId }); // Tìm tài khoản ứng với userID trong jwt token của người dùng
+        const account = await Account.findOne({ userID: req.userId }).lean(); // Tìm tài khoản ứng với userID trong jwt token của người dùng
+        // console.log(account);
         // Nếu không tìm thấy tài khoản trong cơ sở dữ liệu, trả về lỗi
         if (!account) {
             return res.status(404).json({ error: 'Tài khoản không tồn tại' });
         }
         res.json({ balance: account.balance }); // Trả về số dư tài khoản nếu không có lỗi
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 };
@@ -57,7 +58,7 @@ exports.updateBalance = async (req, res) => {
         await account.save(); // Lưu số dư mới
         return res.status(200).json({ message: 'Số dư tài khoản đã được cập nhật!', balance: account.balance });
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         return res.status(500).json({ error: 'Lỗi server' });
     }
 };

@@ -37,6 +37,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelector("#editBalanceForm").onsubmit = async function(e) {
             e.preventDefault();
+            console.log(getCookie("AccessToken"))
             try {
                 const response = await fetch("https://localhost:5001/api/accounts/balance/update", {
                     method: "POST",

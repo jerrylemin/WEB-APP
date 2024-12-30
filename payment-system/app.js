@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const accountRoutes = require('./routes/accountRoutes');
+const accountModel = require('./models/accountModel');
 const transactionRoutes = require('./routes/transactionRoutes');
 const fs = require('fs');
 const https = require('https');
@@ -21,6 +22,9 @@ app.use(cors());
 // Routes
 app.use('/api/accounts', accountRoutes);
 app.use('/api/transactions', transactionRoutes);
+
+// Khởi tạo tài khoản nhận thanh toán
+
 
 // Khởi động server
 const certs = {

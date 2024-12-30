@@ -6,7 +6,7 @@ const orderController = require('../controllers/orderController');
 const { ensureAuthenticated, isAdmin } = require('../utils/authMiddleware');
 
 // Logging để kiểm tra orderController
-console.log('Order Controller:', orderController);
+// console.log('Order Controller:', orderController);
 
 // Route hiển thị trang xác nhận thanh toán (đặt trước các route động)
 router.get('/checkout', ensureAuthenticated, orderController.getCheckout);
@@ -31,7 +31,6 @@ router.get('/admin/orders/view/:id', ensureAuthenticated, isAdmin, orderControll
 
 // Route để cập nhật trạng thái đơn hàng (Admin)
 router.post('/admin/orders/update/:id', ensureAuthenticated, isAdmin, orderController.updateOrderStatus);
-
 
 // // Cập nhật trạng thái đơn hàng
 // router.post('/admin/update/:id', isAdmin, orderController.updateOrderStatus);

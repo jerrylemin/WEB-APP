@@ -32,6 +32,12 @@
     </div>
 </main>
 <script>
+    window.onload = function(e) {
+        <% if(message) { %>
+            showNotification("<%= message %>");
+        <% } %>
+    }
+
     const bttns = document.querySelectorAll(".bttn");
     const cartCnt = document.querySelector(".cart");
     const buyOpt = document.querySelector(".buyOpt");

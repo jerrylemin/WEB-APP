@@ -152,17 +152,20 @@ passport.use(
     try {
         let user = await User.findOne({ googleId: profile.id });
         if(!user) {
+            // Tạo đối tượng người dùng mới
             const info = {
                 name: profile.name.givenName + ' ' + profile.name.familyName,
                 email: profile.emails[0].value,
                 googleAuth: true,
-                googleId: profile.id
+                googleId: profile.id,
+                isVerified: true
             };
-            console.log(info);
             const newUser = new User(info);
             await newUser.save();
-            user = await User.findOne({ googleId: profile.id });
+            
+            user = await User.findOne({ googleId: profile.id }).lean();
             return done(null, user);
+
         }
         return done(null, user);
     }
@@ -191,8 +194,6 @@ exports.renderRegister = (req, res) => {
         msg: null,
         name: '',
         email: '',
-        password: '',
-        password2: '',
         title: 'Đăng Ký'
     });
 };
@@ -240,10 +241,14 @@ exports.register = async (req, res, next) => {
             
             // Tạo đối tượng người dùng mới
             let isAdmin = false;
+            let isMainAcc = false;
             try {
                 const response = await Admin.findOne({email: email}); // Kiểm tra xem người dùng có phải là admin không
                 if (response) {
                     isAdmin = true; // Nếu là admin thì isAdmin = true
+                    if(response.mainAccount) {
+                        isMainAcc = true;
+                    }
                 }
             }
             catch(err) {
@@ -254,7 +259,8 @@ exports.register = async (req, res, next) => {
                 name,
                 email,
                 password: hashedPassword,
-                isAdmin
+                isAdmin,
+                mainAccount: isMainAcc
             });
             // console.log('Đối tượng người dùng mới được tạo:', newUser);
         
@@ -285,8 +291,11 @@ exports.register = async (req, res, next) => {
                 msg: 'Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản!'
             })
         } catch (err) {
+            console.log(err);
             return res.render('register', {
-                msg: 'Đã xảy ra lỗi trong quá trình đăng ký'
+                msg: 'Đã xảy ra lỗi trong quá trình đăng ký',
+                name: '',
+                email: ''
             });
         }
     }
@@ -324,9 +333,9 @@ exports.verifyRegister = async (req, res) => {
 
         // Lưu token vào cookie của người dùng
         res.cookie('AccessToken', req.params.token, { maxAge: 86400000, httpOnly:   true });
-        res.render("login", {
+        res.status(200).render("login", {
             msg: 'Tài khoản đã được xác thực thành công!'
-        })
+        });
     } catch (err) {
         console.log(err);  
         res.render("login", {

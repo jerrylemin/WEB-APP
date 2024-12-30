@@ -31,3 +31,10 @@
         <p>Bạn chưa có đơn hàng nào.</p>
     <% } %>
 </main>
+<script>
+    window.onload = function(e) {
+        <% if(message) { %>
+            showNotification("<%= message %>");
+        <% } %>
+    }
+</script>

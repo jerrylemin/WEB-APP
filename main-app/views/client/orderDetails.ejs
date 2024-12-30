@@ -18,10 +18,10 @@
         <tbody>
             <% order.cart.items.forEach(item => { %>
                 <tr>
-                    <td class="py-2 px-4 border-b"><%= item.productId.name %></td> <!-- Sử dụng productId -->
-                    <td class="py-2 px-4 border-b"><%= item.productId.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                    <td class="py-2 px-4 border-b"><%= item.product.name %></td> <!-- Sử dụng productId -->
+                    <td class="py-2 px-4 border-b"><%= item.product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
                     <td class="py-2 px-4 border-b"><%= item.quantity %></td>
-                    <td class="py-2 px-4 border-b"><%= (item.productId.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
+                    <td class="py-2 px-4 border-b"><%= (item.product.price * item.quantity).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %></td>
                 </tr>
             <% }) %>
         </tbody>

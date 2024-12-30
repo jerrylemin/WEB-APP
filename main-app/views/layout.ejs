@@ -15,7 +15,7 @@
 </head>
 <body class="bg-cream">
     <header class="p-4 sticky top-1 z-50 flex flex-col">
-        <nav class="bg-tertiaryGreen rounded-outer flex justify-between items-center h-[70px] px-4 shadow-lg mb-3">
+        <nav class="bg-tertiaryGreen rounded-outer flex justify-between items-center h-[10.5vh] px-4 shadow-lg mb-3">
             <div class="text-red text-big font-title">
                 Brewtiful
             </div>
@@ -46,7 +46,9 @@
     </header>
 
     <!-- Nội dung chính của từng trang sẽ được chèn vào đây -->
-    <%- body %>
+    <div class="min-h-[60vh]">
+        <%- body %>
+    </div>
 
     <section class="fixed bottom-0 right-0 m-4">
         <div id="notification" class="bg-yellow/40 backdrop-blur-lg text-white p-4 rounded-lg border border-yellow shadow-md hidden">
@@ -54,7 +56,7 @@
         </div>
     </section>
 
-    <footer class="bg-tertiaryGreen text-red font-serif font-bold p-4 mt-8 drop-shadow-bars">
+    <footer class="bg-tertiaryGreen text-red font-serif font-bold p-4 mt-8 drop-shadow-bars h-[10.5vh] flex justify-between items-center">
         <div class="container mx-auto text-center">
             <p>&copy; 2024 Brewtiful. All rights reserved.</p>
         </div>

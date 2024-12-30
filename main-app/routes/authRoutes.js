@@ -5,6 +5,8 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const { User } = require('../models/userModel');
+const Cart = require('../models/cartModel');
 
 const SECRET_KEY = "tm_lm_qd";
 
@@ -21,21 +23,18 @@ router.post('/register', authController.register);
 router.get('/register/verify/:token', authController.verifyRegister);
 
 // Xử lý đăng nhập
-// Sử dụng custom callback cho đăng nhập
 router.post('/login', (req, res, next) => {
     const temp = req.session.cart;
     passport.authenticate('local', (err, user, info) => {
         if (err) { return next(err); }
         if (!user) {
-            req.flash('error_msg', info.message || 'Đăng nhập không thành công');
             return res.render('login', {
-                error_msg: req.flash('error_msg')
+                msg: 'Đăng nhập không thành công'
             });
         }
         if(!user.isVerified) {
-            req.flash('error_msg', 'Tài khoản chưa được xác thực');
             return res.render('login', {
-                error_msg: req.flash('error_msg')
+                msg: 'Tài khoản chưa được xác thực'
             });
         }
         req.logIn(user, (err) => {
@@ -67,8 +66,38 @@ router.get(
 router.get(
     '/login/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
-    (req, res) => {
-        res.redirect('/products');
+    async (req, res) => {
+        // Tạo cart cho người dùng
+        const cart = new Cart({
+            user: req.user._id,
+            items: [],
+            totalPrice: 0
+        });
+        await cart.save();
+
+        // Tạo jwt token cho người dùng dựa vào userID
+        const token = jwt.sign({ userID: req.user._id }, SECRET_KEY, { expiresIn: '1d' });
+        
+        // Lưu token vào cookie của người dùng
+        res.cookie('AccessToken', token, { maxAge: 86400000 });
+
+        // Tạo tài khoản ngân hàng cho người dùng
+        const response = await fetch("https://localhost:5001/api/accounts/create", {
+            method: "GET",
+            headers: {
+                "Access-Token": token // Token jwt của người dùng
+            }
+        });
+        if (response.ok) {
+            const resData = await response.json();
+            const { bankAccountID } = resData;
+            // Thêm trường bankAccountID vào newUser và lưu lại xuống cơ sở dữ liệu
+            const user = await User.findOne({_id: req.user._id});
+            user.bankAccountID = bankAccountID;
+            await user.save();
+            req.user.bankAccountID = bankAccountID;
+        }
+        res.status(200).redirect('/');
     }
 );
 

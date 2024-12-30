@@ -3,16 +3,26 @@ const fs = require('fs');
 const path = require('path');
 const Account = require('../models/accountModel');
 const Transaction = require('../models/transactionModel');
+const { default: mongoose } = require('mongoose');
 
 // Thực hiện giao dịch chuyển khoản
 exports.transfer = async (req, res) => {
     const { amount } = req.body;
     const fromUserId = req.userId;
+    // Tài khoản chính nhận thanh toán
+    // Sử dụng API để hỏi hệ thống chính xem tài khoản nhận thanh toán chính là của người dùng nào
+    const response = await fetch("https://localhost:5000/mainaccount");
+    const resData = await response.json();
+    if(resData.message) {
+        return res.status(404).json({message: resData.message});
+    }
+    const toUserId = resData.id;
     try {
-        const fromAccount = await Account.findOne({ userId: fromUserId });
-        const toAccount = await Account.findOne({ userId: 'main_account' }); // Tài khoản chính
+        const fromAccount = await Account.findOne({ userID: fromUserId });
+        const toAccount = await Account.findOne({ userID: toUserId }); // Tài khoản chính
 
         if (!fromAccount || !toAccount) {
+            console.log("Tài khoản không tồn tại")
             return res.status(404).json({ error: 'Tài khoản không tồn tại' });
         }
 
@@ -32,21 +42,27 @@ exports.transfer = async (req, res) => {
         fromAccount.balance -= amount;
         toAccount.balance += amount;
 
-        // Lưu thay đổi
-        await fromAccount.save();
-        await toAccount.save();
-        await transaction.save();
+        // Sử dụng Transaction để lưu thay đổi 
+        const session = await mongoose.startSession();
+        session.startTransaction();
 
-        res.json({ message: 'Giao dịch thành công', transaction });
+        try {
+            await fromAccount.save();
+            await toAccount.save();
+            await transaction.save();
+            await session.commitTransaction();
+        }
+        catch(err) {
+            await session.abortTransaction();
+            // console.log(err);
+        }
+        finally {
+            session.endSession();
+        }
 
-        // Sau khi giao dịch thành công
-        const logData = `Transaction ID: ${transaction._id}, From: ${fromUserId}, Amount: ${amount}, Date: ${new Date().toISOString()}\n`;
-        fs.appendFile(path.join(__dirname, '../logs/transactions.log'), logData, (err) => {
-            if (err) console.log('Lỗi ghi log:', err);
-        });
-
+        res.status(200).json({ message: 'Giao dịch thành công', transaction, error: null });
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 };
@@ -59,7 +75,7 @@ exports.getTransaction = async (req, res) => {
         if (!transaction) return res.status(404).json({ error: 'Giao dịch không tồn tại' });
         res.json(transaction);
     } catch (err) {
-        console.log(err);
+        // console.log(err);
         res.status(500).json({ error: 'Lỗi server' });
     }
 };

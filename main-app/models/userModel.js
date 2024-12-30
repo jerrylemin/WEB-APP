@@ -45,6 +45,11 @@ const userSchema = new mongoose.Schema({
     bankAccountID: {
         type: String,
         default: null   
+    },
+    mainAccount: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 }, { timestamps: true });
 
@@ -54,7 +59,12 @@ const adminSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true 
+        unique: true     
+    },
+    mainAccount: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

@@ -33,7 +33,7 @@ exports.addToCart = async (req, res) => {
                 if(product.stock === 0) {
                     return res.status(400).json({ message: "Số lượng sản phẩm vượt quá kho" });
                 }
-                // Nếu chưa hết hàng -> Thêm
+                // Nếu chưa hết hàng 
                 cart.items.push({
                     product: productId,
                     quantity: 1
@@ -42,7 +42,7 @@ exports.addToCart = async (req, res) => {
             // Nếu đã có trong giỏ
             else {
                 // Không thể thêm vì hết hàng
-                if(cart.items[findRes].quantity + 1 >   product.stock) {
+                if(cart.items[findRes].quantity + 1 > product.stock) {
                     return res.status(400).json({ message: "Số lượng sản phẩm vượt quá kho" });
                 }  
                 cart.items[findRes].quantity += 1;
@@ -113,18 +113,18 @@ exports.getCart = async (req, res) => {
         }
         req.session.cart.items = await Promise.all(req.session.cart.items.map(async item => {
             const product = await Product.findById(item.product).lean();
-            console.log({...item, productInfo: product});
+            // console.log({...item, productInfo: product});
             return { ...item, productInfo: product };
         }));
         return res.render('client/cart', { 
             user: null,
             cart: req.session.cart,
-            title: 'Giỏ Hàng'
+            title: 'Giỏ Hàng',
+            message: null 
         });
     }
     // Khi đăng nhập rồi thì merge giỏ hàng trong session vào giỏ hàng trong tài khoản
     let cart = await Cart.findOne({ user: req.user._id });
-    // console.log(cart);
     if(req.session.cart && req.session.cart.items.length > 0) {
         req.session.cart.items.forEach(item => {
             cart.items.push(item); // Lấy các item từ session
@@ -142,8 +142,8 @@ exports.getCart = async (req, res) => {
         // console.log({...item, productInfo: product})
         return {...item, productInfo: product};
     }));
-    console.log(cart.items.length);
-    res.render('client/cart', { user: req.user, cart, title: 'Giỏ Hàng' });
+    // console.log(cart.items.length);
+    res.render('client/cart', { user: req.user, cart, title: 'Giỏ Hàng', message: req.query.message });
 };
 
 // Xóa sản phẩm khỏi giỏ hàng
